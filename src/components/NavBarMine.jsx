@@ -15,7 +15,7 @@ export const NavBarMine = () => {
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="me-auto">
           <Nav.Link href="/proveedores">Listado proveedores</Nav.Link>
-          <Nav.Link href="/depositivos">Listado depositos</Nav.Link>
+          <Nav.Link href="/depositos">Listado depositos</Nav.Link>
           <Nav.Link href="/categorias">Listado categorias</Nav.Link>
           <Nav.Link href="/productos">Listado productos</Nav.Link>
         </Nav>
