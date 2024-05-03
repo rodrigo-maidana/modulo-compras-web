@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { ModalProveedor } from "./ModalProveedor";
 import ModalPedidosDetalles from "./ModalPedidosDetalles";
 
 export const ListadoPedidosCompras = () => {
