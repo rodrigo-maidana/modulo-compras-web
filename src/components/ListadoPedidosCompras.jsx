@@ -60,7 +60,7 @@ export const ListadoPedidosCompras = () => {
   return (
     <div className="containter">
       <div className="p-1 ps-4">
-        <h1>Listado de proveedores</h1>
+        <h1>Listado de pedidos de compras</h1>
       </div>
       <div className="col-12 p-3 px-5">
         <table className="table table-secondary col-6">
