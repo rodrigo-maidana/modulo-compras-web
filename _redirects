@@ -1,0 +1,7 @@
+# Redirects from what the browser requests to what we serve
+/home                /
+/proveedores         /proveedores
+/depositos           /depositos
+/categorias          /categorias
+/productos           /productos
+

@@ -15,7 +15,7 @@ function App() {
         <NavBarMine />
         <Routes>
           <Route path="/proveedores" element={<ListadoProveedores />} />
-          <Route path="/depositivos" element={<ListarDepositos />} />
+          <Route path="/depositos" element={<ListarDepositos />} />
           <Route path="/categorias" element={<ListarCategorias />} />
           <Route path="/productos" element={<ListarProducto />} />
         </Routes>
