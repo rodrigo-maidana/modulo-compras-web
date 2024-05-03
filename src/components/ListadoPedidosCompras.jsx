@@ -1,10 +1,24 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { ModalProveedor } from "./ModalProveedor";
+import ModalPedidosDetalles from "./ModalPedidosDetalles";
+
 export const ListadoPedidosCompras = () => {
   const [pedidoCompras, setPedidoCompras] = useState([]);
 
-  useEffect(() => {
-    //obtener pedidos
+  const [showModal, setShowModal] = useState(false);
+  const [selectedPedidoId, setSelectedPedidoId] = useState(null);
+
+  const handleOpenModal = (id) => {
+    setSelectedPedidoId(id);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedPedidoId(null);
+  };
+  const fetchCargarPedidos = () => {
     axios
       .get("https://api.rodrigomaidana.com:8080/pedidoscompra")
       .then((response) => {
@@ -14,6 +28,9 @@ export const ListadoPedidosCompras = () => {
       .catch((error) => {
         console.log("el error es: ", error);
       });
+  };
+  useEffect(() => {
+    fetchCargarPedidos();
   }, []);
 
   const formatearFecha = (fecha) => {
@@ -27,6 +44,19 @@ export const ListadoPedidosCompras = () => {
     return `${año}-${dia < 10 ? "0" + dia : dia}-${mes < 10 ? "0" + mes : mes}`;
   };
 
+  const deletePedido = (pedido) => {
+    pedido.estado = "Cancelado";
+    console.log(pedido);
+    axios
+      .put(
+        `https://api.rodrigomaidana.com:8080/pedidoscompra/${pedido.id}`,
+        pedido
+      )
+      .then(console.log("editado"))
+      .catch((error) => console.log("error al editar ", error));
+
+    fetchCargarPedidos();
+  };
   return (
     <div className="containter">
       <div className="p-1 ps-4">
@@ -49,24 +79,28 @@ export const ListadoPedidosCompras = () => {
                 <td>{formatearFecha(pedido.fechaEmision)}</td>
                 <td>{pedido.estado}</td>
                 <td>
-                  <button className="btn btn-info m-2">Ver</button>
-                  <button className="btn btn-warning m-2">Editar</button>
-                  <button className="btn btn-danger m-2">Eliminar</button>
+                  <button
+                    className="btn btn-info m-2"
+                    onClick={() => handleOpenModal(pedido.id)}
+                  >
+                    Ver detalles
+                  </button>
+                  <input
+                    className="btn btn-danger m-2"
+                    type="submit"
+                    onClick={() => deletePedido(pedido)}
+                    value="eliminar"
+                  />
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <ModalProveedor
-        show={show}
-        handleClose={() => {
-          setShow(false);
-          setProveedorSeleccionado(null);
-        }}
-        actualizarProveedores={actualizarProveedores}
-        proveedor={proveedorSeleccionado}
-        isEdit={isEdit}
+      <ModalPedidosDetalles
+        id={selectedPedidoId}
+        show={showModal}
+        onHide={handleCloseModal}
       />
     </div>
   );
