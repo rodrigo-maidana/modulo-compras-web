@@ -18,6 +18,7 @@ function App() {
           <Route path="/depositos" element={<ListarDepositos />} />
           <Route path="/categorias" element={<ListarCategorias />} />
           <Route path="/productos" element={<ListarProducto />} />
+          <Route path="/pedidos" element={<ListadoPedidosCompras />} />
         </Routes>
       </Router>
     </>
