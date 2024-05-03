@@ -14,7 +14,7 @@ export const ListadoProveedores = () => {
     const [isEdit,setIsEdit] = useState(false);
 
     const fetchProveedores = () => {
-        axios.get('http://52.186.168.213:8080/proveedores')
+        axios.get('https://api.rodrigomaidana.com:8080/proveedores')
             .then((response) => {
                 setProveedores(response.data);
             })
@@ -23,7 +23,7 @@ export const ListadoProveedores = () => {
             });
     };
     const deleteProveedor = (idProveedor) => {
-        axios.delete(`http://52.186.168.213:8080/proveedores/${idProveedor}`)
+        axios.delete(`https://api.rodrigomaidana.com:8080/proveedores/${idProveedor}`)
             .then(() => {
                 // Actualizar la lista de proveedores después de eliminar
                 fetchProveedores();

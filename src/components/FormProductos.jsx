@@ -12,7 +12,7 @@ export const FormProductos = () => {
     
     useEffect(()=>{
         //obtener categorias
-        axios.get('http://52.186.168.213:8080/categorias')
+        axios.get('https://api.rodrigomaidana.com:8080/categorias')
         .then(response =>{
             setCategorias(response.data);
         })
@@ -20,7 +20,7 @@ export const FormProductos = () => {
             console.error("error:",error)
         });
         //obtener marcas
-        axios.get('http://52.186.168.213:8080/marcas')
+        axios.get('https://api.rodrigomaidana.com:8080/marcas')
         .then(response =>{
             setMarcas(response.data)
         })

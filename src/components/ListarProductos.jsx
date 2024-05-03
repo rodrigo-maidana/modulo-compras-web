@@ -27,7 +27,7 @@ function ListarDepositos() {
     }, []);
 
     const cargarMarcas = () => {
-        axios.get('http://api.rodrigomaidana.com:8080/marcas')
+        axios.get('https://api.rodrigomaidana.com:8080/marcas')
             .then(response => {
                 setMarcas(response.data);
             })
@@ -37,7 +37,7 @@ function ListarDepositos() {
     };
 
     const cargarCategorias = () => {
-        axios.get('http://api.rodrigomaidana.com:8080/categorias')
+        axios.get('https://api.rodrigomaidana.com:8080/categorias')
             .then(response => {
                 setCategorias(response.data);
             })
@@ -48,7 +48,7 @@ function ListarDepositos() {
 
     // Función para cargar las categorías desde la API
     const cargarProductos = () => {
-        axios.get('http://api.rodrigomaidana.com:8080/productos')
+        axios.get('https://api.rodrigomaidana.com:8080/productos')
             .then(response => {
                 setProductos(response.data);
             })
@@ -61,7 +61,7 @@ function ListarDepositos() {
     const crearProducto = () => {
         console.log(selectedNewMarca);
         console.log(selectedNewCategoria);
-        axios.post('http://api.rodrigomaidana.com:8080/productos', {
+        axios.post('https://api.rodrigomaidana.com:8080/productos', {
             "marca": {
                 "id": selectedNewMarca,
             },
@@ -84,7 +84,7 @@ function ListarDepositos() {
 
     // Función para eliminar una categoría
     const eliminarProducto = (id) => {
-        axios.delete(`http://api.rodrigomaidana.com:8080/productos/${id}`)
+        axios.delete(`https://api.rodrigomaidana.com:8080/productos/${id}`)
             .then(() => {
                 console.log('Producto eliminado', id);
                 // Recargar las categorías después de la eliminación exitosa
@@ -124,7 +124,7 @@ function ListarDepositos() {
         !selectedCategoria ? alert("Seleccione una Categoria") :
             !selectedMarca ? alert("Seleccione una Marca") :
 
-                axios.put(`http://api.rodrigomaidana.com:8080/productos/${id}`,
+                axios.put(`https://api.rodrigomaidana.com:8080/productos/${id}`,
                     {
                         "marca": {
                             "id": selectedMarca,

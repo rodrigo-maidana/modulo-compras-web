@@ -20,7 +20,7 @@ function ListarDepositos() {
 
   // Función para cargar las categorías desde la API
   const cargarDepositos = () => {
-    axios.get('http://api.rodrigomaidana.com:8080/depositos')
+    axios.get('https://api.rodrigomaidana.com:8080/depositos')
       .then(response => {
         setDepositos(response.data);
       })
@@ -31,7 +31,7 @@ function ListarDepositos() {
 
   // Función para crear una nueva categoría
   const crearDeposito = () => {
-    axios.post('http://api.rodrigomaidana.com:8080/depositos', {
+    axios.post('https://api.rodrigomaidana.com:8080/depositos', {
       nombre,
       direccion,
       contacto
@@ -48,7 +48,7 @@ function ListarDepositos() {
 
   // Función para eliminar una categoría
   const eliminarDeposito = (id) => {
-    axios.delete(`http://api.rodrigomaidana.com:8080/depositos/${id}`)
+    axios.delete(`https://api.rodrigomaidana.com:8080/depositos/${id}`)
       .then(() => {
         console.log('Deposito eliminado', id);
         // Recargar las categorías después de la eliminación exitosa
@@ -84,7 +84,7 @@ function ListarDepositos() {
       return;
     }
 
-    axios.put(`http://api.rodrigomaidana.com:8080/depositos/${id}`,
+    axios.put(`https://api.rodrigomaidana.com:8080/depositos/${id}`,
       {
         "nombre": nuevoNombreDeposito,
         "direccion": nuevoDireccionDeposito,

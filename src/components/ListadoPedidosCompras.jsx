@@ -5,7 +5,7 @@ export const ListadoPedidosCompras = () => {
 
     useEffect(()=>{
         //obtener pedidos
-        axios.get('http://52.186.168.213:8080/pedidoscompra')
+        axios.get('https://api.rodrigomaidana.com:8080/pedidoscompra')
         .then((response)=>{
             setPedidoCompras(response.data)
             console.log(response.data);

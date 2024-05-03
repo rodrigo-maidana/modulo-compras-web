@@ -53,7 +53,7 @@ export const FormProveedores = ({
   };
   const handleSubmitNew = (nuevoProveedor) => {
     axios
-      .post("http://52.186.168.213:8080/proveedores", nuevoProveedor)
+      .post("https://api.rodrigomaidana.com:8080/proveedores", nuevoProveedor)
       .then((response) => {
         console.log(response.data);
         actualizarProveedores();
@@ -75,7 +75,7 @@ export const FormProveedores = ({
     console.log(nuevoProveedor);
     axios
       .put(
-        `http://52.186.168.213:8080/proveedores/${proveedor.id}`,
+        `https://api.rodrigomaidana.com:8080/proveedores/${proveedor.id}`,
         nuevoProveedor
       )
       .then((response) => {

@@ -15,7 +15,7 @@ function ListarCategorias() {
 
   // Función para cargar las categorías desde la API
   const cargarCategorias = () => {
-    axios.get('http://api.rodrigomaidana.com:8080/categorias')
+    axios.get('https://api.rodrigomaidana.com:8080/categorias')
       .then(response => {
         setCategorias(response.data);
       })
@@ -26,7 +26,7 @@ function ListarCategorias() {
 
   // Función para crear una nueva categoría
   const crearCategoria = () => {
-    axios.post('http://api.rodrigomaidana.com:8080/categorias', {
+    axios.post('https://api.rodrigomaidana.com:8080/categorias', {
       nombre
     })
       .then(response => {
@@ -41,7 +41,7 @@ function ListarCategorias() {
 
   // Función para eliminar una categoría
   const eliminarCategoria = (id) => {
-    axios.delete(`http://api.rodrigomaidana.com:8080/categorias/${id}`)
+    axios.delete(`https://api.rodrigomaidana.com:8080/categorias/${id}`)
       .then(() => {
         console.log('Categoría eliminada', id);
         // Recargar las categorías después de la eliminación exitosa
@@ -76,7 +76,7 @@ function ListarCategorias() {
       return;
     }
 
-    axios.put(`http://api.rodrigomaidana.com:8080/categorias/${id}`, { nombre: nuevoNombreCategoria })
+    axios.put(`https://api.rodrigomaidana.com:8080/categorias/${id}`, { nombre: nuevoNombreCategoria })
       .then(() => {
         console.log("Categoría modificada:", id);
         cargarCategorias();
