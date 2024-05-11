@@ -7,6 +7,7 @@ import ListarDepositos from "./components/ListarDepositos.jsx";
 import ListarProducto from "./components/ListarProductos.jsx";
 import ListarCategorias from "./components/ListarCategorias.jsx";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ProductTable } from "./components/modales/ProductTable.jsx";
 //a
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Router>
         <NavBarMine />
         <Routes>
+          <Route path="/" element={<ProductTable />} />
           <Route path="/proveedores" element={<ListadoProveedores />} />
           <Route path="/depositos" element={<ListarDepositos />} />
           <Route path="/categorias" element={<ListarCategorias />} />
