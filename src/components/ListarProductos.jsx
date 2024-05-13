@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+/* import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function ListarDepositos() {
@@ -216,7 +216,7 @@ function ListarDepositos() {
                     ))}
                 </tbody>
             </table>
-            {/* Modal para editar producto */}
+            {/* Modal para editar producto }
             {mostrarModal && (
                 <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
                     <div className="modal-dialog" role="document">
@@ -261,4 +261,4 @@ function ListarDepositos() {
     );
 }
 
-export default ListarDepositos;
+export default ListarDepositos;*/

@@ -1,11 +1,11 @@
 //aca deben estar todo lq esta en el main.jsx xd
-import { FormProductos } from "./components/FormProductos.jsx";
+//import { FormProductos } from "./components/FormProductos.jsx";
 import { ListadoProveedores } from "./components/ListadoProveedores.jsx";
 import { NavBarMine } from "./components/NavBarMine.jsx";
 import { ListadoPedidosCompras } from "./components/ListadoPedidosCompras.jsx";
-import ListarDepositos from "./components/ListarDepositos.jsx";
-import ListarProducto from "./components/ListarProductos.jsx";
-import ListarCategorias from "./components/ListarCategorias.jsx";
+import { ListarDepositos } from "./components/ListarDepositos.jsx";
+//import ListarProducto from "./components/ListarProductos.jsx";
+import { ListarCategorias } from "./components/ListarCategorias.jsx";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 //a
 function App() {
@@ -17,7 +17,10 @@ function App() {
           <Route path="/proveedores" element={<ListadoProveedores />} />
           <Route path="/depositos" element={<ListarDepositos />} />
           <Route path="/categorias" element={<ListarCategorias />} />
-          <Route path="/productos" element={<ListarProducto />} />
+          {/*
+  <Route path="/productos" element={<ListarProducto />} />
+  */}
+
           <Route path="/pedidos" element={<ListadoPedidosCompras />} />
         </Routes>
       </Router>

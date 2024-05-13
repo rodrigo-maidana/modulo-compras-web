@@ -1,20 +1,68 @@
-import React, { useEffect } from 'react'
-import { useState } from 'react'
-import axios from 'axios'
+/* import { useState, useEffect } from "react";
+import axios from "axios";
+
+export const FormProductos = ({
+  producto,
+  actualizarproductos,
+  isEdit,
+  handleClose,
+}) => {
+  const [formState, setFormState] = useState({
+    marca:"",
+    producto: "",
+    categoria: "",
+    descripcion:""
+  });
+
+  useEffect(() => {
+    console.log("Producto que llego: ", producto);
+    if (producto) {
+      setFormState({
+        marca: producto.marca.nombre,
+        producto: producto.nombre,
+        categoria: producto.categoria.nombre,
+        descripcion: producto.descripcion
+      });
+    }
+  }, [producto]);
+
+  const handleSubmit = () => {
+    const { descripcion } = formState;
+    const nuevoProdcuto = {
+      descripcion: descripcion,
+
+    };
+    //console.log(isEdit);
+    //isEdit?handleSubmitEdit() : handleSubmitNew()
+    if (!validar()) {
+      return;
+    }
+    if (isEdit) {
+      console.log(isEdit);
+      handleSubmitEdit(nuevoProdcuto);
+      //return
+    } else {
+      console.log(isEdit);
+      handleSubmitNew(nuevoProdcuto);
+      //return
+    }
+  };
+
 export const FormProductos = () => {
     const [formState,setFormState] = useState( {
         marca:0,
-        categoria: "",
+        producto: "",
+        categoria:"",
         descripcion: ""
     })
-    const [categorias,setCategorias] = useState([])
+    const [productos,setproductos] = useState([])
     const [marcas,setMarcas] = useState([])
     
     useEffect(()=>{
-        //obtener categorias
-        axios.get('https://api.rodrigomaidana.com:8080/categorias')
+        //obtener productos
+        axios.get('https://api.rodrigomaidana.com:8080/productos')
         .then(response =>{
-            setCategorias(response.data);
+            setproductos(response.data);
         })
         .catch(error=>{
             console.error("error:",error)
@@ -51,16 +99,16 @@ export const FormProductos = () => {
         <form className="row g-3 mx-auto border border-2 py-3 px-5 rounded col-8">
             <div><h2>Datos del producto</h2></div>
             <label htmlFor="marca"> Marca: 
-                <select className="form-select" name="marca" id="categoria" onChange={handleChange} value={formState.marca}>
+                <select className="form-select" name="marca" id="producto" onChange={handleChange} value={formState.marca}>
                     {marcas.map(marca =>(
                         <option key={marca.idMarca} value={marca.idMarca}>{marca.nombre}</option>
                     ))}
                 </select>
             </label>
-            <label htmlFor="categoria"> Categoria: 
-                <select className="form-select" name="categoria" onChange={handleChange} value={formState.categoria}>
-                    {categorias.map(categoria =>(
-                        <option key={categoria.idCategoria} value={categoria.idCategoria}>{categoria.nombre}</option>
+            <label htmlFor="producto"> producto: 
+                <select className="form-select" name="producto" onChange={handleChange} value={formState.producto}>
+                    {productos.map(producto =>(
+                        <option key={producto.idproducto} value={producto.idproducto}>{producto.nombre}</option>
                     ))}
                 </select>
             </label>
@@ -76,4 +124,4 @@ export const FormProductos = () => {
         </div>
     </>
   )
-}
+}*/
