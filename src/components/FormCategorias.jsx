@@ -59,7 +59,7 @@ export const FormCategorias = ({
 
   const handleSubmitEdit = (nuevaCategoria) => {
     console.log("edita");
-    console.log(nuevaCategoria);S
+    console.log(nuevaCategoria);
     axios
       .put(
         `https://api.rodrigomaidana.com:8080/categorias/${categoria.id}`,
