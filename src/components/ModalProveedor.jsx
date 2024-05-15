@@ -21,14 +21,6 @@ export const ModalProveedor = ({
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/*
-          <App
-            proveedor={proveedor}
-            actualizarProveedores={actualizarProveedores}
-            isEdit={isEdit}
-            handleClose={handleClose}
-          />
-  */}
           <FormProveedores
             proveedor={proveedor}
             actualizarProveedores={actualizarProveedores}

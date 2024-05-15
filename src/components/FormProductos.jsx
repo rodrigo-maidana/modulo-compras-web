@@ -1,127 +1,197 @@
-/* import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 export const FormProductos = ({
   producto,
-  actualizarproductos,
+  actualizarProductos,
   isEdit,
   handleClose,
 }) => {
   const [formState, setFormState] = useState({
-    marca:"",
-    producto: "",
+    descripcion: "",
+    marca: "",
     categoria: "",
-    descripcion:""
   });
 
+  const [marcas, setMarcas] = useState([]);
+  const [categorias, setCategorias] = useState([]);
+
   useEffect(() => {
-    console.log("Producto que llego: ", producto);
     if (producto) {
       setFormState({
-        marca: producto.marca.nombre,
-        producto: producto.nombre,
-        categoria: producto.categoria.nombre,
-        descripcion: producto.descripcion
+        descripcion: producto.descripcion,
+        marca: producto.marca.id,
+        categoria: producto.categoria.id,
       });
     }
   }, [producto]);
 
-  const handleSubmit = () => {
-    const { descripcion } = formState;
-    const nuevoProdcuto = {
-      descripcion: descripcion,
+  useEffect(() => {
+    axios.get("https://api.rodrigomaidana.com:8080/marcas").then((response) => {
+      setMarcas(response.data);
+    });
+    axios
+      .get("https://api.rodrigomaidana.com:8080/categorias")
+      .then((response) => {
+        setCategorias(response.data);
+      });
+  }, []);
 
+  const handleSubmit = () => {
+    const { descripcion, marca, categoria } = formState;
+    const nuevoProducto = {
+      descripcion,
+      marca: { id: marca },
+      categoria: { id: categoria },
     };
-    //console.log(isEdit);
-    //isEdit?handleSubmitEdit() : handleSubmitNew()
+
     if (!validar()) {
       return;
     }
     if (isEdit) {
-      console.log(isEdit);
-      handleSubmitEdit(nuevoProdcuto);
-      //return
+      handleSubmitEdit(nuevoProducto);
     } else {
-      console.log(isEdit);
-      handleSubmitNew(nuevoProdcuto);
-      //return
+      handleSubmitNew(nuevoProducto);
     }
   };
 
-export const FormProductos = () => {
-    const [formState,setFormState] = useState( {
-        marca:0,
-        producto: "",
-        categoria:"",
-        descripcion: ""
-    })
-    const [productos,setproductos] = useState([])
-    const [marcas,setMarcas] = useState([])
-    
-    useEffect(()=>{
-        //obtener productos
-        axios.get('https://api.rodrigomaidana.com:8080/productos')
-        .then(response =>{
-            setproductos(response.data);
-        })
-        .catch(error=>{
-            console.error("error:",error)
+  const handleSubmitNew = (nuevoProducto) => {
+    axios
+      .post("https://api.rodrigomaidana.com:8080/productos", nuevoProducto, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        actualizarProductos();
+        handleClose();
+        setFormState({
+          descripcion: "",
+          marca: "",
+          categoria: "",
         });
-        //obtener marcas
-        axios.get('https://api.rodrigomaidana.com:8080/marcas')
-        .then(response =>{
-            setMarcas(response.data)
-        })
-        .catch(error=>{
-            console.error("error: ", error)
-        })
-    },[])
+      })
+      .catch((error) => {
+        console.error("Error al crear el producto:", error);
+      });
+  };
 
-    const handleSubmit = (e)=>{
-        e.preventDefault()
-        //validacion de descripcion
-        if(formState.descripcion.length > 60 || formState.descripcion.length ===0){
-            alert("Descripcion no puede tener mas de 60 caracteres o vacio")
-            //console.log("llego");
+  const handleSubmitEdit = (nuevoProducto) => {
+    axios
+      .put(
+        `https://api.rodrigomaidana.com:8080/productos/${producto.id}`,
+        nuevoProducto,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-        //mandar al api por axios
+      )
+      .then((response) => {
+        actualizarProductos();
+        handleClose();
+        setFormState({
+          descripcion: "",
+          marca: "",
+          categoria: "",
+        });
+      })
+      .catch((error) => {
+        console.error("Error al editar el producto:", error);
+      });
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormState({ ...formState, [name]: value });
+  };
+
+  const validar = () => {
+    const { descripcion, marca, categoria } = formState;
+    if (!descripcion || !marca || !categoria) {
+      alert("No se aceptan campos en blanco");
+      return false;
     }
-    const handleChange = (e)=>{
-        e.preventDefault()
-        const {name, value} = e.target
-        setFormState({...formState,
-            [name]:value})
-    }
+    return true;
+  };
+
   return (
     <>
-    <div className="container">
-    <h1 className='p-4 text-center'>Cargar producto</h1>
+      <div className="container p-2">
         <form className="row g-3 mx-auto border border-2 py-3 px-5 rounded col-8">
-            <div><h2>Datos del producto</h2></div>
-            <label htmlFor="marca"> Marca: 
-                <select className="form-select" name="marca" id="producto" onChange={handleChange} value={formState.marca}>
-                    {marcas.map(marca =>(
-                        <option key={marca.idMarca} value={marca.idMarca}>{marca.nombre}</option>
-                    ))}
-                </select>
+          <div>
+            <h3>Datos del Producto</h3>
+          </div>
+          <div className="col-12-md-6 px-4">
+            <label className="col-6 pe-4" htmlFor="descripcion">
+              Descripción
             </label>
-            <label htmlFor="producto"> producto: 
-                <select className="form-select" name="producto" onChange={handleChange} value={formState.producto}>
-                    {productos.map(producto =>(
-                        <option key={producto.idproducto} value={producto.idproducto}>{producto.nombre}</option>
-                    ))}
-                </select>
+            <input
+              className="col-6"
+              type="text"
+              name="descripcion"
+              value={formState.descripcion}
+              id="descripcion"
+              onChange={handleChange}
+              placeholder="Ejemplo: Producto X"
+            ></input>
+          </div>
+          <div className="col-12-md-6 px-4">
+            <label className="col-6 pe-4" htmlFor="marca">
+              Marca
             </label>
-            <label className="col-12 pe-4" htmlFor="descripcion">Descripcion: 
-                <input className="col-12" type="text" name="descripcion" id="descripcion" onChange={handleChange} />
+            <select
+              className="col-6"
+              name="marca"
+              id="marca"
+              value={formState.marca}
+              onChange={handleChange}
+            >
+              <option value="">Seleccione una marca</option>
+              {marcas.map((marca) => (
+                <option key={marca.id} value={marca.id}>
+                  {marca.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="col-12-md-6 px-4">
+            <label className="col-6 pe-4" htmlFor="categoria">
+              Categoría
             </label>
-            <div className='text-center'>
-                <button type="button" className='m-2 btn btn-danger'>Cancelar</button>
-                <button type="submit" className="m-2 btn btn-primary"onClick={handleSubmit}> Cargar</button>
-            </div>
-
+            <select
+              className="col-6"
+              name="categoria"
+              id="categoria"
+              value={formState.categoria}
+              onChange={handleChange}
+            >
+              <option value="">Seleccione una categoría</option>
+              {categorias.map((categoria) => (
+                <option key={categoria.id} value={categoria.id}>
+                  {categoria.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="text-center">
+            <button
+              className="btn btn-danger px-3 mx-1"
+              type="button"
+              onClick={handleClose}
+            >
+              Cancelar
+            </button>
+            <button
+              className="btn btn-primary px-3 mx-1"
+              type="button"
+              onClick={handleSubmit}
+            >
+              Guardar
+            </button>
+          </div>
         </form>
-        </div>
+      </div>
     </>
-  )
-}*/
+  );
+};

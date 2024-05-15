@@ -21,14 +21,6 @@ export const ModalDeposito = ({
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/*
-          <App
-            deposito={deposito}
-            actualizarDepositos={actualizarDepositos}
-            isEdit={isEdit}
-            handleClose={handleClose}
-          />
-  */}
           <FormDepositos
             deposito={deposito}
             actualizarDepositos={actualizarDepositos}
