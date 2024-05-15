@@ -1,80 +1,88 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-export const FormCategorias = ({
-  categoria,
-  actualizarCategorias,
+export const FormDepositos = ({
+  deposito,
+  actualizarDepositos,
   isEdit,
   handleClose,
 }) => {
   const [formState, setFormState] = useState({
     nombre: "",
+    direccion: "",
+    contacto:""
   });
 
   useEffect(() => {
-    console.log("Categoria que llego: ", categoria);
-    if (categoria) {
+    console.log("deposito que llego: ", deposito);
+    if (deposito) {
       setFormState({
-        nombre: categoria.nombre,
+        nombre: deposito.nombre,
+        direccion: deposito.direccion,
+        contacto: deposito.contacto
       });
     }
-  }, [categoria]);
+  }, [deposito]);
 
   const handleSubmit = () => {
-    const { nombre } = formState;
-    const nuevaCategoria = {
+    const { nombre, direccion, contacto } = formState;
+    const nuevoDeposito = {
       nombre: nombre,
+      direccion: direccion,
+      contacto: contacto
     };
-    //console.log(isEdit);
-    //isEdit?handleSubmitEdit() : handleSubmitNew()
     if (!validar()) {
       return;
     }
     if (isEdit) {
       console.log(isEdit);
-      handleSubmitEdit(nuevaCategoria);
+      handleSubmitEdit(nuevoDeposito);
       //return
     } else {
       console.log(isEdit);
-      handleSubmitNew(nuevaCategoria);
+      handleSubmitNew(nuevoDeposito);
       //return
     }
   };
 
-  const handleSubmitNew = (nuevaCategoria) => {
+  const handleSubmitNew = (nuevoDeposito) => {
     axios
-      .post("https://api.rodrigomaidana.com:8080/categorias", nuevaCategoria)
+      .post("https://api.rodrigomaidana.com:8080/depositos", nuevoDeposito)
       .then((response) => {
         console.log(response.data);
-        actualizarCategorias();
+        actualizarDepositos();
         handleClose();
         setFormState({
           nombre: "",
+          direccion:"",
+          contacto:""
         });
       })
       .catch((error) => {
-        console.error("Error al crear la categoria:", error);
+        console.error("Error al crear la deposito:", error);
       });
   };
 
-  const handleSubmitEdit = (nuevaCategoria) => {
+  const handleSubmitEdit = (nuevoDeposito) => {
     console.log("edita");
-    console.log(nuevaCategoria);
+    console.log(nuevoDeposito);
     axios
       .put(
-        `https://api.rodrigomaidana.com:8080/categorias/${categoria.id}`,
-        nuevaCategoria
+        `https://api.rodrigomaidana.com:8080/depositos/${deposito.id}`,
+        nuevoDeposito
       )
       .then((response) => {
         console.log(response.data);
-        actualizarCategorias();
+        actualizarDepositos();
         handleClose();
         setFormState({
           nombre: "",
+          direccion: "",
+          contacto: ""
         });
       })
       .catch((error) => {
-        console.error("Error al editar la categoria:", error);
+        console.error("Error al editar la deposito:", error);
       });
   };
   const handleChange = (e) => {
@@ -96,11 +104,11 @@ export const FormCategorias = ({
       <div className="container p-2">
         <form className="row g-3 mx-auto border border-2 py-3 px-5 rounded col-8">
           <div>
-            <h3>Datos de la categoria</h3>
+            <h3>Datos de la deposito</h3>
           </div>
           <div className="col-12-md-6 px-4">
             <label className="col-6 pe-4" htmlFor="name">
-              Nombre de la categoria
+              Nombre de la deposito
             </label>
             <input
               className="col-6"
@@ -109,7 +117,35 @@ export const FormCategorias = ({
               value={formState.nombre}
               id="name"
               onChange={handleChange}
-              placeholder="Ejemplo: Electrico"
+              placeholder="Ejemplo: Suc. Encarnacion 1"
+            ></input>
+          </div>
+          <div className="col-12-md-6 px-4">
+            <label className="col-6 pe-4" htmlFor="direccion">
+              Direccion del deposito
+            </label>
+            <input
+              className="col-6"
+              type="text"
+              name="direccion"
+              value={formState.direccion}
+              id="direccion"
+              onChange={handleChange}
+              placeholder="Ejemplo: Juan L. Mallorquin"
+            ></input>
+          </div>
+          <div className="col-12-md-6 px-4">
+            <label className="col-6 pe-4" htmlFor="contacto">
+              Contacto del deposito
+            </label>
+            <input
+              className="col-6"
+              type="text"
+              name="contacto"
+              value={formState.contacto}
+              id="contacto"
+              onChange={handleChange}
+              placeholder="Ejemplo: Jorge Daniel Figueredo Amarilla"
             ></input>
           </div>
           <div className="text-center">

@@ -1,169 +1,122 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { ModalCategoria } from "./ModalCategoria";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 
-function ListarCategorias() {
-  const [categorias, setCategorias] = useState([]);
-  const [nombre, setNombre] = useState('');
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState([]);
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [nuevoNombreCategoria, setNuevoNombreCategoria] = useState('');
+export const ListarCategorias = () => {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => {
+    setShow(true);
+    setIsEdit(false);
+  };
 
+  const [categorias, setcategorias] = useState([]);
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null);
+  const [isEdit, setIsEdit] = useState(false);
+
+  const fetchCategorias = () => {
+    axios
+      .get("https://api.rodrigomaidana.com:8080/categorias")
+      .then((response) => {
+        setcategorias(response.data);
+      })
+      .catch((error) => {
+        console.log("error: ", error);
+      });
+  };
+
+  const deleteCategoria = (idCategoria) => {
+    axios
+      .delete(`https://api.rodrigomaidana.com:8080/categorias/${idCategoria}`)
+      .then(() => {
+        // Actualizar la lista de categorias después de eliminar
+        fetchCategorias();
+      })
+      .catch((error) => {
+        console.log("Error al eliminar la categoria:", error);
+      });
+  };
   // Función para cargar las categorías desde la API al cargar la página
   useEffect(() => {
-    cargarCategorias();
+    fetchCategorias();
   }, []);
 
-  // Función para cargar las categorías desde la API
-  const cargarCategorias = () => {
-    axios.get('https://api.rodrigomaidana.com:8080/categorias')
-      .then(response => {
-        setCategorias(response.data);
-      })
-      .catch(error => {
-        console.error('Error al cargar las categorías:', error);
-      });
+  const actualizarCategorias = () => {
+    // Actualizar la lista de categorias después de agregar uno nuevo
+    console.log("llego");
+    fetchCategorias();
   };
 
-  // Función para crear una nueva categoría
-  const crearCategoria = () => {
-    axios.post('https://api.rodrigomaidana.com:8080/categorias', {
-      nombre
-    })
-      .then(response => {
-        console.log('Categoría creada:', response.data);
-        // Recargar las categorías después de la creación exitosa
-        cargarCategorias();
-      })
-      .catch(error => {
-        console.error('Error al crear la categoría:', error);
-      });
-  };
-
-  // Función para eliminar una categoría
-  const eliminarCategoria = (id) => {
-    axios.delete(`https://api.rodrigomaidana.com:8080/categorias/${id}`)
-      .then(() => {
-        console.log('Categoría eliminada', id);
-        // Recargar las categorías después de la eliminación exitosa
-        cargarCategorias();
-      })
-      .catch(error => {
-        console.error('Error al eliminar la categoría:', error);
-      });
-  };
-
-  // Función para modificar una categoría
-  const modificarCategoria = (categoria) => {
+  const handleEditarCategoria = (categoria) => {
+    console.log("categoria seleccionado: ", categoria);
     setCategoriaSeleccionada(categoria);
-    setNuevoNombreCategoria(categoria.nombre);
-    setMostrarModal(true);
+    setShow(true);
+    setIsEdit(true);
   };
 
-  // Función para guardar los cambios en la categoría
-  const guardarCambios = () => {
-    const { id } = categoriaSeleccionada;
-
-    // Verificar si el nuevo nombre está en blanco
-    if (nuevoNombreCategoria.trim() === "") {
-      console.error("El nombre de la categoría no puede estar en blanco.");
-      alert("El nombre no puede estar en blanco.")
-      return;
-    }
-    // Verificar si el nuevo nombre excede el límite de caracteres permitidos
-    if (nuevoNombreCategoria.length > 60) {
-      console.error("El nombre de la categoría excede el límite de 60 caracteres.");
-      alert("Supero el limite de 60 caracteres ")
-      return;
-    }
-
-    axios.put(`https://api.rodrigomaidana.com:8080/categorias/${id}`, { nombre: nuevoNombreCategoria })
-      .then(() => {
-        console.log("Categoría modificada:", id);
-        cargarCategorias();
-        setMostrarModal(false);
-      })
-      .catch(error => {
-        if (error.response && error.response.status === 400) {
-          console.error("Error: superado el límite de caracteres permitido (60)");
-          alert("Supero el limite de 60 caracteres ")
-        } else {
-          console.error("Error al modificar la categoría:", error);
-          alert("Error al modificar")
-        }
-      });
-  };
-
-
-
-
-  // Función para cancelar la edición de la categoría
-  const cancelarEdicion = () => {
-    setMostrarModal(false);
+  const iconoEstilo = {
+    marginRight: '10px' // Ajusta el valor según sea necesario
   };
 
   return (
-    <div className="container mt-5">
-      <h1 className='mb-4 ' style={{ backgroundColor: 'Gray' }}>CRUD de Categorías</h1>
-      <form onSubmit={(e) => {
-        e.preventDefault();
-        crearCategoria();
-      }}>
-        <label htmlFor='nombre' className="form-label">
-          Nombre:
-          <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} />
-        </label>
-        <button type="submit" className='btn btn-dark'>Crear Categoría</button>
-      </form>
-      <h2>Categorías</h2>
-      <table className='table table-dark table-striped table-bordered'>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {categorias.map(categoria => (
-            <tr key={categoria.id}>
-              <td>{categoria.id}</td>
-              <td>{categoria.nombre}</td>
-              <td>
-                <button onClick={() => eliminarCategoria(categoria.id)} className='btn btn-danger'>Eliminar</button>
-                <button onClick={() => modificarCategoria(categoria)} className='btn btn-primary'>Modificar</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {/* Modal para editar categoría */}
-      {mostrarModal && (
-        <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Editar Categoría</h5>
-                <button type="button" className="close" onClick={cancelarEdicion}>
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div className="modal-body">
-                <label htmlFor='nombre' className="form-label">
-                  Nombre:
-                  <input type="text" value={nuevoNombreCategoria} onChange={(e) => setNuevoNombreCategoria(e.target.value)} className="form-control" />
-                </label>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-primary" onClick={() => guardarCambios(categoriaSeleccionada.id)}>Guardar Cambios</button>
-                <button type="button" className="btn btn-secondary" onClick={cancelarEdicion}>Cancelar</button>
-              </div>
-            </div>
+    <>
+      <div className="containter">
+        <div className="p-1 ps-4">
+          <h1>Listado de categorias</h1>
+        </div>
+        <div className="col-12 p-3 ">
+          <table className="table table-secondary col-8">
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {categorias.map((categorias) => (
+                <tr className="table-secondary" key={categorias.id}>
+                  <td>{categorias.id}</td>
+                  <td>{categorias.nombre}</td>
+                  <td>
+                    <span
+                      style={iconoEstilo}
+                      onClick={() => handleEditarCategoria(categorias)}
+                    >
+                      <FontAwesomeIcon icon={faEdit} />
+                    </span>
+                    <span onClick={() => deleteCategoria(categorias.id)}>
+                      <FontAwesomeIcon icon={faTrash} />
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="text-end">
+            <button
+              type="submit"
+              className="btn btn-primary m-2"
+              onClick={handleShow}
+            >
+              {" "}
+              Crear categoria
+            </button>
           </div>
         </div>
-      )}
-    </div>
+      </div>
+      <ModalCategoria
+        show={show}
+        handleClose={() => {
+          setShow(false);
+          setCategoriaSeleccionada(null);
+        }}
+        actualizarCategorias={actualizarCategorias}
+        categoria={categoriaSeleccionada}
+        isEdit={isEdit}
+      />
+    </>
   );
-}
-
-export default ListarCategorias;
+};
