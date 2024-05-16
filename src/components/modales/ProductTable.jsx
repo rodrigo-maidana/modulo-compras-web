@@ -1,6 +1,8 @@
 import React, { useMemo, useEffect, useState } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
 import axios from "axios";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const ProductTable = () => {
   const [data, setData] = useState([]);
@@ -97,43 +99,75 @@ export const ProductTable = () => {
 
   const totalPaginas = pageOptions.length;
 
+  const iconoEstilo = {
+    marginRight: '10px' // Ajusta el valor según sea necesario
+  };
+
   return (
     <div className="container mt-5">
+      <div className="mb-4">
+        <h1>Listado de Algo</h1>
+      </div>
       <div className="row justify-content-center">
-        <div className="col-md-8">
+        <div className="col-md-12">
           <div className="text-center">
-            <input
-              type="text"
-              className="form-control mb-4"
-              value={filter}
-              onChange={handleFilterChange}
-              placeholder="Buscar"
-            />
+            <div className="text-center d-flex">
+              <input
+                type="text"
+                className="form-control mb-4"
+                value={filter}
+                onChange={handleFilterChange}
+                placeholder="Buscar"
+              />
+
+              {/* Botón de crear */}
+              <div className="text-right mx-4">
+                <button className="btn btn-primary px-5">Crear</button>
+                {/*Añadirle utilidad*/}
+              </div>
+
+            </div>
             <table {...getTableProps()} className="table table-bordered table-hover">
               <thead className="thead-dark">
                 {headerGroups.map((headerGroup) => (
-                  <tr {...headerGroup.getHeaderGroupProps()}>
+                  <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
                     {headerGroup.headers.map((column) => (
-                      <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+                      <th key={column.id} {...column.getHeaderProps()}>
+                        {column.render("Header")}
+                      </th>
                     ))}
-                    <th>Seleccione para Agregar</th> {/* New column */}
+                    <th>Acciones</th> {/* New column */}
                   </tr>
                 ))}
               </thead>
               <tbody {...getTableBodyProps()}>
-                {page.map((row) => {
+                {page.map((row, index) => {
                   prepareRow(row);
                   return (
-                    <tr {...row.getRowProps()}>
+                    <tr key={row.id} {...row.getRowProps()}>
                       {row.cells.map((cell) => {
                         return (
-                          <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                          <td key={cell.column.id} {...cell.getCellProps()}>
+                            {cell.render("Cell")}
+                          </td>
                         );
                       })}
                       <td>
-                        <input type="checkbox" />
-                      </td>{" "}
-                      {/* New column */}
+                        <span
+                          style={iconoEstilo}
+                        //Añadir Funcion
+                        >
+                          <FontAwesomeIcon icon={faEdit} />
+                        </span>
+
+                        <span
+                          style={iconoEstilo}
+                        //Añadir Funcion
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                        </span>
+                      </td>
+
                     </tr>
                   );
                 })}
@@ -151,7 +185,18 @@ export const ProductTable = () => {
                       onClick={() => handlePageChange(1)}
                       disabled={!canPreviousPage}
                     >
-                      {"Primera página"}
+                      {"<<"}
+                    </button>
+                  </li>
+                  <li
+                    className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                    >
+                      {"<"}
                     </button>
                   </li>
                   {currentPage > 1 && (
@@ -178,6 +223,17 @@ export const ProductTable = () => {
                     </li>
                   )}
                   <li
+                    className={`page-item ${currentPage === totalPaginas ? "disabled" : ""}`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === totalPaginas}
+                    >
+                      {">"}
+                    </button>
+                  </li>
+                  <li
                     className={`page-item ${!canNextPage ? "disabled" : ""}`}
                   >
                     <button
@@ -185,21 +241,16 @@ export const ProductTable = () => {
                       onClick={() => handlePageChange(totalPaginas)}
                       disabled={!canNextPage}
                     >
-                      {"Última página"}
+                      {">>"}
                     </button>
                   </li>
                 </ul>
               </nav>
             </div>
-            <span className="pagination-info">
-              Página{" "}
-              <strong>
-                {pageIndex + 1} de {pageOptions.length}
-              </strong>{" "}
-            </span>
           </div>
         </div>
       </div>
     </div>
   );
+
 };
