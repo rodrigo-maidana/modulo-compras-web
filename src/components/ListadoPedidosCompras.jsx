@@ -4,19 +4,24 @@ import ModalPedidosDetalles from "./ModalPedidosDetalles";
 
 export const ListadoPedidosCompras = () => {
   const [pedidoCompras, setPedidoCompras] = useState([]);
-
-  const [showModal, setShowModal] = useState(false);
+  const [show, setShow] = useState(false);
   const [selectedPedidoId, setSelectedPedidoId] = useState(null);
+  const [edit, isEdit] = useState(false);
 
-  const handleOpenModal = (id) => {
+  const handleEditarPedido = (id) => {
     setSelectedPedidoId(id);
-    setShowModal(true);
+    setShow(true);
+  };
+
+  const handleShow = () => {
+    setShow(true);
   };
 
   const handleCloseModal = () => {
-    setShowModal(false);
+    setShow(false);
     setSelectedPedidoId(null);
   };
+
   const fetchCargarPedidos = () => {
     axios
       .get("https://api.rodrigomaidana.com:8080/pedidoscompra")
@@ -28,18 +33,16 @@ export const ListadoPedidosCompras = () => {
         console.log("el error es: ", error);
       });
   };
+
   useEffect(() => {
     fetchCargarPedidos();
   }, []);
 
   const formatearFecha = (fecha) => {
-    // Crear un objeto Date a partir de la fecha de emisión
     const fechaEmision = new Date(fecha);
-    // Obtener los componentes de la fecha (año, mes y día)
     const año = fechaEmision.getFullYear();
-    const mes = fechaEmision.getMonth() + 1; // Sumar 1 porque los meses van de 0 a 11
+    const mes = fechaEmision.getMonth() + 1;
     const dia = fechaEmision.getDate();
-    // Formatear la fecha en el formato deseado
     return `${año}-${dia < 10 ? "0" + dia : dia}-${mes < 10 ? "0" + mes : mes}`;
   };
 
@@ -56,8 +59,15 @@ export const ListadoPedidosCompras = () => {
 
     fetchCargarPedidos();
   };
+
+  const handleSave = (updatedDetalles) => {
+    // Aquí puedes manejar los detalles actualizados si es necesario
+    console.log("Detalles actualizados: ", updatedDetalles);
+    fetchCargarPedidos(); // Volver a cargar los pedidos si es necesario
+  };
+
   return (
-    <div className="containter">
+    <div className="container mx-5">
       <div className="p-1 ps-4">
         <h1>Listado de pedidos de compras</h1>
       </div>
@@ -80,7 +90,7 @@ export const ListadoPedidosCompras = () => {
                 <td>
                   <button
                     className="btn btn-info m-2"
-                    onClick={() => handleOpenModal(pedido.id)}
+                    onClick={() => handleEditarPedido(pedido.id)}
                   >
                     Ver detalles
                   </button>
@@ -95,12 +105,24 @@ export const ListadoPedidosCompras = () => {
             ))}
           </tbody>
         </table>
+        <div className="text-end">
+          <button
+            className="btn btn-primary"
+            type="submit"
+            onClick={handleShow}
+          >
+            Crear pedido de compra
+          </button>
+        </div>
       </div>
       <ModalPedidosDetalles
         id={selectedPedidoId}
-        show={showModal}
-        onHide={handleCloseModal}
+        show={show}
+        handleClose={handleCloseModal}
+        onSave={handleSave} // Pasar la función de guardar
       />
     </div>
   );
 };
+
+export default ListadoPedidosCompras;
