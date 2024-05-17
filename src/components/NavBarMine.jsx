@@ -1,17 +1,12 @@
-import React from "react";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
+import React, { useContext } from "react";
+import { Container, Nav, Navbar } from "react-bootstrap";
+import { AuthContext } from "./AuthContext";
 
 export const NavBarMine = () => {
+  const { logout } = useContext(AuthContext);
+
   return (
-    <Navbar
-      bg="dark"
-      data-bs-theme="dark"
-      expand="lg"
-      className="bg-body-tertiary"
-    >
+    <Navbar bg="dark" expand="lg" className="bg-body-tertiary">
       <Container>
         <Navbar.Brand href="/">Modulo compras</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -22,7 +17,9 @@ export const NavBarMine = () => {
             <Nav.Link href="/categorias">Categorias</Nav.Link>
             <Nav.Link href="/productos">Productos</Nav.Link>
             <Nav.Link href="/pedidos">Pedidos</Nav.Link>
-            <button>Salir</button>
+            <button onClick={logout} className="btn btn-danger">
+              Salir
+            </button>
           </Nav>
         </Navbar.Collapse>
       </Container>
