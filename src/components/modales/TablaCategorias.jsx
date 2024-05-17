@@ -127,7 +127,7 @@ export const TablaCategorias = ({
                       <th
                         key={column.id}
                         {...column.getHeaderProps()}
-                        className="text-center"
+                        className="text-center align-middle"
                       >
                         {column.render("Header")}
                       </th>
@@ -144,7 +144,7 @@ export const TablaCategorias = ({
                         <td
                           key={cell.column.id}
                           {...cell.getCellProps()}
-                          className="text-center"
+                          className="text-center align-middle"
                         >
                           {cell.render("Cell")}
                         </td>

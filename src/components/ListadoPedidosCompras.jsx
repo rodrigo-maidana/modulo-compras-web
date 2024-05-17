@@ -90,22 +90,20 @@ export const ListadoPedidosCompras = () => {
 
   return (
     <>
-      <div className="container mx-5">
-        <TabalPedidoCompra
-          pedidos={pedidoCompras}
-          deletePedido={deletePedido}
-          handleEditarPedido={handleEditarPedido}
-          handleCrearPedido={handleCrearPedido}
-          formatearFecha={formatearFecha}
-        />
+      <TabalPedidoCompra
+        pedidos={pedidoCompras}
+        deletePedido={deletePedido}
+        handleEditarPedido={handleEditarPedido}
+        handleCrearPedido={handleCrearPedido}
+        formatearFecha={formatearFecha}
+      />
 
-        <ModalPedidosDetalles
-          id={selectedPedidoId}
-          show={show}
-          handleClose={handleCloseModal}
-          onSave={handleSave}
-        />
-      </div>
+      <ModalPedidosDetalles
+        id={selectedPedidoId}
+        show={show}
+        handleClose={handleCloseModal}
+        onSave={handleSave}
+      />
     </>
   );
 };

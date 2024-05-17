@@ -158,8 +158,7 @@ export const TablaProductos = ({
                         <td
                           key={cell.column.id}
                           {...cell.getCellProps()}
-                          className="text-center"
-                        >
+                          className="text-center align-middle">
                           {cell.render("Cell")}
                         </td>
                       ))}

@@ -129,7 +129,9 @@ export const TabalPedidoCompra = ({
                 {page.map((row) => {
                   prepareRow(row);
                   return (
-                    <tr key={row.id} {...row.getRowProps()}>
+                    <tr key={row.id} {...row.getRowProps()}
+
+                      className="text-center align-middle">
                       {row.cells.map((cell) => (
                         <td key={cell.column.id} {...cell.getCellProps()} className="text-center">
                           {cell.render("Cell")}
@@ -144,6 +146,11 @@ export const TabalPedidoCompra = ({
               <nav>
                 <ul className="pagination">
                   <li className={`page-item ${!canPreviousPage ? "disabled" : ""}`}>
+                  <li
+                    className={`page-item ${!canPreviousPage ? "disabled" : ""
+                      }`}
+                  >
+
                     <button
                       className="page-link"
                       onClick={() => handlePageChange(1)}
@@ -164,7 +171,12 @@ export const TabalPedidoCompra = ({
                   {Array.from({ length: endPage - startPage }, (_, i) => startPage + i).map((pageNumber) => (
                     <li
                       key={pageNumber}
+
                       className={`page-item ${pageNumber === pageIndex ? "active" : ""}`}
+
+                      className={`page-item ${pageNumber === pageIndex ? "active" : ""
+                        }`}
+
                     >
                       <button
                         className="page-link"
@@ -174,7 +186,13 @@ export const TabalPedidoCompra = ({
                       </button>
                     </li>
                   ))}
+
                   <li className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""}`}>
+
+                  <li
+                    className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""
+                      }`}
+                  >
                     <button
                       className="page-link"
                       onClick={() => nextPage()}

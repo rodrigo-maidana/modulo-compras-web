@@ -130,6 +130,10 @@ export const TablaProveedores = ({
                     <tr key={row.id} {...row.getRowProps()}>
                       {row.cells.map((cell) => (
                         <td key={cell.column.id} {...cell.getCellProps()} className="text-center">
+                        <td
+                          key={cell.column.id}
+                          {...cell.getCellProps()}
+                          className="text-center align-middle">
                           {cell.render("Cell")}
                         </td>
                       ))}
@@ -142,6 +146,10 @@ export const TablaProveedores = ({
               <nav>
                 <ul className="pagination">
                   <li className={`page-item ${!canPreviousPage ? "disabled" : ""}`}>
+                  <li
+                    className={`page-item ${!canPreviousPage ? "disabled" : ""
+                      }`}
+                  >
                     <button
                       className="page-link"
                       onClick={() => handlePageChange(1)}
@@ -163,6 +171,8 @@ export const TablaProveedores = ({
                     <li
                       key={pageNumber}
                       className={`page-item ${pageNumber === pageIndex ? "active" : ""}`}
+                      className={`page-item ${pageNumber === pageIndex ? "active" : ""
+                        }`}
                     >
                       <button
                         className="page-link"
@@ -173,6 +183,10 @@ export const TablaProveedores = ({
                     </li>
                   ))}
                   <li className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""}`}>
+                  <li
+                    className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""
+                      }`}
+                  >
                     <button
                       className="page-link"
                       onClick={() => nextPage()}
