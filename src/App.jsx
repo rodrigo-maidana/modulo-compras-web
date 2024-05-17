@@ -1,21 +1,20 @@
-//aca deben estar todo lq esta en el main.jsx xd
-//import { FormProductos } from "./components/FormProductos.jsx";
-import { ListadoProveedores } from "./components/ListadoProveedores.jsx";
-import { NavBarMine } from "./components/NavBarMine.jsx";
-import { ListadoPedidosCompras } from "./components/ListadoPedidosCompras.jsx";
-import { ListarDepositos } from "./components/ListarDepositos.jsx";
-import { ListarProductos } from "./components/ListarProductos.jsx";
-import { ListarCategorias } from "./components/ListarCategorias.jsx";
+import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { ProductTable } from "./components/modales/ProductTable.jsx";
-//a
+import { ListadoProveedores } from "./components/ListadoProveedores";
+import { NavBarMine } from "./components/NavBarMine";
+import { ListadoPedidosCompras } from "./components/ListadoPedidosCompras";
+import { ListarDepositos } from "./components/ListarDepositos";
+import { ListarProductos } from "./components/ListarProductos";
+import { ListarCategorias } from "./components/ListarCategorias";
+import AuthTabs from "./components/AuthTabs"; // Importar el nuevo componente
+
 function App() {
   return (
     <>
       <Router>
         <NavBarMine />
         <Routes>
-          <Route path="/" element={<ProductTable />} />
+          <Route path="/" element={<AuthTabs />} />
           <Route path="/proveedores" element={<ListadoProveedores />} />
           <Route path="/depositos" element={<ListarDepositos />} />
           <Route path="/categorias" element={<ListarCategorias />} />

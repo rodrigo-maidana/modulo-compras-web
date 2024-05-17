@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ModalPedidosDetalles from "./ModalPedidosDetalles";
+import axiosInstance from "./axiosInstance";
 
 export const ListadoPedidosCompras = () => {
   const [pedidoCompras, setPedidoCompras] = useState([]);
@@ -23,7 +24,7 @@ export const ListadoPedidosCompras = () => {
   };
 
   const fetchCargarPedidos = () => {
-    axios
+    axiosInstance
       .get("https://api.rodrigomaidana.com:8080/pedidoscompra")
       .then((response) => {
         setPedidoCompras(response.data);
@@ -49,7 +50,7 @@ export const ListadoPedidosCompras = () => {
   const deletePedido = (pedido) => {
     pedido.estado = "Cancelado";
     console.log(pedido);
-    axios
+    axiosInstance
       .put(
         `https://api.rodrigomaidana.com:8080/pedidoscompra/${pedido.id}`,
         pedido

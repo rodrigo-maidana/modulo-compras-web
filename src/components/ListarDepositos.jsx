@@ -4,6 +4,7 @@ import { ModalDeposito } from "./ModalDeposito";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { TablaDepositos } from "./modales/TablaDepositos"; // Importa TablaDepositos
+import axiosInstance from "./axiosInstance";
 
 export const ListarDepositos = () => {
   const [show, setShow] = useState(false);
@@ -18,7 +19,7 @@ export const ListarDepositos = () => {
   const [isEdit, setIsEdit] = useState(false);
 
   const fetchDepositos = () => {
-    axios
+    axiosInstance
       .get("https://api.rodrigomaidana.com:8080/depositos")
       .then((response) => {
         setDepositos(response.data);
@@ -29,7 +30,7 @@ export const ListarDepositos = () => {
   };
 
   const deleteDeposito = (idDeposito) => {
-    axios
+    axiosInstance
       .delete(`https://api.rodrigomaidana.com:8080/depositos/${idDeposito}`)
       .then(() => {
         // Actualizar la lista de depositos después de eliminar
