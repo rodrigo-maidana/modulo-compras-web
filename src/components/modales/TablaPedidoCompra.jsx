@@ -1,21 +1,26 @@
-// TablaCategorias.jsx
 import React, { useMemo, useState } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export const TablaCategorias = ({
-  categorias,
-  deleteCategoria,
-  handleEditarCategoria,
-  handleCrearCategoria,
+export const TabalPedidoCompra = ({
+  pedidos,
+  deletePedido,
+  handleEditarPedido,
+  handleCrearPedido,
+  formatearFecha,
 }) => {
   const [filter, setFilter] = useState("");
 
   const columns = useMemo(
     () => [
       { Header: "ID", accessor: "id" },
-      { Header: "Nombre", accessor: "nombre" },
+      {
+        Header: "Fecha",
+        accessor: "fechaEmision",
+        Cell: ({ value }) => formatearFecha(value),
+      },
+      { Header: "Estado", accessor: "estado" },
       {
         Header: "Acciones",
         accessor: "acciones",
@@ -23,13 +28,13 @@ export const TablaCategorias = ({
           <div className="d-flex justify-content-center">
             <button
               className="btn btn-lg mx-1"
-              onClick={() => handleEditarCategoria(row.original)}
+              onClick={() => handleEditarPedido(row.original.id)}
             >
               <FontAwesomeIcon icon={faEdit} />
             </button>
             <button
               className="btn btn-lg mx-1"
-              onClick={() => deleteCategoria(row.original.id)}
+              onClick={() => deletePedido(row.original)}
             >
               <FontAwesomeIcon icon={faTrash} />
             </button>
@@ -37,7 +42,7 @@ export const TablaCategorias = ({
         ),
       },
     ],
-    [handleEditarCategoria, deleteCategoria]
+    [handleEditarPedido, deletePedido, formatearFecha]
   );
 
   const {
@@ -59,7 +64,7 @@ export const TablaCategorias = ({
   } = useTable(
     {
       columns,
-      data: categorias,
+      data: pedidos,
       initialState: { pageIndex: 0 },
     },
     useGlobalFilter,
@@ -76,7 +81,7 @@ export const TablaCategorias = ({
     gotoPage(page - 1);
   };
 
-  if (!categorias.length)
+  if (!pedidos.length)
     return (
       <div className="text-center">
         <strong>Cargando...</strong>
@@ -88,7 +93,7 @@ export const TablaCategorias = ({
   return (
     <div className="container mt-5">
       <div className="mb-4">
-        <h1>Listado de Categorías</h1>
+        <h1>Listado de pedido de compra</h1>
       </div>
       <div className="row justify-content-center">
         <div className="col-md-12">
@@ -104,7 +109,7 @@ export const TablaCategorias = ({
               <div className="text-right mx-4">
                 <button
                   className="btn btn-primary px-5"
-                  onClick={handleCrearCategoria}
+                  onClick={handleCrearPedido}
                 >
                   Crear
                 </button>

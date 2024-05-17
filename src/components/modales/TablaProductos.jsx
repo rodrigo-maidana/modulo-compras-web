@@ -4,18 +4,32 @@ import { useTable, usePagination, useGlobalFilter } from "react-table";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export const TablaCategorias = ({
-  categorias,
-  deleteCategoria,
-  handleEditarCategoria,
-  handleCrearCategoria,
+export const TablaProductos = ({
+  productos,
+  deleteProducto,
+  handleEditarProducto,
+  handleCrearProducto,
 }) => {
   const [filter, setFilter] = useState("");
 
   const columns = useMemo(
     () => [
-      { Header: "ID", accessor: "id" },
-      { Header: "Nombre", accessor: "nombre" },
+      {
+        Header: "ID",
+        accessor: "id",
+      },
+      {
+        Header: "Marca",
+        accessor: "marca.nombre",
+      },
+      {
+        Header: "Categoría",
+        accessor: "categoria.nombre",
+      },
+      {
+        Header: "Descripción",
+        accessor: "descripcion",
+      },
       {
         Header: "Acciones",
         accessor: "acciones",
@@ -23,13 +37,13 @@ export const TablaCategorias = ({
           <div className="d-flex justify-content-center">
             <button
               className="btn btn-lg mx-1"
-              onClick={() => handleEditarCategoria(row.original)}
+              onClick={() => handleEditarProducto(row.original)}
             >
               <FontAwesomeIcon icon={faEdit} />
             </button>
             <button
               className="btn btn-lg mx-1"
-              onClick={() => deleteCategoria(row.original.id)}
+              onClick={() => deleteProducto(row.original.id)}
             >
               <FontAwesomeIcon icon={faTrash} />
             </button>
@@ -37,7 +51,7 @@ export const TablaCategorias = ({
         ),
       },
     ],
-    [handleEditarCategoria, deleteCategoria]
+    [handleEditarProducto, deleteProducto]
   );
 
   const {
@@ -59,7 +73,7 @@ export const TablaCategorias = ({
   } = useTable(
     {
       columns,
-      data: categorias,
+      data: productos,
       initialState: { pageIndex: 0 },
     },
     useGlobalFilter,
@@ -76,7 +90,7 @@ export const TablaCategorias = ({
     gotoPage(page - 1);
   };
 
-  if (!categorias.length)
+  if (!productos.length)
     return (
       <div className="text-center">
         <strong>Cargando...</strong>
@@ -88,7 +102,7 @@ export const TablaCategorias = ({
   return (
     <div className="container mt-5">
       <div className="mb-4">
-        <h1>Listado de Categorías</h1>
+        <h1>Listado de Productos</h1>
       </div>
       <div className="row justify-content-center">
         <div className="col-md-12">
@@ -104,7 +118,7 @@ export const TablaCategorias = ({
               <div className="text-right mx-4">
                 <button
                   className="btn btn-primary px-5"
-                  onClick={handleCrearCategoria}
+                  onClick={handleCrearProducto}
                 >
                   Crear
                 </button>

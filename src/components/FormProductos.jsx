@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-
+import axiosInstance from "./axiosInstance";
 export const FormProductos = ({
   producto,
   actualizarProductos,
@@ -27,10 +27,12 @@ export const FormProductos = ({
   }, [producto]);
 
   useEffect(() => {
-    axios.get("https://api.rodrigomaidana.com:8080/marcas").then((response) => {
-      setMarcas(response.data);
-    });
-    axios
+    axiosInstance
+      .get("https://api.rodrigomaidana.com:8080/marcas")
+      .then((response) => {
+        setMarcas(response.data);
+      });
+    axiosInstance
       .get("https://api.rodrigomaidana.com:8080/categorias")
       .then((response) => {
         setCategorias(response.data);
@@ -56,7 +58,7 @@ export const FormProductos = ({
   };
 
   const handleSubmitNew = (nuevoProducto) => {
-    axios
+    axiosInstance
       .post("https://api.rodrigomaidana.com:8080/productos", nuevoProducto, {
         headers: {
           "Content-Type": "application/json",
@@ -77,7 +79,7 @@ export const FormProductos = ({
   };
 
   const handleSubmitEdit = (nuevoProducto) => {
-    axios
+    axiosInstance
       .put(
         `https://api.rodrigomaidana.com:8080/productos/${producto.id}`,
         nuevoProducto,

@@ -17,7 +17,6 @@ export const NavBarMine = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/productTable">ProductTable</Nav.Link>
             <Nav.Link href="/proveedores">Proveedores</Nav.Link>
             <Nav.Link href="/depositos">Depositos</Nav.Link>
             <Nav.Link href="/categorias">Categorias</Nav.Link>

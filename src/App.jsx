@@ -16,7 +16,6 @@ function App() {
         <NavBarMine />
         <Routes>
           <Route path="/" element={<AuthTabs />} />
-          <Route path="/productTable" element={<ProductTable />} />
           <Route path="/proveedores" element={<ListadoProveedores />} />
           <Route path="/depositos" element={<ListarDepositos />} />
           <Route path="/categorias" element={<ListarCategorias />} />

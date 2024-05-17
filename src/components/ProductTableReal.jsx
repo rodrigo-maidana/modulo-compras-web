@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect, useState } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
 import axios from "axios";
-
+import axiosInstance from "./axiosInstance";
 export const ProductTableReal = ({ handleAgregarProducto }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +19,7 @@ export const ProductTableReal = ({ handleAgregarProducto }) => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
+        const response = await axiosInstance.get(
           "https://api.rodrigomaidana.com:8080/productos"
         );
         setData(response.data); // Asumiendo que la API devuelve un arreglo de productos
@@ -157,7 +157,7 @@ export const ProductTableReal = ({ handleAgregarProducto }) => {
       {/* Renderiza controles de paginación */}
       <div className="pagination">
         <button
-          className="btn btn-primary"
+          className="btn btn-primary "
           onClick={() => gotoPage(0)}
           disabled={!canPreviousPage}
         >
