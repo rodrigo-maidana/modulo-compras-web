@@ -72,14 +72,15 @@ export const TablaDepositos = ({ depositos, deleteDeposito, handleEditarDeposito
     };
 
     const handlePageChange = (page) => {
-        setCurrentPage(page);
         gotoPage(page - 1);
     };
 
     if (!depositos.length) return <div className="text-center"><strong>Cargando...</strong></div>;
 
     const totalPaginas = pageOptions.length;
-    const iconoEstilo = { marginRight: '0px' };
+    const maxPagesToShow = 10;
+    const startPage = Math.floor(pageIndex / maxPagesToShow) * maxPagesToShow;
+    const endPage = Math.min(startPage + maxPagesToShow, totalPaginas);
 
     return (
         <div className="container mt-5">
@@ -88,7 +89,7 @@ export const TablaDepositos = ({ depositos, deleteDeposito, handleEditarDeposito
             </div>
             <div className="row justify-content-center">
                 <div className="col-md-12">
-                    <div className="text-center align-middle">
+                    <div className="text-center">
                         <div className="text-center d-flex">
                             <input
                                 type="text"
@@ -111,8 +112,7 @@ export const TablaDepositos = ({ depositos, deleteDeposito, handleEditarDeposito
                                 {headerGroups.map((headerGroup) => (
                                     <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
                                         {headerGroup.headers.map((column) => (
-                                            <th key={column.id} {...column.getHeaderProps()}
-                                                className="text-center align-middle">
+                                            <th key={column.id} {...column.getHeaderProps()}>
                                                 {column.render("Header")}
                                             </th>
                                         ))}
@@ -120,7 +120,6 @@ export const TablaDepositos = ({ depositos, deleteDeposito, handleEditarDeposito
                                 ))}
                             </thead>
                             <tbody {...getTableBodyProps()}>
-
                                 {page.map((row) => {
                                     prepareRow(row);
                                     return (
@@ -148,43 +147,34 @@ export const TablaDepositos = ({ depositos, deleteDeposito, handleEditarDeposito
                                             {"<<"}
                                         </button>
                                     </li>
-                                    <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                                    <li className={`page-item ${pageIndex === 0 ? "disabled" : ""}`}>
                                         <button
                                             className="page-link"
-                                            onClick={() => handlePageChange(currentPage - 1)}
-                                            disabled={currentPage === 1}
+                                            onClick={() => previousPage()}
+                                            disabled={pageIndex === 0}
                                         >
                                             {"<"}
                                         </button>
                                     </li>
-                                    {currentPage > 1 && (
-                                        <li className="page-item">
+                                    {Array.from({ length: endPage - startPage }, (_, i) => startPage + i).map((pageNumber) => (
+                                        <li
+                                            key={pageNumber}
+                                            className={`page-item ${pageNumber === pageIndex ? "active" : ""
+                                                }`}
+                                        >
                                             <button
                                                 className="page-link"
-                                                onClick={() => handlePageChange(currentPage - 1)}
+                                                onClick={() => handlePageChange(pageNumber + 1)}
                                             >
-                                                {currentPage - 1}
+                                                {pageNumber + 1}
                                             </button>
                                         </li>
-                                    )}
-                                    <li className="page-item active">
-                                        <button className="page-link">{currentPage}</button>
-                                    </li>
-                                    {currentPage < totalPaginas && (
-                                        <li className="page-item">
-                                            <button
-                                                className="page-link"
-                                                onClick={() => handlePageChange(currentPage + 1)}
-                                            >
-                                                {currentPage + 1}
-                                            </button>
-                                        </li>
-                                    )}
-                                    <li className={`page-item ${currentPage === totalPaginas ? "disabled" : ""}`}>
+                                    ))}
+                                    <li className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""}`}>
                                         <button
                                             className="page-link"
-                                            onClick={() => handlePageChange(currentPage + 1)}
-                                            disabled={currentPage === totalPaginas}
+                                            onClick={() => nextPage()}
+                                            disabled={pageIndex === pageCount - 1}
                                         >
                                             {">"}
                                         </button>
@@ -192,7 +182,7 @@ export const TablaDepositos = ({ depositos, deleteDeposito, handleEditarDeposito
                                     <li className={`page-item ${!canNextPage ? "disabled" : ""}`}>
                                         <button
                                             className="page-link"
-                                            onClick={() => handlePageChange(totalPaginas)}
+                                            onClick={() => handlePageChange(pageCount)}
                                             disabled={!canNextPage}
                                         >
                                             {">>"}

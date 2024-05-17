@@ -98,6 +98,9 @@ export const TablaProductos = ({
     );
 
   const totalPaginas = pageOptions.length;
+  const maxPagesToShow = 10;
+  const startPage = Math.floor(pageIndex / maxPagesToShow) * maxPagesToShow;
+  const endPage = Math.min(startPage + maxPagesToShow, totalPaginas);
 
   return (
     <div className="container mt-5">
@@ -190,7 +193,7 @@ export const TablaProductos = ({
                       {"<"}
                     </button>
                   </li>
-                  {pageOptions.map((pageNumber) => (
+                  {Array.from({ length: endPage - startPage }, (_, i) => startPage + i).map((pageNumber) => (
                     <li
                       key={pageNumber}
                       className={`page-item ${pageNumber === pageIndex ? "active" : ""
