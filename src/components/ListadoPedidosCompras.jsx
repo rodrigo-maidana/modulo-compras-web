@@ -1,26 +1,40 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import ModalPedidosDetalles from "./ModalPedidosDetalles";
 import axiosInstance from "./axiosInstance";
+import { TabalPedidoCompra } from "./modales/TablaPedidoCompra";
 
 export const ListadoPedidosCompras = () => {
   const [pedidoCompras, setPedidoCompras] = useState([]);
   const [show, setShow] = useState(false);
   const [selectedPedidoId, setSelectedPedidoId] = useState(null);
-  const [edit, isEdit] = useState(false);
+  const [edit, setEdit] = useState(false);
+
+  const handleCrearPedido = () => {
+    setShow(true);
+    setEdit(false);
+    setSelectedPedidoId(null);
+  };
 
   const handleEditarPedido = (id) => {
     setSelectedPedidoId(id);
     setShow(true);
   };
 
-  const handleShow = () => {
-    setShow(true);
-  };
-
   const handleCloseModal = () => {
     setShow(false);
     setSelectedPedidoId(null);
+  };
+
+  const obtenerPedido = async (id) => {
+    try {
+      const response = await axiosInstance.get(
+        `https://api.rodrigomaidana.com:8080/pedidoscompra/${id}`
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (e) {
+      console.log("error al querer obtener un pedido", e);
+    }
   };
 
   const fetchCargarPedidos = () => {
@@ -47,82 +61,52 @@ export const ListadoPedidosCompras = () => {
     return `${año}-${dia < 10 ? "0" + dia : dia}-${mes < 10 ? "0" + mes : mes}`;
   };
 
-  const deletePedido = (pedido) => {
-    pedido.estado = "Cancelado";
-    console.log(pedido);
-    axiosInstance
-      .put(
-        `https://api.rodrigomaidana.com:8080/pedidoscompra/${pedido.id}`,
-        pedido
-      )
-      .then(console.log("editado"))
-      .catch((error) => console.log("error al editar ", error));
-
-    fetchCargarPedidos();
+  const deletePedido = async (pedido) => {
+    if (!pedido || !pedido.id) {
+      console.log("El pedido no tiene un id válido:", pedido);
+      return;
+    }
+    const pedidoObtenido = await obtenerPedido(pedido.id);
+    if (pedidoObtenido) {
+      pedidoObtenido.estado = "Cancelado";
+      console.log(pedidoObtenido.estado);
+      try {
+        await axiosInstance.put(
+          `https://api.rodrigomaidana.com:8080/pedidoscompra/${pedido.id}`,
+          pedidoObtenido
+        );
+        console.log("editado");
+        fetchCargarPedidos();
+      } catch (error) {
+        console.log("error al editar ", error);
+      }
+    }
   };
 
   const handleSave = (updatedDetalles) => {
-    // Aquí puedes manejar los detalles actualizados si es necesario
     console.log("Detalles actualizados: ", updatedDetalles);
     fetchCargarPedidos(); // Volver a cargar los pedidos si es necesario
   };
 
   return (
-    <div className="container mx-5">
-      <div className="p-1 ps-4">
-        <h1>Listado de pedidos de compras</h1>
+    <>
+      <div className="container mx-5">
+        <TabalPedidoCompra
+          pedidos={pedidoCompras}
+          deletePedido={deletePedido}
+          handleEditarPedido={handleEditarPedido}
+          handleCrearPedido={handleCrearPedido}
+          formatearFecha={formatearFecha}
+        />
+
+        <ModalPedidosDetalles
+          id={selectedPedidoId}
+          show={show}
+          handleClose={handleCloseModal}
+          onSave={handleSave}
+        />
       </div>
-      <div className="col-12 p-3 px-5">
-        <table className="table table-secondary col-6">
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Fecha</th>
-              <th>Estado</th>
-              <th>Opciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pedidoCompras.map((pedido) => (
-              <tr className="table-secondary" key={pedido.id}>
-                <td>{pedido.id}</td>
-                <td>{formatearFecha(pedido.fechaEmision)}</td>
-                <td>{pedido.estado}</td>
-                <td>
-                  <button
-                    className="btn btn-info m-2"
-                    onClick={() => handleEditarPedido(pedido.id)}
-                  >
-                    Ver detalles
-                  </button>
-                  <input
-                    className="btn btn-danger m-2"
-                    type="submit"
-                    onClick={() => deletePedido(pedido)}
-                    value="eliminar"
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="text-end">
-          <button
-            className="btn btn-primary"
-            type="submit"
-            onClick={handleShow}
-          >
-            Crear pedido de compra
-          </button>
-        </div>
-      </div>
-      <ModalPedidosDetalles
-        id={selectedPedidoId}
-        show={show}
-        handleClose={handleCloseModal}
-        onSave={handleSave} // Pasar la función de guardar
-      />
-    </div>
+    </>
   );
 };
 

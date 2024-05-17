@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 
 export const FormCategorias = ({
   categoria,
@@ -42,7 +42,7 @@ export const FormCategorias = ({
   };
 
   const handleSubmitNew = (nuevaCategoria) => {
-    axios
+    axiosInstance
       .post("https://api.rodrigomaidana.com:8080/categorias", nuevaCategoria)
       .then((response) => {
         console.log(response.data);
@@ -60,7 +60,7 @@ export const FormCategorias = ({
   const handleSubmitEdit = (nuevaCategoria) => {
     console.log("edita");
     console.log(nuevaCategoria);
-    axios
+    axiosInstance
       .put(
         `https://api.rodrigomaidana.com:8080/categorias/${categoria.id}`,
         nuevaCategoria

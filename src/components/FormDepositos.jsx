@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 
 export const FormDepositos = ({
   deposito,
@@ -10,7 +10,7 @@ export const FormDepositos = ({
   const [formState, setFormState] = useState({
     nombre: "",
     direccion: "",
-    contacto:""
+    contacto: ""
   });
 
   useEffect(() => {
@@ -37,43 +37,18 @@ export const FormDepositos = ({
     if (isEdit) {
       console.log(isEdit);
       handleSubmitEdit(nuevoDeposito);
-      //return
     } else {
       console.log(isEdit);
       handleSubmitNew(nuevoDeposito);
-      //return
     }
   };
 
   const handleSubmitNew = (nuevoDeposito) => {
-    axios
-      .post("https://api.rodrigomaidana.com:8080/depositos", nuevoDeposito)
+    axiosInstance
+      .post("/depositos", nuevoDeposito)
       .then((response) => {
         console.log(response.data);
-        actualizarDepositos();
-        handleClose();
-        setFormState({
-          nombre: "",
-          direccion:"",
-          contacto:""
-        });
-      })
-      .catch((error) => {
-        console.error("Error al crear la deposito:", error);
-      });
-  };
-
-  const handleSubmitEdit = (nuevoDeposito) => {
-    console.log("edita");
-    console.log(nuevoDeposito);
-    axios
-      .put(
-        `https://api.rodrigomaidana.com:8080/depositos/${deposito.id}`,
-        nuevoDeposito
-      )
-      .then((response) => {
-        console.log(response.data);
-        actualizarDepositos();
+        actualizarDepositos(); // Actualizar la lista de depósitos después de crear uno nuevo
         handleClose();
         setFormState({
           nombre: "",
@@ -82,9 +57,36 @@ export const FormDepositos = ({
         });
       })
       .catch((error) => {
-        console.error("Error al editar la deposito:", error);
+        if (error.response && error.response.status === 403) {
+          console.error("Error 403: Forbidden. Asegúrate de que tienes permisos para crear este recurso.");
+        } else {
+          console.error("Error al crear el depósito:", error);
+        }
       });
   };
+
+  const handleSubmitEdit = (nuevoDeposito) => {
+    axiosInstance
+      .put(`/depositos/${deposito.id}`, nuevoDeposito)
+      .then((response) => {
+        console.log(response.data);
+        actualizarDepositos(); // Actualizar la lista de depósitos después de editar uno
+        handleClose();
+        setFormState({
+          nombre: "",
+          direccion: "",
+          contacto: ""
+        });
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 403) {
+          console.error("Error 403: Forbidden. Asegúrate de que tienes permisos para editar este recurso.");
+        } else {
+          console.error("Error al editar el depósito:", error);
+        }
+      });
+  };
+
   const handleChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
@@ -99,16 +101,17 @@ export const FormDepositos = ({
     }
     return true;
   };
+
   return (
     <>
       <div className="container p-2">
         <form className="row g-3 mx-auto border border-2 py-3 px-5 rounded col-8">
           <div>
-            <h3>Datos de la deposito</h3>
+            <h3>Datos de la depósito</h3>
           </div>
           <div className="col-12-md-6 px-4">
             <label className="col-6 pe-4" htmlFor="name">
-              Nombre de la deposito
+              Nombre de la depósito
             </label>
             <input
               className="col-6"
@@ -117,12 +120,12 @@ export const FormDepositos = ({
               value={formState.nombre}
               id="name"
               onChange={handleChange}
-              placeholder="Ejemplo: Suc. Encarnacion 1"
+              placeholder="Ejemplo: Suc. Encarnación 1"
             ></input>
           </div>
           <div className="col-12-md-6 px-4">
             <label className="col-6 pe-4" htmlFor="direccion">
-              Direccion del deposito
+              Dirección de la depósito
             </label>
             <input
               className="col-6"
@@ -131,12 +134,12 @@ export const FormDepositos = ({
               value={formState.direccion}
               id="direccion"
               onChange={handleChange}
-              placeholder="Ejemplo: Juan L. Mallorquin"
+              placeholder="Ejemplo: Juan L. Mallorquín"
             ></input>
           </div>
           <div className="col-12-md-6 px-4">
             <label className="col-6 pe-4" htmlFor="contacto">
-              Contacto del deposito
+              Contacto de la depósito
             </label>
             <input
               className="col-6"

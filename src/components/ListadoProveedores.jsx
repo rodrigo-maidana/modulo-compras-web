@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ModalProveedor } from "./ModalProveedor";
 import axiosInstance from "./axiosInstance";
+import { TablaProveedores } from "./modales/TablaProveedores";
 export const ListadoProveedores = () => {
   //state para el modal
   const [show, setShow] = useState(false);
@@ -14,6 +15,12 @@ export const ListadoProveedores = () => {
   const [proveedorSeleccionado, setProveedorSeleccionado] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
 
+  const handleCrearProveedor = () => {
+    console.log("llego al handleCrearProveedor");
+    setShow(true);
+    setIsEdit(false);
+    setProveedorSeleccionado(null);
+  };
   const fetchProveedores = () => {
     axiosInstance
       .get("https://api.rodrigomaidana.com:8080/proveedores")
@@ -54,6 +61,7 @@ export const ListadoProveedores = () => {
 
   return (
     <>
+      {/* 
       <div className="containter">
         <div className="p-1 ps-4">
           <h1>Listado de proveedores</h1>
@@ -111,6 +119,13 @@ export const ListadoProveedores = () => {
           </div>
         </div>
       </div>
+      */}
+      <TablaProveedores
+        proveedores={proveedores}
+        deleteProveedor={deleteProveedor}
+        handleEditarProveedor={handleEditarProveedor}
+        handleCrearProveedor={handleCrearProveedor}
+      />
       <ModalProveedor
         show={show}
         handleClose={() => {

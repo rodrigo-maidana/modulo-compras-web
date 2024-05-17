@@ -4,6 +4,8 @@ import { ModalProducto } from "./ModalProductos";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 import axiosInstance from "./axiosInstance";
+import { TablaProductos } from "./modales/TablaProductos";
+
 export const ListarProductos = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -19,6 +21,11 @@ export const ListarProductos = () => {
 
   const productosPorPagina = 15;
 
+  const handleCrearProducto = () => {
+    setShow(true);
+    setIsEdit(false);
+    productoSeleccionado(null);
+  };
   const fetchProductos = () => {
     axiosInstance
       .get("https://api.rodrigomaidana.com:8080/productos")
@@ -74,6 +81,7 @@ export const ListarProductos = () => {
 
   return (
     <>
+      {/*
       <div className="container">
         <div className="p-1 ps-4">
           <h1>Listado de productos</h1>
@@ -143,6 +151,13 @@ export const ListarProductos = () => {
           </div>
         </div>
       </div>
+ */}
+      <TablaProductos
+        productos={productos}
+        deleteProducto={deleteProducto}
+        handleEditarProducto={handleEditarProducto}
+        handleCrearProducto={handleCrearProducto}
+      />
       <ModalProducto
         show={show}
         handleClose={() => {

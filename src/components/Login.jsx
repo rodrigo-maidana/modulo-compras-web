@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { AuthContext } from "./AuthContext";
 
 export const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -15,13 +15,9 @@ export const Login = () => {
     try {
       const response = await axios.post(
         "https://api.rodrigomaidana.com:8080/auth/login",
-        {
-          username,
-          password,
-        }
+        { username, password }
       );
-      localStorage.setItem("authToken", response.data.token);
-      navigate("/categorias"); // Redirigir a la página principal después del inicio de sesión
+      login(response.data.token);
     } catch (err) {
       console.log(err);
       setError("Invalid credentials, please try again.");

@@ -1,30 +1,37 @@
+// ListarCategorias.jsx
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { ModalCategoria } from "./ModalCategoria";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 import axiosInstance from "./axiosInstance";
+import { ModalCategoria } from "./ModalCategoria";
+import { TablaCategorias } from "./modales/TablaCategorias";
+import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 
 export const ListarCategorias = () => {
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
+  const [categorias, setCategorias] = useState([]);
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null);
+  const [isEdit, setIsEdit] = useState(false);
+
+  const handleClose = () => {
+    setShow(false);
+    setCategoriaSeleccionada(null);
+  };
   const handleShow = () => {
     setShow(true);
     setIsEdit(false);
   };
 
-  const [categorias, setcategorias] = useState([]);
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null);
-  const [isEdit, setIsEdit] = useState(false);
-
   const fetchCategorias = () => {
     axiosInstance
       .get("/categorias")
       .then((response) => {
-        setcategorias(response.data);
+        setCategorias(response.data);
       })
       .catch((error) => {
-        console.log("error: ", error);
+        if (error.response && error.response.status === 403) {
+          console.error("Error 403: Forbidden. Asegúrate de que tienes permisos para acceder a este recurso.");
+        } else {
+          console.error("Error: ", error);
+        }
       });
   };
 
@@ -32,91 +39,49 @@ export const ListarCategorias = () => {
     axiosInstance
       .delete(`/categorias/${idCategoria}`)
       .then(() => {
-        // Actualizar la lista de categorias después de eliminar
         fetchCategorias();
       })
       .catch((error) => {
-        console.log("Error al eliminar la categoria:", error);
+        if (error.response && error.response.status === 403) {
+          console.error("Error 403: Forbidden. Asegúrate de que tienes permisos para eliminar este recurso.");
+        } else {
+          console.error("Error al eliminar el deposito:", error);
+        }
       });
-  };
-  // Función para cargar las categorías desde la API al cargar la página
-  useEffect(() => {
-    fetchCategorias();
-  }, []);
-
-  const actualizarCategorias = () => {
-    // Actualizar la lista de categorias después de agregar uno nuevo
-    console.log("llego");
-    fetchCategorias();
   };
 
   const handleEditarCategoria = (categoria) => {
-    console.log("categoria seleccionado: ", categoria);
     setCategoriaSeleccionada(categoria);
     setShow(true);
     setIsEdit(true);
   };
 
-  const iconoEstilo = {
-    marginRight: "10px", // Ajusta el valor según sea necesario
+  const handleCrearCategoria = () => {
+    setShow(true);
+    setIsEdit(false);
+    setCategoriaSeleccionada(null); // Resetea el depósito seleccionado para el formulario de creación
   };
+
+  useEffect(() => {
+    fetchCategorias();
+  }, []);
 
   return (
     <>
-      <div className="containter">
-        <div className="p-1 ps-4">
-          <h1>Listado de categorias</h1>
-        </div>
-        <div className="col-12 p-3 ">
-          <table className="table table-secondary col-8">
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Nombre</th>
-                <th>Opciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {categorias.map((categorias) => (
-                <tr className="table-secondary" key={categorias.id}>
-                  <td>{categorias.id}</td>
-                  <td>{categorias.nombre}</td>
-                  <td>
-                    <span
-                      style={iconoEstilo}
-                      onClick={() => handleEditarCategoria(categorias)}
-                    >
-                      <FontAwesomeIcon icon={faEdit} />
-                    </span>
-                    <span onClick={() => deleteCategoria(categorias.id)}>
-                      <FontAwesomeIcon icon={faTrash} />
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="text-end">
-            <button
-              type="submit"
-              className="btn btn-primary m-2"
-              onClick={handleShow}
-            >
-              {" "}
-              Crear categoria
-            </button>
-          </div>
-        </div>
-      </div>
+      <TablaCategorias
+        categorias={categorias}
+        deleteCategoria={deleteCategoria}
+        handleEditarCategoria={handleEditarCategoria}
+        handleCrearCategoria={handleCrearCategoria}
+        faTrash={faTrash}
+        faEdit={faEdit}
+      />
       <ModalCategoria
         show={show}
-        handleClose={() => {
-          setShow(false);
-          setCategoriaSeleccionada(null);
-        }}
-        actualizarCategorias={actualizarCategorias}
+        handleClose={handleClose}
         categoria={categoriaSeleccionada}
         isEdit={isEdit}
+        actualizarCategorias={fetchCategorias} // Pasar la función para actualizar la lista después de crear o editar
       />
     </>
   );

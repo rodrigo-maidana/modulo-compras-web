@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-
+import axiosInstance from "./axiosInstance";
 export const FormProveedores = ({
   proveedor,
   actualizarProveedores,
@@ -52,7 +52,7 @@ export const FormProveedores = ({
     }
   };
   const handleSubmitNew = (nuevoProveedor) => {
-    axios
+    axiosInstance
       .post("https://api.rodrigomaidana.com:8080/proveedores", nuevoProveedor)
       .then((response) => {
         console.log(response.data);
@@ -73,7 +73,7 @@ export const FormProveedores = ({
   const handleSubmitEdit = (nuevoProveedor) => {
     console.log("edita");
     console.log(nuevoProveedor);
-    axios
+    axiosInstance
       .put(
         `https://api.rodrigomaidana.com:8080/proveedores/${proveedor.id}`,
         nuevoProveedor
