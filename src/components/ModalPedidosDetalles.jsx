@@ -64,8 +64,25 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
     }
   }, [id]);
 
-  const handleSave = () => {
-    onSave(detalles);
+  const handleSave = async () => {
+    try {
+      console.log(detalles);
+      const updatedDetalles = detalles.map((detalle) => ({
+        id: detalle.id,
+        producto: detalle.producto,
+        cantidad: detalle.cantidad,
+      }));
+
+      await axiosInstance.put(
+        `https://api.rodrigomaidana.com:8080/pedidoscompra/${id}`,
+        { detalles: updatedDetalles }
+      );
+
+      console.log("Pedido actualizado:", updatedDetalles);
+      onSave(updatedDetalles);
+    } catch (error) {
+      console.error("Error al actualizar el pedido:", error);
+    }
     handleClose();
   };
 

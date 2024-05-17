@@ -1,5 +1,7 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const DetalleTabla = ({
   detalles,
@@ -12,7 +14,7 @@ const DetalleTabla = ({
   setNuevaCantidad,
 }) => {
   return (
-    <table className="table table-primary table-striped table-bordered text-center">
+    <table className="table table-light table-striped table-bordered text-center">
       <thead>
         <tr>
           <th>ID</th>
@@ -23,7 +25,6 @@ const DetalleTabla = ({
         </tr>
       </thead>
       <tbody>
-        {console.log(detalles)}
         {detalles.map((item) => (
           <tr key={item.id}>
             <td>{item.id}</td>
@@ -51,16 +52,16 @@ const DetalleTabla = ({
             </td>
             <td>
               <Button
-                variant="danger"
+                variant="secondary"
                 onClick={() => handleEliminarProducto(item.id)}
               >
-                Eliminar
+                <FontAwesomeIcon icon={faTrash} />
               </Button>{" "}
               <Button
-                variant="primary"
+                variant="secondary"
                 onClick={() => handleEditarCantidad(item)}
               >
-                Modificar
+                <FontAwesomeIcon icon={faEdit} />
               </Button>
             </td>
           </tr>
