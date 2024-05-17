@@ -1,0 +1,24 @@
+/* style.css */
+.btn-custom {
+    background-color: transparent;
+    border: 1px solid transparent;
+    /* Borde transparente en estado normal */
+    color: black;
+    transition: background-color 0s, color 0s, border 0s;
+    /* Añadimos transición suave */
+    margin: 0 5px;
+    padding: 10px 20px;
+    /* Tamaño del botón grande */
+    font-size: 1.25rem;
+    /* Ajusta el tamaño del texto para btn-lg */
+    cursor: pointer;
+    border-radius: 8px;
+    /* Esquinas redondeadas */
+}
+
+.btn-custom:hover {
+    background-color: red;
+    border: 1px solid red;
+    /* Cambia el color del borde en el estado hover */
+    color: white;
+}

@@ -1,8 +1,8 @@
-// TablaCategorias.jsx
 import React, { useMemo, useState } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "../styles.css"; // Asegúrate de importar el archivo CSS
 
 export const TablaCategorias = ({
   categorias,
@@ -14,8 +14,7 @@ export const TablaCategorias = ({
 
   const columns = useMemo(
     () => [
-      { Header: "ID", accessor: "id" },
-      { Header: "Nombre", accessor: "nombre" },
+      { Header: "Nombre", accessor: "nombre", Cell: ({ value }) => <div className="text-left">{value}</div> },
       {
         Header: "Acciones",
         accessor: "acciones",
@@ -28,7 +27,7 @@ export const TablaCategorias = ({
               <FontAwesomeIcon icon={faEdit} />
             </button>
             <button
-              className="btn btn-lg mx-1"
+              className="btn-custom mx-1"
               onClick={() => deleteCategoria(row.original.id)}
             >
               <FontAwesomeIcon icon={faTrash} />
@@ -91,7 +90,7 @@ export const TablaCategorias = ({
   return (
     <div className="container mt-5">
       <div className="mb-4">
-        <h1>Listado de Categorías</h1>
+        <h2>Listado de Categorías</h2>
       </div>
       <div className="row justify-content-center">
         <div className="col-md-12">
@@ -144,7 +143,12 @@ export const TablaCategorias = ({
                         <td
                           key={cell.column.id}
                           {...cell.getCellProps()}
-                          className="text-center align-middle"
+                          className={"align-middle"}
+                          style={
+                            cell.column.id === "nombre"
+                              ? { textAlign: "left" }
+                              : { textAlign: "center" }
+                          }
                         >
                           {cell.render("Cell")}
                         </td>
@@ -158,8 +162,7 @@ export const TablaCategorias = ({
               <nav>
                 <ul className="pagination">
                   <li
-                    className={`page-item ${!canPreviousPage ? "disabled" : ""
-                      }`}
+                    className={`page-item ${!canPreviousPage ? "disabled" : ""}`}
                   >
                     <button
                       className="page-link"
@@ -183,8 +186,7 @@ export const TablaCategorias = ({
                   {Array.from({ length: endPage - startPage }, (_, i) => startPage + i).map((pageNumber) => (
                     <li
                       key={pageNumber}
-                      className={`page-item ${pageNumber === pageIndex ? "active" : ""
-                        }`}
+                      className={`page-item ${pageNumber === pageIndex ? "active" : ""}`}
                     >
                       <button
                         className="page-link"
@@ -195,8 +197,7 @@ export const TablaCategorias = ({
                     </li>
                   ))}
                   <li
-                    className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""
-                      }`}
+                    className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""}`}
                   >
                     <button
                       className="page-link"
