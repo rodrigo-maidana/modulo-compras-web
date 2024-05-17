@@ -1,6 +1,11 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faTrash,
+  faCircleXmark,
+  faFloppyDisk,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const DetalleTabla = ({
@@ -40,10 +45,14 @@ const DetalleTabla = ({
                     onChange={(e) => setNuevaCantidad(e.target.value)}
                   />
                   <Button variant="primary" onClick={handleGuardarCantidad}>
-                    Guardar
+                    <FontAwesomeIcon icon={faFloppyDisk} />
                   </Button>
-                  <Button variant="danger" onClick={handleCancelarEdicion}>
-                    Cancelar
+                  <Button
+                    className="mx-2"
+                    variant="secondary"
+                    onClick={handleCancelarEdicion}
+                  >
+                    <FontAwesomeIcon icon={faCircleXmark} />
                   </Button>
                 </>
               ) : (
