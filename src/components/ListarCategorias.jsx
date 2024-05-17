@@ -3,6 +3,7 @@ import axios from "axios";
 import { ModalCategoria } from "./ModalCategoria";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
+import axiosInstance from "./axiosInstance";
 
 export const ListarCategorias = () => {
   const [show, setShow] = useState(false);
@@ -17,8 +18,8 @@ export const ListarCategorias = () => {
   const [isEdit, setIsEdit] = useState(false);
 
   const fetchCategorias = () => {
-    axios
-      .get("https://api.rodrigomaidana.com:8080/categorias")
+    axiosInstance
+      .get("/categorias")
       .then((response) => {
         setcategorias(response.data);
       })
@@ -28,8 +29,8 @@ export const ListarCategorias = () => {
   };
 
   const deleteCategoria = (idCategoria) => {
-    axios
-      .delete(`https://api.rodrigomaidana.com:8080/categorias/${idCategoria}`)
+    axiosInstance
+      .delete(`/categorias/${idCategoria}`)
       .then(() => {
         // Actualizar la lista de categorias después de eliminar
         fetchCategorias();
@@ -57,7 +58,7 @@ export const ListarCategorias = () => {
   };
 
   const iconoEstilo = {
-    marginRight: '10px' // Ajusta el valor según sea necesario
+    marginRight: "10px", // Ajusta el valor según sea necesario
   };
 
   return (
