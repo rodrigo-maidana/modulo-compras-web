@@ -6,6 +6,7 @@ import { ListadoPedidosCompras } from "./components/ListadoPedidosCompras";
 import { ListarDepositos } from "./components/ListarDepositos";
 import { ListarProductos } from "./components/ListarProductos";
 import { ListarCategorias } from "./components/ListarCategorias";
+import { ProductTable } from "./components/modales/ProductTable";
 import AuthTabs from "./components/AuthTabs"; // Importar el nuevo componente
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <NavBarMine />
         <Routes>
           <Route path="/" element={<AuthTabs />} />
+          <Route path="/productTable" element={<ProductTable />} />
           <Route path="/proveedores" element={<ListadoProveedores />} />
           <Route path="/depositos" element={<ListarDepositos />} />
           <Route path="/categorias" element={<ListarCategorias />} />

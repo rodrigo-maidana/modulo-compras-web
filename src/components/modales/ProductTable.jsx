@@ -1,8 +1,8 @@
 import React, { useMemo, useEffect, useState } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
-import axios from "axios";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axiosInstance from "../axiosInstance";
 
 export const ProductTable = () => {
   const [data, setData] = useState([]);
@@ -15,7 +15,7 @@ export const ProductTable = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
+        const response = await axiosInstance.get(
           "https://api.rodrigomaidana.com:8080/productos"
         );
         setData(response.data); // Asumiendo que la API devuelve un arreglo de productos
@@ -153,19 +153,21 @@ export const ProductTable = () => {
                         );
                       })}
                       <td>
-                        <span
+                        <button
+                          className="btn"
                           style={iconoEstilo}
                         //Añadir Funcion
                         >
                           <FontAwesomeIcon icon={faEdit} />
-                        </span>
+                        </button>
 
-                        <span
+                        <button
+                          className="btn"
                           style={iconoEstilo}
                         //Añadir Funcion
                         >
                           <FontAwesomeIcon icon={faTrash} />
-                        </span>
+                        </button>
                       </td>
 
                     </tr>

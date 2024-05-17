@@ -6,11 +6,13 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use((config) => {
-  // Excluir endpoints de autenticación de la inclusión del token
   if (!config.url.includes('/auth/')) {
     const token = localStorage.getItem('authToken');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
+      console.log('Token incluido en la solicitud:', token); // Debugging token inclusion
+    } else {
+      console.log('No se encontró token en localStorage'); // Debugging missing token
     }
   }
   return config;
