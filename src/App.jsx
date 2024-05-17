@@ -6,12 +6,12 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { AuthProvider } from "./components/AuthContext";
-import { ListadoProveedores } from "./components/ListadoProveedores";
+import { ListadoProveedores } from "./components/listados/ListadoProveedores";
 import { NavBarMine } from "./components/NavBarMine";
-import { ListadoPedidosCompras } from "./components/ListadoPedidosCompras";
-import { ListarDepositos } from "./components/ListarDepositos";
-import { ListarProductos } from "./components/ListarProductos";
-import { ListarCategorias } from "./components/ListarCategorias";
+import { ListadoPedidosCompras } from "./components/listados/ListadoPedidosCompras";
+import { ListarDepositos } from "./components/listados/ListarDepositos";
+import { ListarProductos } from "./components/listados/ListarProductos";
+import { ListarCategorias } from "./components/listados/ListarCategorias";
 import AuthTabs from "./components/AuthTabs";
 import ProtectedRoute from "./components/ProtectedRoute";
 

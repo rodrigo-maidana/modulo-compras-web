@@ -1,8 +1,9 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import App from "../App";
-import { FormCategorias } from "./FormCategorias";
+import App from "../../App";
+import { FormCategorias } from "../forms/FormCategorias";
+
 //props para mostrar el modal
 export const ModalCategoria = ({
   show,

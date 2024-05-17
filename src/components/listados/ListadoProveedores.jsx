@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { ModalProveedor } from "./ModalProveedor";
-import axiosInstance from "./axiosInstance";
-import { TablaProveedores } from "./modales/TablaProveedores";
+import { ModalProveedor } from "../modales/ModalProveedor";
+import axiosInstance from "../axiosInstance";
+import { TablaProveedores } from "../tablas/TablaProveedores";
 export const ListadoProveedores = () => {
   //state para el modal
   const [show, setShow] = useState(false);

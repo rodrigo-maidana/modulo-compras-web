@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import axiosInstance from "./axiosInstance";
-import { ProductTableReal } from "./ProductTableReal";
-import DetalleTabla from "./DetalleTabla";
+import axiosInstance from "../axiosInstance";
+import { TablaPedidoCompra } from "../tablas/TablaPedidoCompra";
+import ListarDetalleTabla from "../listados/ListarDetalleTabla";
 
 const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
   const [detalles, setDetalles] = useState([]);
@@ -92,10 +92,10 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
       </Modal.Header>
       <Modal.Body>
         {!id && (
-          <ProductTableReal handleAgregarProducto={handleAgregarProducto} />
+          <TablaPedidoCompra handleAgregarProducto={handleAgregarProducto} />
         )}
         <div>Listado de detalles</div>
-        <DetalleTabla
+        <ListarDetalleTabla
           detalles={detalles}
           editandoProducto={editandoProducto}
           nuevaCantidad={nuevaCantidad}

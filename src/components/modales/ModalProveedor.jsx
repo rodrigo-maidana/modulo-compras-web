@@ -1,13 +1,14 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { FormProductos } from "./FormProductos";
-
-export const ModalProducto = ({
+import App from "../../App";
+import { FormProveedores } from "../forms/FormProveedores";
+//props para mostrar el modal
+export const ModalProveedor = ({
   show,
   handleClose,
-  actualizarProductos,
-  producto,
+  actualizarProveedores,
+  proveedor,
   isEdit,
 }) => {
   return (
@@ -15,22 +16,18 @@ export const ModalProducto = ({
       <Modal show={show} onHide={handleClose} size="xl">
         <Modal.Header>
           <Modal.Title className="p-1">
-            <h1>{isEdit ? "Editar producto" : "Crear producto"}</h1>
+            {" "}
+            <h1>Crear proveedor</h1>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <FormProductos
-            producto={producto}
-            actualizarProductos={actualizarProductos}
+          <FormProveedores
+            proveedor={proveedor}
+            actualizarProveedores={actualizarProveedores}
             isEdit={isEdit}
             handleClose={handleClose}
           />
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancelar
-          </Button>
-        </Modal.Footer>
       </Modal>
     </>
   );

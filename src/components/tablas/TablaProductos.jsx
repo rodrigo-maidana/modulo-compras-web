@@ -1,24 +1,32 @@
+// TablaCategorias.jsx
 import React, { useMemo, useState } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "../styles.css";
 
-export const TablaProveedores = ({
-  proveedores,
-  deleteProveedor,
-  handleEditarProveedor,
-  handleCrearProveedor,
+export const TablaProductos = ({
+  productos,
+  deleteProducto,
+  handleEditarProducto,
+  handleCrearProducto,
 }) => {
   const [filter, setFilter] = useState("");
 
   const columns = useMemo(
     () => [
-      { Header: "ID", accessor: "id" },
-      { Header: "Nombre", accessor: "nombre" },
-      { Header: "Ruc", accessor: "ruc" },
-      { Header: "Contacto", accessor: "contacto" },
-      { Header: "Correo", accessor: "correo" },
-      { Header: "Direccion", accessor: "direccion" },
+      {
+        Header: "Marca",
+        accessor: "marca.nombre",
+      },
+      {
+        Header: "Categoría",
+        accessor: "categoria.nombre",
+      },
+      {
+        Header: "Descripción",
+        accessor: "descripcion",
+      },
       {
         Header: "Acciones",
         accessor: "acciones",
@@ -26,13 +34,13 @@ export const TablaProveedores = ({
           <div className="d-flex justify-content-center">
             <button
               className="btn btn-lg mx-1"
-              onClick={() => handleEditarProveedor(row.original)}
+              onClick={() => handleEditarProducto(row.original)}
             >
               <FontAwesomeIcon icon={faEdit} />
             </button>
             <button
-              className="btn btn-lg mx-1"
-              onClick={() => deleteProveedor(row.original.id)}
+              className="btn-custom mx-1"
+              onClick={() => deleteProducto(row.original.id)}
             >
               <FontAwesomeIcon icon={faTrash} />
             </button>
@@ -40,7 +48,7 @@ export const TablaProveedores = ({
         ),
       },
     ],
-    [handleEditarProveedor, deleteProveedor]
+    [handleEditarProducto, deleteProducto]
   );
 
   const {
@@ -62,7 +70,7 @@ export const TablaProveedores = ({
   } = useTable(
     {
       columns,
-      data: proveedores,
+      data: productos,
       initialState: { pageIndex: 0 },
     },
     useGlobalFilter,
@@ -79,7 +87,12 @@ export const TablaProveedores = ({
     gotoPage(page - 1);
   };
 
-  if (!proveedores.length) return <div className="text-center"><strong>Cargando...</strong></div>;
+  if (!productos.length)
+    return (
+      <div className="text-center">
+        <strong>Cargando...</strong>
+      </div>
+    );
 
   const totalPaginas = pageOptions.length;
   const maxPagesToShow = 10;
@@ -89,7 +102,7 @@ export const TablaProveedores = ({
   return (
     <div className="container mt-5">
       <div className="mb-4">
-        <h1>Listado de Proveedores</h1>
+        <h2>Listado de Productos</h2>
       </div>
       <div className="row justify-content-center">
         <div className="col-md-12">
@@ -105,18 +118,28 @@ export const TablaProveedores = ({
               <div className="text-right mx-4">
                 <button
                   className="btn btn-primary px-5"
-                  onClick={handleCrearProveedor}
+                  onClick={handleCrearProducto}
                 >
                   Crear
                 </button>
               </div>
             </div>
-            <table {...getTableProps()} className="table table-bordered table-hover">
+            <table
+              {...getTableProps()}
+              className="table table-bordered table-hover"
+            >
               <thead className="thead-dark">
                 {headerGroups.map((headerGroup) => (
-                  <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
+                  <tr
+                    key={headerGroup.id}
+                    {...headerGroup.getHeaderGroupProps()}
+                  >
                     {headerGroup.headers.map((column) => (
-                      <th key={column.id} {...column.getHeaderProps()} className="text-center">
+                      <th
+                        key={column.id}
+                        {...column.getHeaderProps()}
+                        className="text-center"
+                      >
                         {column.render("Header")}
                       </th>
                     ))}
@@ -132,7 +155,13 @@ export const TablaProveedores = ({
                         <td
                           key={cell.column.id}
                           {...cell.getCellProps()}
-                          className="text-center align-middle">
+                          className={"align-middle"}
+                          style={
+                            ["marca.nombre", "categoria.nombre", "descripcion"].includes(cell.column.id)
+                              ? { textAlign: "left" }
+                              : { textAlign: "center" }
+                          }
+                        >
                           {cell.render("Cell")}
                         </td>
                       ))}
@@ -144,7 +173,10 @@ export const TablaProveedores = ({
             <div className="d-flex justify-content-center">
               <nav>
                 <ul className="pagination">
-                  <li className={`page-item ${!canPreviousPage ? "disabled" : ""}`}>
+                  <li
+                    className={`page-item ${!canPreviousPage ? "disabled" : ""
+                      }`}
+                  >
                     <button
                       className="page-link"
                       onClick={() => handlePageChange(1)}
@@ -153,7 +185,9 @@ export const TablaProveedores = ({
                       {"<<"}
                     </button>
                   </li>
-                  <li className={`page-item ${pageIndex === 0 ? "disabled" : ""}`}>
+                  <li
+                    className={`page-item ${pageIndex === 0 ? "disabled" : ""}`}
+                  >
                     <button
                       className="page-link"
                       onClick={() => previousPage()}
@@ -165,7 +199,8 @@ export const TablaProveedores = ({
                   {Array.from({ length: endPage - startPage }, (_, i) => startPage + i).map((pageNumber) => (
                     <li
                       key={pageNumber}
-                      className={`page-item ${pageNumber === pageIndex ? "active" : ""}`}
+                      className={`page-item ${pageNumber === pageIndex ? "active" : ""
+                        }`}
                     >
                       <button
                         className="page-link"
@@ -175,7 +210,10 @@ export const TablaProveedores = ({
                       </button>
                     </li>
                   ))}
-                  <li className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""}`}>
+                  <li
+                    className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""
+                      }`}
+                  >
                     <button
                       className="page-link"
                       onClick={() => nextPage()}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axiosInstance from "./axiosInstance";
+import axiosInstance from "../axiosInstance";
 
 export const FormDepositos = ({
   deposito,
@@ -153,7 +153,7 @@ export const FormDepositos = ({
           </div>
           <div className="text-center">
             <button
-              className="btn btn-danger px-3 mx-1"
+              className="btn btn-outline-secondary px-3 mx-1"
               type="button"
               onClick={handleClose}
             >

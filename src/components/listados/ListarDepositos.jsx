@@ -1,30 +1,30 @@
-// ListarCategorias.jsx
-import React, { useEffect, useState } from "react";
-import axiosInstance from "./axiosInstance";
-import { ModalCategoria } from "./ModalCategoria";
-import { TablaCategorias } from "./modales/TablaCategorias";
+// ListarDepositos.jsx
+import React, { useState, useEffect } from "react";
+import axiosInstance from "../axiosInstance";
+import { ModalDeposito } from "../modales/ModalDeposito";
+import { TablaDepositos } from "../tablas/TablaDepositos";
 import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 
-export const ListarCategorias = () => {
+export const ListarDepositos = () => {
   const [show, setShow] = useState(false);
-  const [categorias, setCategorias] = useState([]);
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null);
+  const [depositos, setDepositos] = useState([]);
+  const [depositoSeleccionado, setDepositoSeleccionado] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
 
   const handleClose = () => {
     setShow(false);
-    setCategoriaSeleccionada(null);
+    setDepositoSeleccionado(null);
   };
   const handleShow = () => {
     setShow(true);
     setIsEdit(false);
   };
 
-  const fetchCategorias = () => {
+  const fetchDepositos = () => {
     axiosInstance
-      .get("/categorias")
+      .get("/depositos")
       .then((response) => {
-        setCategorias(response.data);
+        setDepositos(response.data);
       })
       .catch((error) => {
         if (error.response && error.response.status === 403) {
@@ -35,11 +35,11 @@ export const ListarCategorias = () => {
       });
   };
 
-  const deleteCategoria = (idCategoria) => {
+  const deleteDeposito = (idDeposito) => {
     axiosInstance
-      .delete(`/categorias/${idCategoria}`)
+      .delete(`/depositos/${idDeposito}`)
       .then(() => {
-        fetchCategorias();
+        fetchDepositos();
       })
       .catch((error) => {
         if (error.response && error.response.status === 403) {
@@ -50,38 +50,38 @@ export const ListarCategorias = () => {
       });
   };
 
-  const handleEditarCategoria = (categoria) => {
-    setCategoriaSeleccionada(categoria);
+  const handleEditarDeposito = (deposito) => {
+    setDepositoSeleccionado(deposito);
     setShow(true);
     setIsEdit(true);
   };
 
-  const handleCrearCategoria = () => {
+  const handleCrearDeposito = () => {
     setShow(true);
     setIsEdit(false);
-    setCategoriaSeleccionada(null); // Resetea el depósito seleccionado para el formulario de creación
+    setDepositoSeleccionado(null); // Resetea el depósito seleccionado para el formulario de creación
   };
 
   useEffect(() => {
-    fetchCategorias();
+    fetchDepositos();
   }, []);
 
   return (
     <>
-      <TablaCategorias
-        categorias={categorias}
-        deleteCategoria={deleteCategoria}
-        handleEditarCategoria={handleEditarCategoria}
-        handleCrearCategoria={handleCrearCategoria}
+      <TablaDepositos
+        depositos={depositos}
+        deleteDeposito={deleteDeposito}
+        handleEditarDeposito={handleEditarDeposito}
+        handleCrearDeposito={handleCrearDeposito}
         faTrash={faTrash}
         faEdit={faEdit}
       />
-      <ModalCategoria
+      <ModalDeposito
         show={show}
         handleClose={handleClose}
-        categoria={categoriaSeleccionada}
+        deposito={depositoSeleccionado}
         isEdit={isEdit}
-        actualizarCategorias={fetchCategorias} // Pasar la función para actualizar la lista después de crear o editar
+        actualizarDepositos={fetchDepositos} // Pasar la función para actualizar la lista después de crear o editar
       />
     </>
   );

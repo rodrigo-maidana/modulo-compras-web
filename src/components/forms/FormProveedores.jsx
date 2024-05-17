@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import axiosInstance from "./axiosInstance";
+import axiosInstance from "../axiosInstance";
 export const FormProveedores = ({
   proveedor,
   actualizarProveedores,
@@ -197,7 +197,7 @@ export const FormProveedores = ({
           </div>
           <div className="text-center">
             <button
-              className="btn btn-danger px-3 mx-1"
+              className="btn btn-outline-secondary px-3 mx-1"
               type="button"
               onClick={handleClose}
             >

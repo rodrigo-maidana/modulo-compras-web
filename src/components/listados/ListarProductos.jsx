@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { ModalProducto } from "./ModalProductos";
+import { ModalProducto } from "../modales/ModalProductos";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
-import axiosInstance from "./axiosInstance";
-import { TablaProductos } from "./modales/TablaProductos";
+import axiosInstance from "../axiosInstance";
+import { TablaProductos } from "../tablas/TablaProductos";
 
 export const ListarProductos = () => {
   const [show, setShow] = useState(false);

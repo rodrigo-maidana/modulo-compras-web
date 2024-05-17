@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import ModalPedidosDetalles from "./ModalPedidosDetalles";
-import axiosInstance from "./axiosInstance";
-import { TabalPedidoCompra } from "./modales/TablaPedidoCompra";
+import ModalPedidosDetalles from "../modales/ModalPedidosDetalles";
+import axiosInstance from "../axiosInstance";
+import { TablaPedidoCompra } from "../tablas/TablaPedidoCompra";
 
 export const ListadoPedidosCompras = () => {
   const [pedidoCompras, setPedidoCompras] = useState([]);
@@ -90,7 +90,7 @@ export const ListadoPedidosCompras = () => {
 
   return (
     <>
-      <TabalPedidoCompra
+      <TablaPedidoCompra
         pedidos={pedidoCompras}
         deletePedido={deletePedido}
         handleEditarPedido={handleEditarPedido}

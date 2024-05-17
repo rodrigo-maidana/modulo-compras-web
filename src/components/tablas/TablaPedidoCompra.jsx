@@ -2,8 +2,9 @@ import React, { useMemo, useState } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "../styles.css";
 
-export const TabalPedidoCompra = ({
+export const TablaPedidoCompra = ({
   pedidos,
   deletePedido,
   handleEditarPedido,
@@ -14,7 +15,6 @@ export const TabalPedidoCompra = ({
 
   const columns = useMemo(
     () => [
-      { Header: "ID", accessor: "id" },
       {
         Header: "Fecha",
         accessor: "fechaEmision",
@@ -33,7 +33,7 @@ export const TabalPedidoCompra = ({
               <FontAwesomeIcon icon={faEdit} />
             </button>
             <button
-              className="btn btn-lg mx-1"
+              className="btn-custom mx-1"
               onClick={() => deletePedido(row.original)}
             >
               <FontAwesomeIcon icon={faTrash} />
@@ -91,7 +91,7 @@ export const TabalPedidoCompra = ({
   return (
     <div className="container mt-5">
       <div className="mb-4">
-        <h1>Listado de pedido de compra</h1>
+        <h2>Listado de pedido de compra</h2>
       </div>
       <div className="row justify-content-center">
         <div className="col-md-12">

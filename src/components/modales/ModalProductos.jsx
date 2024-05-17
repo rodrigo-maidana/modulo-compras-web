@@ -1,14 +1,13 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import App from "../App";
-import { FormDepositos } from "./FormDepositos";
-//props para mostrar el modal
-export const ModalDeposito = ({
+import { FormProductos } from "../forms/FormProductos";
+
+export const ModalProducto = ({
   show,
   handleClose,
-  actualizarDepositos,
-  deposito,
+  actualizarProductos,
+  producto,
   isEdit,
 }) => {
   return (
@@ -16,18 +15,22 @@ export const ModalDeposito = ({
       <Modal show={show} onHide={handleClose} size="xl">
         <Modal.Header>
           <Modal.Title className="p-1">
-            {" "}
-            <h1>Crear deposito</h1>
+            <h1>{isEdit ? "Editar producto" : "Crear producto"}</h1>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <FormDepositos
-            deposito={deposito}
-            actualizarDepositos={actualizarDepositos}
+          <FormProductos
+            producto={producto}
+            actualizarProductos={actualizarProductos}
             isEdit={isEdit}
             handleClose={handleClose}
           />
         </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Cancelar
+          </Button>
+        </Modal.Footer>
       </Modal>
     </>
   );

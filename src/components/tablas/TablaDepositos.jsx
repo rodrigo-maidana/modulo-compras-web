@@ -3,6 +3,7 @@ import React, { useMemo, useState } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "../styles.css";
 
 export const TablaDepositos = ({ depositos, deleteDeposito, handleEditarDeposito, handleCrearDeposito }) => {
     const [filter, setFilter] = useState("");
@@ -11,7 +12,6 @@ export const TablaDepositos = ({ depositos, deleteDeposito, handleEditarDeposito
     // Definir las columnas para react-table
     const columns = useMemo(
         () => [
-            { Header: "ID", accessor: "id" },
             { Header: "Nombre", accessor: "nombre" },
             { Header: "Direccion", accessor: "direccion" },
             { Header: "Contacto", accessor: "contacto" },
@@ -21,13 +21,13 @@ export const TablaDepositos = ({ depositos, deleteDeposito, handleEditarDeposito
                 Cell: ({ row }) => (
                     <div className="d-flex justify-content-center">
                         <button
-                            className="btn btn-lg"
+                            className="btn btn-lg mx-1"
                             onClick={() => handleEditarDeposito(row.original)}
                         >
                             <FontAwesomeIcon icon={faEdit} />
                         </button>
                         <button
-                            className="btn btn-lg"
+                            className="btn-custom mx-1"
                             onClick={() => deleteDeposito(row.original.id)}
                         >
                             <FontAwesomeIcon icon={faTrash} />
@@ -85,7 +85,7 @@ export const TablaDepositos = ({ depositos, deleteDeposito, handleEditarDeposito
     return (
         <div className="container mt-5">
             <div className="mb-4">
-                <h1>Listado de Depositos</h1>
+                <h2>Listado de Depositos</h2>
             </div>
             <div className="row justify-content-center">
                 <div className="col-md-12">
@@ -125,8 +125,16 @@ export const TablaDepositos = ({ depositos, deleteDeposito, handleEditarDeposito
                                     return (
                                         <tr key={row.id} {...row.getRowProps()}>
                                             {row.cells.map((cell) => (
-                                                <td key={cell.column.id} {...cell.getCellProps()}
-                                                    className="text-center align-middle">
+                                                <td
+                                                    key={cell.column.id}
+                                                    {...cell.getCellProps()}
+                                                    className={"align-middle"}
+                                                    style={
+                                                        ["nombre", "direccion"].includes(cell.column.id)
+                                                            ? { textAlign: "left" }
+                                                            : { textAlign: "center" }
+                                                    }
+                                                >
                                                     {cell.render("Cell")}
                                                 </td>
                                             ))}

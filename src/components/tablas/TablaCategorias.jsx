@@ -1,35 +1,20 @@
-// TablaCategorias.jsx
 import React, { useMemo, useState } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "../styles.css";
 
-export const TablaProductos = ({
-  productos,
-  deleteProducto,
-  handleEditarProducto,
-  handleCrearProducto,
+export const TablaCategorias = ({
+  categorias,
+  deleteCategoria,
+  handleEditarCategoria,
+  handleCrearCategoria,
 }) => {
   const [filter, setFilter] = useState("");
 
   const columns = useMemo(
     () => [
-      {
-        Header: "ID",
-        accessor: "id",
-      },
-      {
-        Header: "Marca",
-        accessor: "marca.nombre",
-      },
-      {
-        Header: "Categoría",
-        accessor: "categoria.nombre",
-      },
-      {
-        Header: "Descripción",
-        accessor: "descripcion",
-      },
+      { Header: "Nombre", accessor: "nombre", Cell: ({ value }) => <div className="text-left">{value}</div> },
       {
         Header: "Acciones",
         accessor: "acciones",
@@ -37,13 +22,13 @@ export const TablaProductos = ({
           <div className="d-flex justify-content-center">
             <button
               className="btn btn-lg mx-1"
-              onClick={() => handleEditarProducto(row.original)}
+              onClick={() => handleEditarCategoria(row.original)}
             >
               <FontAwesomeIcon icon={faEdit} />
             </button>
             <button
-              className="btn btn-lg mx-1"
-              onClick={() => deleteProducto(row.original.id)}
+              className="btn-custom mx-1"
+              onClick={() => deleteCategoria(row.original.id)}
             >
               <FontAwesomeIcon icon={faTrash} />
             </button>
@@ -51,7 +36,7 @@ export const TablaProductos = ({
         ),
       },
     ],
-    [handleEditarProducto, deleteProducto]
+    [handleEditarCategoria, deleteCategoria]
   );
 
   const {
@@ -73,7 +58,7 @@ export const TablaProductos = ({
   } = useTable(
     {
       columns,
-      data: productos,
+      data: categorias,
       initialState: { pageIndex: 0 },
     },
     useGlobalFilter,
@@ -90,7 +75,7 @@ export const TablaProductos = ({
     gotoPage(page - 1);
   };
 
-  if (!productos.length)
+  if (!categorias.length)
     return (
       <div className="text-center">
         <strong>Cargando...</strong>
@@ -105,7 +90,7 @@ export const TablaProductos = ({
   return (
     <div className="container mt-5">
       <div className="mb-4">
-        <h1>Listado de Productos</h1>
+        <h2>Listado de Categorías</h2>
       </div>
       <div className="row justify-content-center">
         <div className="col-md-12">
@@ -121,7 +106,7 @@ export const TablaProductos = ({
               <div className="text-right mx-4">
                 <button
                   className="btn btn-primary px-5"
-                  onClick={handleCrearProducto}
+                  onClick={handleCrearCategoria}
                 >
                   Crear
                 </button>
@@ -158,7 +143,13 @@ export const TablaProductos = ({
                         <td
                           key={cell.column.id}
                           {...cell.getCellProps()}
-                          className="text-center align-middle">
+                          className={"align-middle"}
+                          style={
+                            cell.column.id === "nombre"
+                              ? { textAlign: "left" }
+                              : { textAlign: "center" }
+                          }
+                        >
                           {cell.render("Cell")}
                         </td>
                       ))}
@@ -171,8 +162,7 @@ export const TablaProductos = ({
               <nav>
                 <ul className="pagination">
                   <li
-                    className={`page-item ${!canPreviousPage ? "disabled" : ""
-                      }`}
+                    className={`page-item ${!canPreviousPage ? "disabled" : ""}`}
                   >
                     <button
                       className="page-link"
@@ -196,8 +186,7 @@ export const TablaProductos = ({
                   {Array.from({ length: endPage - startPage }, (_, i) => startPage + i).map((pageNumber) => (
                     <li
                       key={pageNumber}
-                      className={`page-item ${pageNumber === pageIndex ? "active" : ""
-                        }`}
+                      className={`page-item ${pageNumber === pageIndex ? "active" : ""}`}
                     >
                       <button
                         className="page-link"
@@ -208,8 +197,7 @@ export const TablaProductos = ({
                     </li>
                   ))}
                   <li
-                    className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""
-                      }`}
+                    className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""}`}
                   >
                     <button
                       className="page-link"

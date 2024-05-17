@@ -2,19 +2,23 @@ import React, { useMemo, useState } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "../styles.css"; // Asegúrate de importar el archivo CSS
+import "../styles.css";
 
-export const TablaCategorias = ({
-  categorias,
-  deleteCategoria,
-  handleEditarCategoria,
-  handleCrearCategoria,
+export const TablaProveedores = ({
+  proveedores,
+  deleteProveedor,
+  handleEditarProveedor,
+  handleCrearProveedor,
 }) => {
   const [filter, setFilter] = useState("");
 
   const columns = useMemo(
     () => [
-      { Header: "Nombre", accessor: "nombre", Cell: ({ value }) => <div className="text-left">{value}</div> },
+      { Header: "Nombre", accessor: "nombre" },
+      { Header: "Ruc", accessor: "ruc" },
+      { Header: "Contacto", accessor: "contacto" },
+      { Header: "Correo", accessor: "correo" },
+      { Header: "Direccion", accessor: "direccion" },
       {
         Header: "Acciones",
         accessor: "acciones",
@@ -22,13 +26,13 @@ export const TablaCategorias = ({
           <div className="d-flex justify-content-center">
             <button
               className="btn btn-lg mx-1"
-              onClick={() => handleEditarCategoria(row.original)}
+              onClick={() => handleEditarProveedor(row.original)}
             >
               <FontAwesomeIcon icon={faEdit} />
             </button>
             <button
               className="btn-custom mx-1"
-              onClick={() => deleteCategoria(row.original.id)}
+              onClick={() => deleteProveedor(row.original.id)}
             >
               <FontAwesomeIcon icon={faTrash} />
             </button>
@@ -36,7 +40,7 @@ export const TablaCategorias = ({
         ),
       },
     ],
-    [handleEditarCategoria, deleteCategoria]
+    [handleEditarProveedor, deleteProveedor]
   );
 
   const {
@@ -58,7 +62,7 @@ export const TablaCategorias = ({
   } = useTable(
     {
       columns,
-      data: categorias,
+      data: proveedores,
       initialState: { pageIndex: 0 },
     },
     useGlobalFilter,
@@ -75,12 +79,7 @@ export const TablaCategorias = ({
     gotoPage(page - 1);
   };
 
-  if (!categorias.length)
-    return (
-      <div className="text-center">
-        <strong>Cargando...</strong>
-      </div>
-    );
+  if (!proveedores.length) return <div className="text-center"><strong>Cargando...</strong></div>;
 
   const totalPaginas = pageOptions.length;
   const maxPagesToShow = 10;
@@ -90,7 +89,7 @@ export const TablaCategorias = ({
   return (
     <div className="container mt-5">
       <div className="mb-4">
-        <h2>Listado de Categorías</h2>
+        <h2>Listado de Proveedores</h2>
       </div>
       <div className="row justify-content-center">
         <div className="col-md-12">
@@ -106,28 +105,18 @@ export const TablaCategorias = ({
               <div className="text-right mx-4">
                 <button
                   className="btn btn-primary px-5"
-                  onClick={handleCrearCategoria}
+                  onClick={handleCrearProveedor}
                 >
                   Crear
                 </button>
               </div>
             </div>
-            <table
-              {...getTableProps()}
-              className="table table-bordered table-hover"
-            >
+            <table {...getTableProps()} className="table table-bordered table-hover">
               <thead className="thead-dark">
                 {headerGroups.map((headerGroup) => (
-                  <tr
-                    key={headerGroup.id}
-                    {...headerGroup.getHeaderGroupProps()}
-                  >
+                  <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
                     {headerGroup.headers.map((column) => (
-                      <th
-                        key={column.id}
-                        {...column.getHeaderProps()}
-                        className="text-center"
-                      >
+                      <th key={column.id} {...column.getHeaderProps()} className="text-center">
                         {column.render("Header")}
                       </th>
                     ))}
@@ -145,7 +134,7 @@ export const TablaCategorias = ({
                           {...cell.getCellProps()}
                           className={"align-middle"}
                           style={
-                            cell.column.id === "nombre"
+                            ["nombre", "correo", "direccion"].includes(cell.column.id)
                               ? { textAlign: "left" }
                               : { textAlign: "center" }
                           }
@@ -161,9 +150,7 @@ export const TablaCategorias = ({
             <div className="d-flex justify-content-center">
               <nav>
                 <ul className="pagination">
-                  <li
-                    className={`page-item ${!canPreviousPage ? "disabled" : ""}`}
-                  >
+                  <li className={`page-item ${!canPreviousPage ? "disabled" : ""}`}>
                     <button
                       className="page-link"
                       onClick={() => handlePageChange(1)}
@@ -172,9 +159,7 @@ export const TablaCategorias = ({
                       {"<<"}
                     </button>
                   </li>
-                  <li
-                    className={`page-item ${pageIndex === 0 ? "disabled" : ""}`}
-                  >
+                  <li className={`page-item ${pageIndex === 0 ? "disabled" : ""}`}>
                     <button
                       className="page-link"
                       onClick={() => previousPage()}
@@ -196,9 +181,7 @@ export const TablaCategorias = ({
                       </button>
                     </li>
                   ))}
-                  <li
-                    className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""}`}
-                  >
+                  <li className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""}`}>
                     <button
                       className="page-link"
                       onClick={() => nextPage()}
