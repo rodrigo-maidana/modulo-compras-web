@@ -33,7 +33,7 @@ export const Register = () => {
   };
 
   return (
-    <div className="register-container container col-3">
+    <div className="register-container container">
       <h2>Register</h2>
       {error && <p className="error">{error}</p>}
       <form onSubmit={handleRegister}>
