@@ -66,15 +66,14 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
 
   const handleSave = async () => {
     try {
-      console.log(detalles);
       const updatedDetalles = detalles.map((detalle) => ({
         id: detalle.id,
         producto: detalle.producto,
         cantidad: detalle.cantidad,
       }));
-
+      console.log(id);
       await axiosInstance.put(
-        `https://api.rodrigomaidana.com:8080/pedidoscompra/${id}`,
+        `https://api.rodrigomaidana.com:8080/pedidosdetalles/${id}`,
         { detalles: updatedDetalles }
       );
 

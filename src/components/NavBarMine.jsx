@@ -24,7 +24,7 @@ export const NavBarMine = () => {
             <Nav.Link href="/pedidos">Pedidos</Nav.Link>
           </Nav>
           <Nav className="ms-auto me-3">
-            <button onClick={logout} className="btn btn-danger">
+            <button onClick={logout} className="btn btn-outline-light">
               Salir
             </button>
           </Nav>
