@@ -124,7 +124,7 @@ export const TablaCategorias = ({
                       <th
                         key={column.id}
                         {...column.getHeaderProps()}
-                        className="text-center"
+                        className="text-center align-middle"
                       >
                         {column.render("Header")}
                       </th>
@@ -141,7 +141,7 @@ export const TablaCategorias = ({
                         <td
                           key={cell.column.id}
                           {...cell.getCellProps()}
-                          className="text-center"
+                          className="text-center align-middle"
                         >
                           {cell.render("Cell")}
                         </td>
@@ -155,9 +155,8 @@ export const TablaCategorias = ({
               <nav>
                 <ul className="pagination">
                   <li
-                    className={`page-item ${
-                      !canPreviousPage ? "disabled" : ""
-                    }`}
+                    className={`page-item ${!canPreviousPage ? "disabled" : ""
+                      }`}
                   >
                     <button
                       className="page-link"
@@ -181,9 +180,8 @@ export const TablaCategorias = ({
                   {pageOptions.map((pageNumber) => (
                     <li
                       key={pageNumber}
-                      className={`page-item ${
-                        pageNumber === pageIndex ? "active" : ""
-                      }`}
+                      className={`page-item ${pageNumber === pageIndex ? "active" : ""
+                        }`}
                     >
                       <button
                         className="page-link"
@@ -194,9 +192,8 @@ export const TablaCategorias = ({
                     </li>
                   ))}
                   <li
-                    className={`page-item ${
-                      pageIndex === pageCount - 1 ? "disabled" : ""
-                    }`}
+                    className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""
+                      }`}
                   >
                     <button
                       className="page-link"

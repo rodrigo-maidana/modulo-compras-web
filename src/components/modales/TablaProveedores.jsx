@@ -144,8 +144,7 @@ export const TablaProveedores = ({
                         <td
                           key={cell.column.id}
                           {...cell.getCellProps()}
-                          className="text-center"
-                        >
+                          className="text-center align-middle">
                           {cell.render("Cell")}
                         </td>
                       ))}
@@ -158,9 +157,8 @@ export const TablaProveedores = ({
               <nav>
                 <ul className="pagination">
                   <li
-                    className={`page-item ${
-                      !canPreviousPage ? "disabled" : ""
-                    }`}
+                    className={`page-item ${!canPreviousPage ? "disabled" : ""
+                      }`}
                   >
                     <button
                       className="page-link"
@@ -184,9 +182,8 @@ export const TablaProveedores = ({
                   {pageOptions.map((pageNumber) => (
                     <li
                       key={pageNumber}
-                      className={`page-item ${
-                        pageNumber === pageIndex ? "active" : ""
-                      }`}
+                      className={`page-item ${pageNumber === pageIndex ? "active" : ""
+                        }`}
                     >
                       <button
                         className="page-link"
@@ -197,9 +194,8 @@ export const TablaProveedores = ({
                     </li>
                   ))}
                   <li
-                    className={`page-item ${
-                      pageIndex === pageCount - 1 ? "disabled" : ""
-                    }`}
+                    className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""
+                      }`}
                   >
                     <button
                       className="page-link"
