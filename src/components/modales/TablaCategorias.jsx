@@ -84,6 +84,9 @@ export const TablaCategorias = ({
     );
 
   const totalPaginas = pageOptions.length;
+  const maxPagesToShow = 10;
+  const startPage = Math.floor(pageIndex / maxPagesToShow) * maxPagesToShow;
+  const endPage = Math.min(startPage + maxPagesToShow, totalPaginas);
 
   return (
     <div className="container mt-5">
@@ -155,9 +158,8 @@ export const TablaCategorias = ({
               <nav>
                 <ul className="pagination">
                   <li
-                    className={`page-item ${
-                      !canPreviousPage ? "disabled" : ""
-                    }`}
+                    className={`page-item ${!canPreviousPage ? "disabled" : ""
+                      }`}
                   >
                     <button
                       className="page-link"
@@ -178,12 +180,11 @@ export const TablaCategorias = ({
                       {"<"}
                     </button>
                   </li>
-                  {pageOptions.map((pageNumber) => (
+                  {Array.from({ length: endPage - startPage }, (_, i) => startPage + i).map((pageNumber) => (
                     <li
                       key={pageNumber}
-                      className={`page-item ${
-                        pageNumber === pageIndex ? "active" : ""
-                      }`}
+                      className={`page-item ${pageNumber === pageIndex ? "active" : ""
+                        }`}
                     >
                       <button
                         className="page-link"
@@ -194,9 +195,8 @@ export const TablaCategorias = ({
                     </li>
                   ))}
                   <li
-                    className={`page-item ${
-                      pageIndex === pageCount - 1 ? "disabled" : ""
-                    }`}
+                    className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""
+                      }`}
                   >
                     <button
                       className="page-link"
