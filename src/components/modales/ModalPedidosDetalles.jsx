@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import axiosInstance from "../axiosInstance";
-import { TablaPedidoCompra } from "../tablas/TablaPedidoCompra";
+import { TablaProductoPedido } from "../tablas/TablaProductoPedido";
 import ListarDetalleTabla from "../listados/ListarDetalleTabla";
 
 const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
@@ -11,7 +11,12 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
   const [nuevaCantidad, setNuevaCantidad] = useState(0);
 
   const handleAgregarProducto = (producto, cantidad) => {
-    const productoConCantidad = { ...producto, cantidad };
+    console.log(producto);
+    const productoConCantidad = {
+      ...producto,
+      producto: producto, // Asegúrate de que el objeto producto esté correctamente anidado
+      cantidad,
+    };
     setDetalles((prevDetalles) => [...prevDetalles, productoConCantidad]);
   };
 
@@ -83,16 +88,22 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
       console.error("Error al actualizar el pedido:", error);
     }
     handleClose();
+    handleReset(); // Limpia los detalles al cerrar el modal
+  };
+
+  const handleCancel = () => {
+    handleClose();
+    handleReset(); // Limpia los detalles al cerrar el modal
   };
 
   return (
-    <Modal show={show} onHide={handleClose} size="lg">
+    <Modal show={show} onHide={handleCancel} size="lg">
       <Modal.Header closeButton>
         <Modal.Title>Detalles del Pedido N°{id}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {!id && (
-          <TablaPedidoCompra handleAgregarProducto={handleAgregarProducto} />
+          <TablaProductoPedido handleAgregarProducto={handleAgregarProducto} />
         )}
         <div>Listado de detalles</div>
         <ListarDetalleTabla
@@ -107,7 +118,7 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
         />
       </Modal.Body>
       <Modal.Footer>
-        <button className="btn btn-danger" onClick={handleClose}>
+        <button className="btn btn-danger" onClick={handleCancel}>
           Cancelar
         </button>
         <button className="btn btn-primary" onClick={handleSave}>

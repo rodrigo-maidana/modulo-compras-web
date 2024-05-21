@@ -90,6 +90,7 @@ export const ListadoPedidosCompras = () => {
 
   return (
     <>
+      {/*Hasta aca todo igual ambos componentes*/}
       <TablaPedidoCompra
         pedidos={pedidoCompras}
         deletePedido={deletePedido}
