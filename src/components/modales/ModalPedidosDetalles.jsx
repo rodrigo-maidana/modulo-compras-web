@@ -14,7 +14,7 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
     console.log(producto);
     const productoConCantidad = {
       ...producto,
-      producto: producto, // Asegúrate de que el objeto producto esté correctamente anidado
+      producto: producto,
       cantidad,
     };
     setDetalles((prevDetalles) => [...prevDetalles, productoConCantidad]);
@@ -54,7 +54,7 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
     const fetchDetalles = async () => {
       try {
         const response = await axiosInstance.get(
-          `https://api.rodrigomaidana.com:8080/pedidoscompra/detalles/${id}`
+          `/pedidos-compra/detalles/${id}`
         );
         setDetalles(response.data);
       } catch (error) {
@@ -70,6 +70,39 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
   }, [id]);
 
   const handleSave = async () => {
+    //funcion para crear un pedido detalle
+    //cargar la cabecera con https://api.rodrigomaidana.com:8080/pedidoscompra/preview
+    try {
+      await axiosInstance
+        .get(`https://api.rodrigomaidana.com:8080/pedidoscompra/preview`)
+        .then((response) => {
+          //console.log(response.data);
+          const pedidoCompra = {
+            fechaEmision: response.data.fechaEmision,
+            estado: "pendiente",
+            nroPedido: response.data.nroPedido,
+          };
+          //console.log(pedidoCompra);
+          axiosInstance
+            .post(
+              `https://api.rodrigomaidana.com:8080/pedidoscompra`,
+              pedidoCompra
+            )
+            .then((response) => {
+              //console.log(response.data);
+            })
+            .catch((error) =>
+              console.log("error al cargar la cabecera", error)
+            );
+        })
+        .catch((error) => console.log("error al cargar la cabecera", error));
+    } catch {
+      console.log("error al cargar la cabecera");
+    }
+    //hacer post a https://api.rodrigomaidana.com:8080/pedidoscompra en cascada de cada producto
+
+    //funcion para actualizar los detalles
+    /*
     try {
       const updatedDetalles = detalles.map((detalle) => ({
         id: detalle.id,
@@ -88,7 +121,8 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
       console.error("Error al actualizar el pedido:", error);
     }
     handleClose();
-    handleReset(); // Limpia los detalles al cerrar el modal
+    handleReset(); // Limpia los detalles al cerrar el modal 
+    */
   };
 
   const handleCancel = () => {

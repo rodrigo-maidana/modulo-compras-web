@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { ModalProducto } from "../modales/ModalProductos";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
@@ -28,7 +27,7 @@ export const ListarProductos = () => {
   };
   const fetchProductos = () => {
     axiosInstance
-      .get("https://api.rodrigomaidana.com:8080/productos")
+      .get("/productos")
       .then((response) => {
         setProductos(response.data);
       })
@@ -39,7 +38,7 @@ export const ListarProductos = () => {
 
   const deleteProducto = (idProducto) => {
     axiosInstance
-      .delete(`https://api.rodrigomaidana.com:8080/productos/${idProducto}`)
+      .delete(`/productos/${idProducto}`)
       .then(() => {
         fetchProductos();
       })

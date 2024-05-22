@@ -24,9 +24,7 @@ export const TablaProductoPedido = ({ handleAgregarProducto }) => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axiosInstance.get(
-          "https://api.rodrigomaidana.com:8080/productos"
-        );
+        const response = await axiosInstance.get("/productos");
         setData(response.data); // Asumiendo que la API devuelve un arreglo de productos
       } catch (error) {
         console.error("Error al cargar datos:", error);

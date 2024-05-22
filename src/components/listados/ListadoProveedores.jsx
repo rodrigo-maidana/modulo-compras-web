@@ -22,7 +22,7 @@ export const ListadoProveedores = () => {
   };
   const fetchProveedores = () => {
     axiosInstance
-      .get("https://api.rodrigomaidana.com:8080/proveedores")
+      .get("/proveedores")
       .then((response) => {
         setProveedores(response.data);
       })
@@ -32,7 +32,7 @@ export const ListadoProveedores = () => {
   };
   const deleteProveedor = (idProveedor) => {
     axiosInstance
-      .delete(`https://api.rodrigomaidana.com:8080/proveedores/${idProveedor}`)
+      .delete(`/proveedores/${idProveedor}`)
       .then(() => {
         // Actualizar la lista de proveedores después de eliminar
         fetchProveedores();
