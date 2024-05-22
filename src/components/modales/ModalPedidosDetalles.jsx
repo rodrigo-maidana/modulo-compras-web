@@ -5,6 +5,7 @@ import axiosInstance from "../axiosInstance";
 import { TablaProductoPedido } from "../tablas/TablaProductoPedido";
 import ListarDetalleTabla from "../listados/ListarDetalleTabla";
 
+//por ahora fingir demencia cuando se cargan productos iguales
 const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
   const [detalles, setDetalles] = useState([]);
   const [editandoProducto, setEditandoProducto] = useState(null);
@@ -70,64 +71,58 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
   }, [id]);
 
   const handleSave = async () => {
-    //funcion para crear un pedido detalle
-    //cargar la cabecera con https://api.rodrigomaidana.com:8080/pedidoscompra/preview
     try {
-      await axiosInstance
-        .get(`https://api.rodrigomaidana.com:8080/pedidoscompra/preview`)
-        .then((response) => {
-          //console.log(response.data);
-          const pedidoCompra = {
-            fechaEmision: response.data.fechaEmision,
-            estado: "pendiente",
-            nroPedido: response.data.nroPedido,
-          };
-          //console.log(pedidoCompra);
-          axiosInstance
-            .post(
-              `https://api.rodrigomaidana.com:8080/pedidoscompra`,
-              pedidoCompra
-            )
-            .then((response) => {
-              //console.log(response.data);
-            })
-            .catch((error) =>
-              console.log("error al cargar la cabecera", error)
-            );
-        })
-        .catch((error) => console.log("error al cargar la cabecera", error));
-    } catch {
-      console.log("error al cargar la cabecera");
-    }
-    //hacer post a https://api.rodrigomaidana.com:8080/pedidoscompra en cascada de cada producto
+      const responsePreview = await axiosInstance.get(
+        `/pedidos-compra/preview`
+      );
+      const pedidoCompra = {
+        fechaEmision: responsePreview.data.fechaEmision,
+        estado: "pendiente",
+        nroPedido: responsePreview.data.nroPedido,
+      };
 
-    //funcion para actualizar los detalles
-    /*
-    try {
-      const updatedDetalles = detalles.map((detalle) => ({
-        id: detalle.id,
-        producto: detalle.producto,
-        cantidad: detalle.cantidad,
-      }));
-      console.log(id);
-      await axiosInstance.put(
-        `https://api.rodrigomaidana.com:8080/pedidosdetalles/${id}`,
-        { detalles: updatedDetalles }
+      const responsePedidoCompra = await axiosInstance.post(
+        `/pedidos-compra`,
+        pedidoCompra
+      );
+      const pedidoCompraId = responsePedidoCompra.data.id;
+
+      await Promise.all(
+        detalles.map(async (detalle) => {
+          const pedidoDetalle = {
+            producto: {
+              id: detalle.producto.id,
+              descripcion: detalle.producto.descripcion,
+              marca: {
+                id: detalle.producto.marca.id,
+                nombre: detalle.producto.marca.nombre,
+              },
+              categoria: {
+                id: detalle.producto.categoria.id,
+                nombre: detalle.producto.categoria.nombre,
+              },
+            },
+            cantidad: detalle.cantidad,
+          };
+
+          await axiosInstance.post(
+            `/pedidos-detalles/${pedidoCompraId}`,
+            pedidoDetalle
+          );
+        })
       );
 
-      console.log("Pedido actualizado:", updatedDetalles);
-      onSave(updatedDetalles);
+      console.log("Pedido guardado correctamente");
+      onSave();
+      handleClose();
     } catch (error) {
-      console.error("Error al actualizar el pedido:", error);
+      console.log("Error al guardar el pedido:", error);
     }
-    handleClose();
-    handleReset(); // Limpia los detalles al cerrar el modal 
-    */
   };
 
   const handleCancel = () => {
     handleClose();
-    handleReset(); // Limpia los detalles al cerrar el modal
+    handleReset();
   };
 
   return (

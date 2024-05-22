@@ -21,6 +21,7 @@ export const TablaPedidoCompra = ({
         Cell: ({ value }) => formatearFecha(value),
       },
       { Header: "Estado", accessor: "estado" },
+      { Header: "Nro Pedido", accessor: "nroPedido" },
       {
         Header: "Acciones",
         accessor: "acciones",
@@ -81,7 +82,12 @@ export const TablaPedidoCompra = ({
     gotoPage(page - 1);
   };
 
-  if (!pedidos.length) return <div className="text-center"><strong>Cargando...</strong></div>;
+  if (!pedidos.length)
+    return (
+      <div className="text-center">
+        <strong>Cargando...</strong>
+      </div>
+    );
 
   const totalPaginas = pageOptions.length;
   const maxPagesToShow = 9;
@@ -113,12 +119,22 @@ export const TablaPedidoCompra = ({
                 </button>
               </div>
             </div>
-            <table {...getTableProps()} className="table table-bordered table-hover">
+            <table
+              {...getTableProps()}
+              className="table table-bordered table-hover"
+            >
               <thead className="thead-dark">
                 {headerGroups.map((headerGroup) => (
-                  <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
+                  <tr
+                    key={headerGroup.id}
+                    {...headerGroup.getHeaderGroupProps()}
+                  >
                     {headerGroup.headers.map((column) => (
-                      <th key={column.id} {...column.getHeaderProps()} className="text-center">
+                      <th
+                        key={column.id}
+                        {...column.getHeaderProps()}
+                        className="text-center"
+                      >
                         {column.render("Header")}
                       </th>
                     ))}
@@ -129,9 +145,11 @@ export const TablaPedidoCompra = ({
                 {page.map((row) => {
                   prepareRow(row);
                   return (
-                    <tr key={row.id} {...row.getRowProps()}
-
-                      className="text-center align-middle">
+                    <tr
+                      key={row.id}
+                      {...row.getRowProps()}
+                      className="text-center align-middle"
+                    >
                       {row.cells.map((cell) => (
                         <td
                           key={cell.column.id}
@@ -149,7 +167,11 @@ export const TablaPedidoCompra = ({
             <div className="d-flex justify-content-center">
               <nav>
                 <ul className="pagination">
-                  <li className={`page-item ${!canPreviousPage ? "disabled" : ""}`}>
+                  <li
+                    className={`page-item ${
+                      !canPreviousPage ? "disabled" : ""
+                    }`}
+                  >
                     <button
                       className="page-link"
                       onClick={() => handlePageChange(1)}
@@ -158,7 +180,9 @@ export const TablaPedidoCompra = ({
                       {"<<"}
                     </button>
                   </li>
-                  <li className={`page-item ${pageIndex === 0 ? "disabled" : ""}`}>
+                  <li
+                    className={`page-item ${pageIndex === 0 ? "disabled" : ""}`}
+                  >
                     <button
                       className="page-link"
                       onClick={() => previousPage()}
@@ -167,10 +191,15 @@ export const TablaPedidoCompra = ({
                       {"<"}
                     </button>
                   </li>
-                  {Array.from({ length: endPage - startPage }, (_, i) => startPage + i).map((pageNumber) => (
+                  {Array.from(
+                    { length: endPage - startPage },
+                    (_, i) => startPage + i
+                  ).map((pageNumber) => (
                     <li
                       key={pageNumber}
-                      className={`page-item ${pageNumber === pageIndex ? "active" : ""}`}
+                      className={`page-item ${
+                        pageNumber === pageIndex ? "active" : ""
+                      }`}
                     >
                       <button
                         className="page-link"
@@ -180,7 +209,11 @@ export const TablaPedidoCompra = ({
                       </button>
                     </li>
                   ))}
-                  <li className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""}`}>
+                  <li
+                    className={`page-item ${
+                      pageIndex === pageCount - 1 ? "disabled" : ""
+                    }`}
+                  >
                     <button
                       className="page-link"
                       onClick={() => nextPage()}

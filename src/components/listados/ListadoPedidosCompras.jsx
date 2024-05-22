@@ -56,7 +56,7 @@ export const ListadoPedidosCompras = () => {
     const año = fechaEmision.getFullYear();
     const mes = fechaEmision.getMonth() + 1;
     const dia = fechaEmision.getDate();
-    return `${año}-${dia < 10 ? "0" + dia : dia}-${mes < 10 ? "0" + mes : mes}`;
+    return `${dia < 10 ? "0" + dia : dia}-${mes < 10 ? "0" + mes : mes}-${año}`;
   };
 
   const deletePedido = async (pedido) => {
