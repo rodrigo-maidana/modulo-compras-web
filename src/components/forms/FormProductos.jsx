@@ -28,12 +28,12 @@ export const FormProductos = ({
 
   useEffect(() => {
     axiosInstance
-      .get("https://api.rodrigomaidana.com:8080/marcas")
+      .get("https://api.rodrigomaidana.com:8080/api/v1/marcas")
       .then((response) => {
         setMarcas(response.data);
       });
     axiosInstance
-      .get("https://api.rodrigomaidana.com:8080/categorias")
+      .get("https://api.rodrigomaidana.com:8080/api/v1/categorias")
       .then((response) => {
         setCategorias(response.data);
       });
@@ -59,7 +59,7 @@ export const FormProductos = ({
 
   const handleSubmitNew = (nuevoProducto) => {
     axiosInstance
-      .post("https://api.rodrigomaidana.com:8080/productos", nuevoProducto, {
+      .post("https://api.rodrigomaidana.com:8080/api/v1/productos", nuevoProducto, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -81,7 +81,7 @@ export const FormProductos = ({
   const handleSubmitEdit = (nuevoProducto) => {
     axiosInstance
       .put(
-        `https://api.rodrigomaidana.com:8080/productos/${producto.id}`,
+        `https://api.rodrigomaidana.com:8080/api/v1/productos/${producto.id}`,
         nuevoProducto,
         {
           headers: {

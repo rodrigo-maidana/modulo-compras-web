@@ -28,7 +28,7 @@ export const ListarProductos = () => {
   };
   const fetchProductos = () => {
     axiosInstance
-      .get("https://api.rodrigomaidana.com:8080/productos")
+      .get("https://api.rodrigomaidana.com:8080/api/v1/productos")
       .then((response) => {
         setProductos(response.data);
       })
@@ -39,7 +39,7 @@ export const ListarProductos = () => {
 
   const deleteProducto = (idProducto) => {
     axiosInstance
-      .delete(`https://api.rodrigomaidana.com:8080/productos/${idProducto}`)
+      .delete(`https://api.rodrigomaidana.com:8080/api/v1/productos/${idProducto}`)
       .then(() => {
         fetchProductos();
       })

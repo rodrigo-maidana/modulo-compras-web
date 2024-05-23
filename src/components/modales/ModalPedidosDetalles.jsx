@@ -49,7 +49,7 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
     const fetchDetalles = async () => {
       try {
         const response = await axiosInstance.get(
-          `https://api.rodrigomaidana.com:8080/pedidoscompra/detalles/${id}`
+          `https://api.rodrigomaidana.com:8080/api/v1/pedidoscompra/detalles/${id}`
         );
         setDetalles(response.data);
       } catch (error) {
@@ -73,7 +73,7 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
       }));
       console.log(id);
       await axiosInstance.put(
-        `https://api.rodrigomaidana.com:8080/pedidosdetalles/${id}`,
+        `https://api.rodrigomaidana.com:8080/api/v1/pedidosdetalles/${id}`,
         { detalles: updatedDetalles }
       );
 

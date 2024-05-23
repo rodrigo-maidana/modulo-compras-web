@@ -53,7 +53,7 @@ export const FormProveedores = ({
   };
   const handleSubmitNew = (nuevoProveedor) => {
     axiosInstance
-      .post("https://api.rodrigomaidana.com:8080/proveedores", nuevoProveedor)
+      .post("https://api.rodrigomaidana.com:8080/api/v1/proveedores", nuevoProveedor)
       .then((response) => {
         console.log(response.data);
         actualizarProveedores();
@@ -75,7 +75,7 @@ export const FormProveedores = ({
     console.log(nuevoProveedor);
     axiosInstance
       .put(
-        `https://api.rodrigomaidana.com:8080/proveedores/${proveedor.id}`,
+        `https://api.rodrigomaidana.com:8080/api/v1/proveedores/${proveedor.id}`,
         nuevoProveedor
       )
       .then((response) => {
