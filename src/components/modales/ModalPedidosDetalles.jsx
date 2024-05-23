@@ -5,14 +5,12 @@ import axiosInstance from "../axiosInstance";
 import { TablaProductoPedido } from "../tablas/TablaProductoPedido";
 import ListarDetalleTabla from "../listados/ListarDetalleTabla";
 
-//por ahora fingir demencia cuando se cargan productos iguales
 const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
   const [detalles, setDetalles] = useState([]);
   const [editandoProducto, setEditandoProducto] = useState(null);
   const [nuevaCantidad, setNuevaCantidad] = useState(0);
 
   const handleAgregarProducto = (producto, cantidad) => {
-    console.log(producto);
     const productoConCantidad = {
       ...producto,
       producto: producto,
@@ -72,45 +70,80 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
 
   const handleSave = async () => {
     try {
-      const responsePreview = await axiosInstance.get(
-        `/pedidos-compra/preview`
-      );
-      const pedidoCompra = {
-        fechaEmision: responsePreview.data.fechaEmision,
-        estado: "pendiente",
-        nroPedido: responsePreview.data.nroPedido,
-      };
-
-      const responsePedidoCompra = await axiosInstance.post(
-        `/pedidos-compra`,
-        pedidoCompra
-      );
-      const pedidoCompraId = responsePedidoCompra.data.id;
-
-      await Promise.all(
-        detalles.map(async (detalle) => {
-          const pedidoDetalle = {
-            producto: {
-              id: detalle.producto.id,
-              descripcion: detalle.producto.descripcion,
-              marca: {
-                id: detalle.producto.marca.id,
-                nombre: detalle.producto.marca.nombre,
-              },
-              categoria: {
-                id: detalle.producto.categoria.id,
-                nombre: detalle.producto.categoria.nombre,
-              },
+      let pedidoCompraId = id;
+      if (id) {
+        // Editar pedido existente
+        console.log(detalles);
+        /* const updatedDetalles = detalles.map((detalle) => ({
+           axiosInstance.put(`/pedidos-detalles/${id}`, detalle);
+        }));
+        await axiosInstance.put(`/pedidos-compra/detalles/${id}`, {
+          detalles: updatedDetalles,
+        });*/
+        const updatedDetalles = detalles.map((detalle) => ({
+          producto: {
+            id: detalle.producto.id,
+            descripcion: detalle.producto.descripcion,
+            marca: {
+              id: detalle.producto.marca.id,
+              nombre: detalle.producto.marca.nombre,
             },
-            cantidad: detalle.cantidad,
-          };
+            categoria: {
+              id: detalle.producto.categoria.id,
+              nombre: detalle.producto.categoria.nombre,
+            },
+          },
+          cantidad: detalle.cantidad,
+        }));
 
-          await axiosInstance.post(
-            `/pedidos-detalles/${pedidoCompraId}`,
-            pedidoDetalle
-          );
-        })
-      );
+        await Promise.all(
+          updatedDetalles.map((detalle) =>
+            axiosInstance.put(`/pedidos-detalles/${id}`, detalle)
+          )
+        );
+      } else {
+        // Crear nuevo pedido
+        //obtengo la cabecera del siguiente
+        const responsePreview = await axiosInstance.get(
+          `/pedidos-compra/preview`
+        );
+        const pedidoCompra = {
+          fechaEmision: responsePreview.data.fechaEmision,
+          estado: "pendiente",
+          nroPedido: responsePreview.data.nroPedido,
+        };
+        //se crea la cabecera del pedido
+        const responsePedidoCompra = await axiosInstance.post(
+          `/pedidos-compra`,
+          pedidoCompra
+        );
+        pedidoCompraId = responsePedidoCompra.data.id;
+        //promise all para que se guarden todos los detalles
+        await Promise.all(
+          detalles.map(async (detalle) => {
+            const pedidoDetalle = {
+              producto: {
+                id: detalle.producto.id,
+                descripcion: detalle.producto.descripcion,
+                marca: {
+                  id: detalle.producto.marca.id,
+                  nombre: detalle.producto.marca.nombre,
+                },
+                categoria: {
+                  id: detalle.producto.categoria.id,
+                  nombre: detalle.producto.categoria.nombre,
+                },
+              },
+              cantidad: detalle.cantidad,
+            };
+
+            await axiosInstance.post(
+              `/pedidos-detalles/${pedidoCompraId}`,
+              pedidoDetalle
+            );
+          })
+        );
+      }
 
       console.log("Pedido guardado correctamente");
       onSave();
