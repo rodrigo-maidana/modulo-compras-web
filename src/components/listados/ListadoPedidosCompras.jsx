@@ -40,7 +40,7 @@ export const ListadoPedidosCompras = () => {
       .get("/pedidos-compra")
       .then((response) => {
         setPedidoCompras(response.data);
-        console.log(response.data);
+        //console.log(response.data);
       })
       .catch((error) => {
         console.log("el error es: ", error);

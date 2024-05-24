@@ -80,27 +80,48 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
         await axiosInstance.put(`/pedidos-compra/detalles/${id}`, {
           detalles: updatedDetalles,
         });*/
+
+        // Eliminar los detalles que fueron eliminados en el frontend
+        const detallesActuales = await axiosInstance.get(
+          `/pedidos-compra/detalles/${id}`
+        );
+        const detallesEliminados = detallesActuales.data.filter(
+          (detalleActual) =>
+            !detalles.some((detalle) => detalle.id === detalleActual.id)
+        );
+
+        await Promise.all(
+          detallesEliminados.map((detalleEliminado) =>
+            axiosInstance.delete(`/pedidos-detalles/${detalleEliminado.id}`)
+          )
+        );
         const updatedDetalles = detalles.map((detalle) => ({
           producto: {
-            id: detalle.producto.id,
+            id: parseInt(detalle.producto.id),
             descripcion: detalle.producto.descripcion,
             marca: {
-              id: detalle.producto.marca.id,
+              id: parseInt(detalle.producto.marca.id),
               nombre: detalle.producto.marca.nombre,
             },
             categoria: {
-              id: detalle.producto.categoria.id,
+              id: parseInt(detalle.producto.categoria.id),
               nombre: detalle.producto.categoria.nombre,
             },
           },
-          cantidad: detalle.cantidad,
+          cantidad: parseInt(detalle.cantidad),
+          id: detalle.id,
         }));
 
         await Promise.all(
-          updatedDetalles.map((detalle) =>
-            axiosInstance.put(`/pedidos-detalles/${id}`, detalle)
-          )
+          updatedDetalles.map((detalle) => {
+            console.log(detalle);
+            axiosInstance.put(`/pedidos-detalles/${detalle.id}`, detalle);
+          })
         );
+
+        //enfoque de haciendo put al arreglo de pedido-compra/detalles/{id del pedido}
+        /*console.log(id);
+        await axiosInstance.put(`/pedidos-compra/detalles/${id}`, detalles);*/
       } else {
         // Crear nuevo pedido
         //obtengo la cabecera del siguiente

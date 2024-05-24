@@ -20,7 +20,6 @@ const ListarDetalleTabla = ({
 }) => {
   return (
     <>
-      {console.log(detalles)}
       <table className="table table-light table-striped table-bordered text-center">
         <thead>
           <tr>
