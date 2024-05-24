@@ -96,6 +96,7 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
           )
         );
         const updatedDetalles = detalles.map((detalle) => ({
+          id: detalle.id,
           producto: {
             id: parseInt(detalle.producto.id),
             descripcion: detalle.producto.descripcion,
@@ -109,7 +110,6 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
             },
           },
           cantidad: parseInt(detalle.cantidad),
-          id: detalle.id,
         }));
 
         await Promise.all(
