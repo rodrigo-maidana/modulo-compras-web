@@ -27,16 +27,13 @@ export const FormProductos = ({
   }, [producto]);
 
   useEffect(() => {
-    axiosInstance
-      .get("https://api.rodrigomaidana.com:8080/api/v1/marcas")
-      .then((response) => {
-        setMarcas(response.data);
-      });
-    axiosInstance
-      .get("https://api.rodrigomaidana.com:8080/api/v1/categorias")
-      .then((response) => {
-        setCategorias(response.data);
-      });
+    axiosInstance.get("/marcas").then((response) => {
+      setMarcas(response.data);
+    });
+    axiosInstance.get("/categorias").then((response) => {
+      setCategorias(response.data);
+    });
+
   }, []);
 
   const handleSubmit = () => {
@@ -59,7 +56,8 @@ export const FormProductos = ({
 
   const handleSubmitNew = (nuevoProducto) => {
     axiosInstance
-      .post("https://api.rodrigomaidana.com:8080/api/v1/productos", nuevoProducto, {
+      .post("/productos", nuevoProducto, {
+
         headers: {
           "Content-Type": "application/json",
         },
@@ -80,15 +78,12 @@ export const FormProductos = ({
 
   const handleSubmitEdit = (nuevoProducto) => {
     axiosInstance
-      .put(
-        `https://api.rodrigomaidana.com:8080/api/v1/productos/${producto.id}`,
-        nuevoProducto,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+      .put(`/productos/${producto.id}`, nuevoProducto, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+
       .then((response) => {
         actualizarProductos();
         handleClose();

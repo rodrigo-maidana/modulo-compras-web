@@ -1,49 +1,92 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import axiosInstance from "../axiosInstance";
+import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "../styles.css";
 
-export const TablaPedidoCompra = ({
-  pedidos,
-  deletePedido,
-  handleEditarPedido,
-  handleCrearPedido,
-  formatearFecha,
-}) => {
+export const TablaProductoPedido = ({ handleAgregarProducto }) => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("");
 
+  // Estado para la cantidad
+  const [productQuantities, setProductQuantities] = useState({});
+
+  // Manejar cambios de cantidad para actualizar
+  const handleQuantityChange = (productId, quantity) => {
+    if (quantity >= 0) {
+      setProductQuantities({ ...productQuantities, [productId]: quantity });
+    }
+  };
+
+  // Cargar datos desde la API
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await axiosInstance.get("/productos");
+        setData(response.data); // Asumiendo que la API devuelve un arreglo de productos
+      } catch (error) {
+        console.error("Error al cargar datos:", error);
+      }
+      setLoading(false);
+    };
+
+    fetchData();
+  }, []);
+
+  // Definir las columnas para react-table
   const columns = useMemo(
     () => [
       {
-        Header: "Fecha",
-        accessor: "fechaEmision",
-        Cell: ({ value }) => formatearFecha(value),
+        Header: "ID",
+        accessor: "id",
       },
-      { Header: "Estado", accessor: "estado" },
-      { Header: "Nro Pedido", accessor: "nroPedido" },
       {
-        Header: "Acciones",
-        accessor: "acciones",
-        Cell: ({ row }) => (
-          <div className="d-flex justify-content-center">
-            <button
-              className="btn btn-lg mx-1"
-              onClick={() => handleEditarPedido(row.original.id)}
-            >
-              <FontAwesomeIcon icon={faEdit} />
-            </button>
-            <button
-              className="btn-custom mx-1"
-              onClick={() => deletePedido(row.original)}
-            >
-              <FontAwesomeIcon icon={faTrash} />
-            </button>
-          </div>
-        ),
+        Header: "Marca",
+        accessor: "marca.nombre",
+      },
+      {
+        Header: "Categoría",
+        accessor: "categoria.nombre",
+      },
+      {
+        Header: "Descripción",
+        accessor: "descripcion",
+      },
+      {
+        Header: "Cantidad",
+        accessor: "cantidad",
+        Cell: ({ row }) => {
+          const productId = row.original.id;
+          const productQuantity = productQuantities[productId] || 0;
+          return (
+            <div className="d-flex align-items-center">
+              <input
+                className="form-control me-3"
+                type="number"
+                min="0"
+                value={productQuantity}
+                onChange={(e) =>
+                  handleQuantityChange(productId, Number(e.target.value))
+                }
+              />
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  handleAgregarProducto(row.original, productQuantity);
+                  handleQuantityChange(productId, 0); // Restablece la cantidad a 0 después de agregar
+                }}
+                disabled={productQuantity <= 0}
+              >
+                <FontAwesomeIcon icon={faFloppyDisk} />
+              </button>
+            </div>
+          );
+        },
       },
     ],
-    [handleEditarPedido, deletePedido, formatearFecha]
+    [productQuantities, handleAgregarProducto]
   );
 
   const {
@@ -65,13 +108,14 @@ export const TablaPedidoCompra = ({
   } = useTable(
     {
       columns,
-      data: pedidos,
-      initialState: { pageIndex: 0 },
+      data,
+      initialState: { pageIndex: 0, pageSize: 5 },
     },
     useGlobalFilter,
     usePagination
   );
 
+  // Manejador para el cambio en el input de filtro
   const handleFilterChange = (e) => {
     const value = e.target.value || undefined;
     setFilter(value);
@@ -82,7 +126,7 @@ export const TablaPedidoCompra = ({
     gotoPage(page - 1);
   };
 
-  if (!pedidos.length)
+  if (loading)
     return (
       <div className="text-center">
         <strong>Cargando...</strong>
@@ -95,9 +139,9 @@ export const TablaPedidoCompra = ({
   const endPage = Math.min(startPage + maxPagesToShow, totalPaginas);
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-1">
       <div className="mb-4">
-        <h2>Listado de pedido de compra</h2>
+        <h1>Listado de productos</h1>
       </div>
       <div className="row justify-content-center">
         <div className="col-md-12">
@@ -110,14 +154,6 @@ export const TablaPedidoCompra = ({
                 onChange={handleFilterChange}
                 placeholder="Buscar"
               />
-              <div className="text-right mx-4">
-                <button
-                  className="btn btn-primary px-5"
-                  onClick={handleCrearPedido}
-                >
-                  Crear
-                </button>
-              </div>
             </div>
             <table
               {...getTableProps()}
@@ -126,13 +162,13 @@ export const TablaPedidoCompra = ({
               <thead className="thead-dark">
                 {headerGroups.map((headerGroup) => (
                   <tr
-                    key={headerGroup.id}
                     {...headerGroup.getHeaderGroupProps()}
+                    key={headerGroup.id}
                   >
                     {headerGroup.headers.map((column) => (
                       <th
-                        key={column.id}
                         {...column.getHeaderProps()}
+                        key={column.id}
                         className="text-center"
                       >
                         {column.render("Header")}
@@ -146,14 +182,14 @@ export const TablaPedidoCompra = ({
                   prepareRow(row);
                   return (
                     <tr
-                      key={row.id}
                       {...row.getRowProps()}
+                      key={row.id}
                       className="text-center align-middle"
                     >
                       {row.cells.map((cell) => (
                         <td
-                          key={cell.column.id}
                           {...cell.getCellProps()}
+                          key={cell.column.id}
                           className="text-center"
                         >
                           {cell.render("Cell")}

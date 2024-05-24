@@ -19,64 +19,66 @@ const ListarDetalleTabla = ({
   setNuevaCantidad,
 }) => {
   return (
-    <table className="table table-light table-striped table-bordered text-center">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Producto</th>
-          <th>Categoría</th>
-          <th>Cantidad</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        {detalles.map((item) => (
-          <tr key={item.id}>
-            <td>{item.id}</td>
-            <td>{item.producto.descripcion}</td>
-            <td>{item.producto.categoria?.nombre}</td>
-            <td>
-              {editandoProducto && editandoProducto.id === item.id ? (
-                <>
-                  <input
-                    className="col-3 me-2"
-                    type="number"
-                    value={nuevaCantidad}
-                    onChange={(e) => setNuevaCantidad(e.target.value)}
-                  />
-                  <Button variant="primary" onClick={handleGuardarCantidad}>
-                    <FontAwesomeIcon icon={faFloppyDisk} />
-                  </Button>
-                  <Button
-                    className="mx-2"
-                    variant="secondary"
-                    onClick={handleCancelarEdicion}
-                  >
-                    <FontAwesomeIcon icon={faCircleXmark} />
-                  </Button>
-                </>
-              ) : (
-                <>{item.cantidad}</>
-              )}
-            </td>
-            <td>
-              <Button
-                variant="secondary"
-                onClick={() => handleEliminarProducto(item.id)}
-              >
-                <FontAwesomeIcon icon={faTrash} />
-              </Button>{" "}
-              <Button
-                variant="secondary"
-                onClick={() => handleEditarCantidad(item)}
-              >
-                <FontAwesomeIcon icon={faEdit} />
-              </Button>
-            </td>
+    <>
+      <table className="table table-light table-striped table-bordered text-center">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th>Cantidad</th>
+            <th>Acciones</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {detalles.map((item) => (
+            <tr key={item.id}>
+              <td>{item.id}</td>
+              <td>{item.producto.descripcion}</td>
+              <td>{item.producto.categoria?.nombre}</td>
+              <td>
+                {editandoProducto && editandoProducto.id === item.id ? (
+                  <>
+                    <input
+                      className="col-3 me-2"
+                      type="number"
+                      value={nuevaCantidad}
+                      onChange={(e) => setNuevaCantidad(e.target.value)}
+                    />
+                    <Button variant="primary" onClick={handleGuardarCantidad}>
+                      <FontAwesomeIcon icon={faFloppyDisk} />
+                    </Button>
+                    <Button
+                      className="mx-2"
+                      variant="secondary"
+                      onClick={handleCancelarEdicion}
+                    >
+                      <FontAwesomeIcon icon={faCircleXmark} />
+                    </Button>
+                  </>
+                ) : (
+                  <>{item.cantidad}</>
+                )}
+              </td>
+              <td>
+                <Button
+                  variant="secondary"
+                  onClick={() => handleEliminarProducto(item.id)}
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </Button>{" "}
+                <Button
+                  variant="secondary"
+                  onClick={() => handleEditarCantidad(item)}
+                >
+                  <FontAwesomeIcon icon={faEdit} />
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
   );
 };
 

@@ -27,9 +27,8 @@ export const ListadoPedidosCompras = () => {
 
   const obtenerPedido = async (id) => {
     try {
-      const response = await axiosInstance.get(
-        `https://api.rodrigomaidana.com:8080/api/v1/pedidoscompra/${id}`
-      );
+      const response = await axiosInstance.get(`/pedidos-compra/${id}`);
+
       console.log(response.data);
       return response.data;
     } catch (e) {
@@ -39,10 +38,11 @@ export const ListadoPedidosCompras = () => {
 
   const fetchCargarPedidos = () => {
     axiosInstance
-      .get("https://api.rodrigomaidana.com:8080/api/v1/pedidoscompra")
+      .get("/pedidos-compra")
+
       .then((response) => {
         setPedidoCompras(response.data);
-        console.log(response.data);
+        //console.log(response.data);
       })
       .catch((error) => {
         console.log("el error es: ", error);
@@ -58,7 +58,7 @@ export const ListadoPedidosCompras = () => {
     const año = fechaEmision.getFullYear();
     const mes = fechaEmision.getMonth() + 1;
     const dia = fechaEmision.getDate();
-    return `${año}-${dia < 10 ? "0" + dia : dia}-${mes < 10 ? "0" + mes : mes}`;
+    return `${dia < 10 ? "0" + dia : dia}-${mes < 10 ? "0" + mes : mes}-${año}`;
   };
 
   const deletePedido = async (pedido) => {
@@ -71,10 +71,8 @@ export const ListadoPedidosCompras = () => {
       pedidoObtenido.estado = "Cancelado";
       console.log(pedidoObtenido.estado);
       try {
-        await axiosInstance.put(
-          `https://api.rodrigomaidana.com:8080/api/v1/pedidoscompra/${pedido.id}`,
-          pedidoObtenido
-        );
+        await axiosInstance.put(`/pedidos-compra/${pedido.id}`, pedidoObtenido);
+
         console.log("editado");
         fetchCargarPedidos();
       } catch (error) {
@@ -90,6 +88,7 @@ export const ListadoPedidosCompras = () => {
 
   return (
     <>
+      {/*Hasta aca todo igual ambos componentes*/}
       <TablaPedidoCompra
         pedidos={pedidoCompras}
         deletePedido={deletePedido}

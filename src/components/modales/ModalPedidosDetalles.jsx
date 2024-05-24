@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import axiosInstance from "../axiosInstance";
-import { TablaPedidoCompra } from "../tablas/TablaPedidoCompra";
+import { TablaProductoPedido } from "../tablas/TablaProductoPedido";
 import ListarDetalleTabla from "../listados/ListarDetalleTabla";
 
 const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
@@ -11,7 +11,11 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
   const [nuevaCantidad, setNuevaCantidad] = useState(0);
 
   const handleAgregarProducto = (producto, cantidad) => {
-    const productoConCantidad = { ...producto, cantidad };
+    const productoConCantidad = {
+      ...producto,
+      producto: producto,
+      cantidad,
+    };
     setDetalles((prevDetalles) => [...prevDetalles, productoConCantidad]);
   };
 
@@ -49,7 +53,8 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
     const fetchDetalles = async () => {
       try {
         const response = await axiosInstance.get(
-          `https://api.rodrigomaidana.com:8080/api/v1/pedidoscompra/detalles/${id}`
+          `/pedidos-compra/detalles/${id}`
+
         );
         setDetalles(response.data);
       } catch (error) {
@@ -66,33 +71,123 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
 
   const handleSave = async () => {
     try {
-      const updatedDetalles = detalles.map((detalle) => ({
-        id: detalle.id,
-        producto: detalle.producto,
-        cantidad: detalle.cantidad,
-      }));
-      console.log(id);
-      await axiosInstance.put(
-        `https://api.rodrigomaidana.com:8080/api/v1/pedidosdetalles/${id}`,
-        { detalles: updatedDetalles }
-      );
+      let pedidoCompraId = id;
+      if (id) {
+        // Editar pedido existente
+        console.log(detalles);
+        /* const updatedDetalles = detalles.map((detalle) => ({
+           axiosInstance.put(`/pedidos-detalles/${id}`, detalle);
+        }));
+        await axiosInstance.put(`/pedidos-compra/detalles/${id}`, {
+          detalles: updatedDetalles,
+        });*/
 
-      console.log("Pedido actualizado:", updatedDetalles);
-      onSave(updatedDetalles);
+        // Eliminar los detalles que fueron eliminados en el frontend
+        const detallesActuales = await axiosInstance.get(
+          `/pedidos-compra/detalles/${id}`
+        );
+        const detallesEliminados = detallesActuales.data.filter(
+          (detalleActual) =>
+            !detalles.some((detalle) => detalle.id === detalleActual.id)
+        );
+
+        await Promise.all(
+          detallesEliminados.map((detalleEliminado) =>
+            axiosInstance.delete(`/pedidos-detalles/${detalleEliminado.id}`)
+          )
+        );
+        const updatedDetalles = detalles.map((detalle) => ({
+          id: detalle.id,
+          producto: {
+            id: parseInt(detalle.producto.id),
+            descripcion: detalle.producto.descripcion,
+            marca: {
+              id: parseInt(detalle.producto.marca.id),
+              nombre: detalle.producto.marca.nombre,
+            },
+            categoria: {
+              id: parseInt(detalle.producto.categoria.id),
+              nombre: detalle.producto.categoria.nombre,
+            },
+          },
+          cantidad: parseInt(detalle.cantidad),
+        }));
+
+        await Promise.all(
+          updatedDetalles.map((detalle) => {
+            console.log(detalle);
+            axiosInstance.put(`/pedidos-detalles/${detalle.id}`, detalle);
+          })
+        );
+
+        //enfoque de haciendo put al arreglo de pedido-compra/detalles/{id del pedido}
+        /*console.log(id);
+        await axiosInstance.put(`/pedidos-compra/detalles/${id}`, detalles);*/
+      } else {
+        // Crear nuevo pedido
+        //obtengo la cabecera del siguiente
+        const responsePreview = await axiosInstance.get(
+          `/pedidos-compra/preview`
+        );
+        const pedidoCompra = {
+          fechaEmision: responsePreview.data.fechaEmision,
+          estado: "pendiente",
+          nroPedido: responsePreview.data.nroPedido,
+        };
+        //se crea la cabecera del pedido
+        const responsePedidoCompra = await axiosInstance.post(
+          `/pedidos-compra`,
+          pedidoCompra
+        );
+        pedidoCompraId = responsePedidoCompra.data.id;
+        //promise all para que se guarden todos los detalles
+        await Promise.all(
+          detalles.map(async (detalle) => {
+            const pedidoDetalle = {
+              producto: {
+                id: detalle.producto.id,
+                descripcion: detalle.producto.descripcion,
+                marca: {
+                  id: detalle.producto.marca.id,
+                  nombre: detalle.producto.marca.nombre,
+                },
+                categoria: {
+                  id: detalle.producto.categoria.id,
+                  nombre: detalle.producto.categoria.nombre,
+                },
+              },
+              cantidad: detalle.cantidad,
+            };
+
+            await axiosInstance.post(
+              `/pedidos-detalles/${pedidoCompraId}`,
+              pedidoDetalle
+            );
+          })
+        );
+      }
+
+      console.log("Pedido guardado correctamente");
+      onSave();
+      handleClose();
     } catch (error) {
-      console.error("Error al actualizar el pedido:", error);
+      console.log("Error al guardar el pedido:", error);
     }
+  };
+
+  const handleCancel = () => {
     handleClose();
+    handleReset();
   };
 
   return (
-    <Modal show={show} onHide={handleClose} size="lg">
+    <Modal show={show} onHide={handleCancel} size="lg">
       <Modal.Header closeButton>
         <Modal.Title>Detalles del Pedido N°{id}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {!id && (
-          <TablaPedidoCompra handleAgregarProducto={handleAgregarProducto} />
+          <TablaProductoPedido handleAgregarProducto={handleAgregarProducto} />
         )}
         <div>Listado de detalles</div>
         <ListarDetalleTabla
@@ -107,7 +202,7 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
         />
       </Modal.Body>
       <Modal.Footer>
-        <button className="btn btn-danger" onClick={handleClose}>
+        <button className="btn btn-danger" onClick={handleCancel}>
           Cancelar
         </button>
         <button className="btn btn-primary" onClick={handleSave}>
