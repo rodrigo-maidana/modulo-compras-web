@@ -33,6 +33,7 @@ export const FormProductos = ({
     axiosInstance.get("/categorias").then((response) => {
       setCategorias(response.data);
     });
+
   }, []);
 
   const handleSubmit = () => {
@@ -56,6 +57,7 @@ export const FormProductos = ({
   const handleSubmitNew = (nuevoProducto) => {
     axiosInstance
       .post("/productos", nuevoProducto, {
+
         headers: {
           "Content-Type": "application/json",
         },
@@ -81,6 +83,7 @@ export const FormProductos = ({
           "Content-Type": "application/json",
         },
       })
+
       .then((response) => {
         actualizarProductos();
         handleClose();

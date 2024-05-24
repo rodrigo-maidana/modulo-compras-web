@@ -44,7 +44,7 @@ export const FormCategorias = ({
 
   const handleSubmitNew = (nuevaCategoria) => {
     axiosInstance
-      .post("https://api.rodrigomaidana.com:8080/categorias", nuevaCategoria)
+      .post("https://api.rodrigomaidana.com:8080/api/v1/categorias", nuevaCategoria)
       .then((response) => {
         console.log(response.data);
         actualizarCategorias();
@@ -63,7 +63,7 @@ export const FormCategorias = ({
     console.log(nuevaCategoria);
     axiosInstance
       .put(
-        `https://api.rodrigomaidana.com:8080/categorias/${categoria.id}`,
+        `https://api.rodrigomaidana.com:8080/api/v1/categorias/${categoria.id}`,
         nuevaCategoria
       )
       .then((response) => {

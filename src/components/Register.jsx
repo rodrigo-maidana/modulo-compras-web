@@ -16,7 +16,7 @@ export const Register = () => {
 
     try {
       const response = await axios.post(
-        "https://api.rodrigomaidana.com:8080/auth/register",
+        "https://auth/register",
         {
           username,
           password,

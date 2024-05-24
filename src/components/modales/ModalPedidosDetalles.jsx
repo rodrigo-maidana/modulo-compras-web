@@ -54,6 +54,7 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
       try {
         const response = await axiosInstance.get(
           `/pedidos-compra/detalles/${id}`
+
         );
         setDetalles(response.data);
       } catch (error) {

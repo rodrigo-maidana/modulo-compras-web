@@ -28,6 +28,7 @@ export const ListarProductos = () => {
   const fetchProductos = () => {
     axiosInstance
       .get("/productos")
+
       .then((response) => {
         setProductos(response.data);
       })
@@ -39,6 +40,7 @@ export const ListarProductos = () => {
   const deleteProducto = (idProducto) => {
     axiosInstance
       .delete(`/productos/${idProducto}`)
+
       .then(() => {
         fetchProductos();
       })
