@@ -39,8 +39,8 @@ export const TablaProductoPedido = ({ handleAgregarProducto }) => {
   const columns = useMemo(
     () => [
       {
-        Header: "ID",
-        accessor: "id",
+        Header: "#",
+        Cell: ({ row }) => row.index + 1,
       },
       {
         Header: "Marca",

@@ -23,7 +23,7 @@ const ListarDetalleTabla = ({
       <table className="table table-light table-striped table-bordered text-center">
         <thead>
           <tr>
-            <th>ID</th>
+            <th>#</th>
             <th>Producto</th>
             <th>Categoría</th>
             <th>Cantidad</th>
@@ -31,9 +31,9 @@ const ListarDetalleTabla = ({
           </tr>
         </thead>
         <tbody>
-          {detalles.map((item) => (
+          {detalles.map((item, index) => (
             <tr key={item.id}>
-              <td>{item.id}</td>
+              <td>{index + 1}</td>
               <td>{item.producto.descripcion}</td>
               <td>{item.producto.categoria?.nombre}</td>
               <td>

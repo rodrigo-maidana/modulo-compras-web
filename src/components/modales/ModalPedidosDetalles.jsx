@@ -71,16 +71,8 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
   const handleSave = async () => {
     try {
       let pedidoCompraId = id;
+      // Editar pedido existente
       if (id) {
-        // Editar pedido existente
-        console.log(detalles);
-        /* const updatedDetalles = detalles.map((detalle) => ({
-           axiosInstance.put(`/pedidos-detalles/${id}`, detalle);
-        }));
-        await axiosInstance.put(`/pedidos-compra/detalles/${id}`, {
-          detalles: updatedDetalles,
-        });*/
-
         // Eliminar los detalles que fueron eliminados en el frontend
         const detallesActuales = await axiosInstance.get(
           `/pedidos-compra/detalles/${id}`
@@ -114,14 +106,10 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
 
         await Promise.all(
           updatedDetalles.map((detalle) => {
-            console.log(detalle);
+            //console.log(detalle);
             axiosInstance.put(`/pedidos-detalles/${detalle.id}`, detalle);
           })
         );
-
-        //enfoque de haciendo put al arreglo de pedido-compra/detalles/{id del pedido}
-        /*console.log(id);
-        await axiosInstance.put(`/pedidos-compra/detalles/${id}`, detalles);*/
       } else {
         // Crear nuevo pedido
         //obtengo la cabecera del siguiente
@@ -157,7 +145,8 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
               },
               cantidad: detalle.cantidad,
             };
-
+            console.log(pedidoDetalle);
+            console.log(pedidoDetalle);
             await axiosInstance.post(
               `/pedidos-detalles/${pedidoCompraId}`,
               pedidoDetalle
@@ -182,7 +171,7 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
   return (
     <Modal show={show} onHide={handleCancel} size="lg">
       <Modal.Header closeButton>
-        <Modal.Title>Detalles del Pedido N°{id}</Modal.Title>
+        <Modal.Title>Detalles del N°{id}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {!id && (
@@ -201,7 +190,7 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
         />
       </Modal.Body>
       <Modal.Footer>
-        <button className="btn btn-danger" onClick={handleCancel}>
+        <button className="btn btn-outline-secondary" onClick={handleCancel}>
           Cancelar
         </button>
         <button className="btn btn-primary" onClick={handleSave}>
