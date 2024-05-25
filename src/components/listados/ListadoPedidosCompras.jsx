@@ -28,6 +28,7 @@ export const ListadoPedidosCompras = () => {
   const obtenerPedido = async (id) => {
     try {
       const response = await axiosInstance.get(`/pedidos-compra/${id}`);
+
       console.log(response.data);
       return response.data;
     } catch (e) {
@@ -38,6 +39,7 @@ export const ListadoPedidosCompras = () => {
   const fetchCargarPedidos = () => {
     axiosInstance
       .get("/pedidos-compra")
+
       .then((response) => {
         setPedidoCompras(response.data);
         //console.log(response.data);
@@ -70,6 +72,7 @@ export const ListadoPedidosCompras = () => {
       console.log(pedidoObtenido.estado);
       try {
         await axiosInstance.put(`/pedidos-compra/${pedido.id}`, pedidoObtenido);
+
         console.log("editado");
         fetchCargarPedidos();
       } catch (error) {

@@ -23,6 +23,7 @@ export const ListadoProveedores = () => {
   const fetchProveedores = () => {
     axiosInstance
       .get("/proveedores")
+
       .then((response) => {
         setProveedores(response.data);
       })
@@ -33,6 +34,7 @@ export const ListadoProveedores = () => {
   const deleteProveedor = (idProveedor) => {
     axiosInstance
       .delete(`/proveedores/${idProveedor}`)
+
       .then(() => {
         // Actualizar la lista de proveedores después de eliminar
         fetchProveedores();
