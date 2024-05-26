@@ -1,92 +1,53 @@
-import React, { useMemo, useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
-import axiosInstance from "../axiosInstance";
-import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrash, faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "../styles.css";
 
-export const TablaProductoPedido = ({ handleAgregarProducto }) => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+export const TablaPedidoCotizacion = ({
+  pedidos,
+  deletePedido,
+  handleEditarPedido,
+  handleCrearPedido,
+  formatearFecha,
+}) => {
   const [filter, setFilter] = useState("");
 
-  // Estado para la cantidad
-  const [productQuantities, setProductQuantities] = useState({});
-
-  // Manejar cambios de cantidad para actualizar
-  const handleQuantityChange = (productId, quantity) => {
-    if (quantity >= 0) {
-      setProductQuantities({ ...productQuantities, [productId]: quantity });
-    }
-  };
-
-  // Cargar datos desde la API
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await axiosInstance.get("/productos");
-        setData(response.data); // Asumiendo que la API devuelve un arreglo de productos
-      } catch (error) {
-        console.error("Error al cargar datos:", error);
-      }
-      setLoading(false);
-    };
-
-    fetchData();
-  }, []);
-
-  // Definir las columnas para react-table
   const columns = useMemo(
     () => [
       {
-        Header: "#",
-        Cell: ({ row }) => row.index + 1,
+        Header: "Fecha",
+        accessor: "fechaEmision",
+        Cell: ({ value }) => formatearFecha(value),
+      },
+      { Header: "Estado", accessor: "estado" },
+      { Header: "Nro Pedido", accessor: "nroPedidoCotizacion" },
+      {
+        Header: "Proveedor",
+        accessor: "proveedor.nombre",
       },
       {
-        Header: "Marca",
-        accessor: "marca.nombre",
-      },
-      {
-        Header: "Categoría",
-        accessor: "categoria.nombre",
-      },
-      {
-        Header: "Descripción",
-        accessor: "descripcion",
-      },
-      {
-        Header: "Cantidad",
-        accessor: "cantidad",
-        Cell: ({ row }) => {
-          const productId = row.original.id;
-          const productQuantity = productQuantities[productId] || 0;
-          return (
-            <div className="d-flex align-items-center">
-              <input
-                className="form-control me-3"
-                type="number"
-                min="0"
-                value={productQuantity}
-                onChange={(e) =>
-                  handleQuantityChange(productId, Number(e.target.value))
-                }
-              />
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  handleAgregarProducto(row.original, productQuantity);
-                  handleQuantityChange(productId, 0); // Restablece la cantidad a 0 después de agregar
-                }}
-                disabled={productQuantity <= 0}
-              >
-                <FontAwesomeIcon icon={faFloppyDisk} />
-              </button>
-            </div>
-          );
-        },
+        Header: "Acciones",
+        accessor: "acciones",
+        Cell: ({ row }) => (
+          <div className="d-flex justify-content-center">
+            <button
+              className="btn btn-lg mx-1"
+              onClick={() => handleEditarPedido(row.original)}
+            >
+              <FontAwesomeIcon icon={faEye} />
+            </button>
+            <button
+              className="btn-custom mx-1"
+              onClick={() => deletePedido(row.original)}
+            >
+              <FontAwesomeIcon icon={faTrash} />
+            </button>
+          </div>
+        ),
       },
     ],
-    [productQuantities, handleAgregarProducto]
+    [handleEditarPedido, deletePedido, formatearFecha]
   );
 
   const {
@@ -108,14 +69,13 @@ export const TablaProductoPedido = ({ handleAgregarProducto }) => {
   } = useTable(
     {
       columns,
-      data,
-      initialState: { pageIndex: 0, pageSize: 5 },
+      data: pedidos,
+      initialState: { pageIndex: 0 },
     },
     useGlobalFilter,
     usePagination
   );
 
-  // Manejador para el cambio en el input de filtro
   const handleFilterChange = (e) => {
     const value = e.target.value || undefined;
     setFilter(value);
@@ -126,7 +86,7 @@ export const TablaProductoPedido = ({ handleAgregarProducto }) => {
     gotoPage(page - 1);
   };
 
-  if (loading)
+  if (!pedidos.length)
     return (
       <div className="text-center">
         <strong>Cargando...</strong>
@@ -139,9 +99,9 @@ export const TablaProductoPedido = ({ handleAgregarProducto }) => {
   const endPage = Math.min(startPage + maxPagesToShow, totalPaginas);
 
   return (
-    <div className="container mt-1">
+    <div className="container mt-5">
       <div className="mb-4">
-        <h1>Listado de productos</h1>
+        <h2>Listado de pedidos de cotización</h2>
       </div>
       <div className="row justify-content-center">
         <div className="col-md-12">
@@ -154,6 +114,14 @@ export const TablaProductoPedido = ({ handleAgregarProducto }) => {
                 onChange={handleFilterChange}
                 placeholder="Buscar"
               />
+              <div className="text-right mx-4">
+                <button
+                  className="btn btn-primary px-5"
+                  onClick={handleCrearPedido}
+                >
+                  Crear
+                </button>
+              </div>
             </div>
             <table
               {...getTableProps()}
@@ -162,13 +130,13 @@ export const TablaProductoPedido = ({ handleAgregarProducto }) => {
               <thead className="thead-dark">
                 {headerGroups.map((headerGroup) => (
                   <tr
-                    {...headerGroup.getHeaderGroupProps()}
                     key={headerGroup.id}
+                    {...headerGroup.getHeaderGroupProps()}
                   >
                     {headerGroup.headers.map((column) => (
                       <th
-                        {...column.getHeaderProps()}
                         key={column.id}
+                        {...column.getHeaderProps()}
                         className="text-center"
                       >
                         {column.render("Header")}
@@ -182,14 +150,14 @@ export const TablaProductoPedido = ({ handleAgregarProducto }) => {
                   prepareRow(row);
                   return (
                     <tr
-                      {...row.getRowProps()}
                       key={row.id}
+                      {...row.getRowProps()}
                       className="text-center align-middle"
                     >
                       {row.cells.map((cell) => (
                         <td
-                          {...cell.getCellProps()}
                           key={cell.column.id}
+                          {...cell.getCellProps()}
                           className="text-center"
                         >
                           {cell.render("Cell")}

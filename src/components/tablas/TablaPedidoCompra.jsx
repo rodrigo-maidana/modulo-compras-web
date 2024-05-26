@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrash, faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../styles.css";
 
@@ -31,7 +31,7 @@ export const TablaPedidoCompra = ({
               className="btn btn-lg mx-1"
               onClick={() => handleEditarPedido(row.original.id)}
             >
-              <FontAwesomeIcon icon={faEdit} />
+              <FontAwesomeIcon icon={faEye} />
             </button>
             <button
               className="btn-custom mx-1"
