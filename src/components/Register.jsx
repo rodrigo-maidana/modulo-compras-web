@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import axiosInstance from "./axiosInstance";
 export const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -15,8 +15,8 @@ export const Register = () => {
     setError("");
 
     try {
-      const response = await axios.post(
-        "https://auth/register",
+      const response = await axiosInstance.post(
+        "https://api.rodrigomaidana.com:8080/auth/register",
         {
           username,
           password,
@@ -28,7 +28,7 @@ export const Register = () => {
       navigate("/categorias"); // Redirigir a la página principal después del registro
     } catch (err) {
       console.log(err);
-      setError("Registration failed, please try again.");
+      setError("Registration failed, please try again.", err);
     }
   };
 
