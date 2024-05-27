@@ -36,17 +36,18 @@ export const ListadoPedidoCotizacion = () => {
   const handleClose = () => {
     setShow(false);
   };
-  const onSave = () => {};
+  const onSave = () => {
+    setShow(false);
+  };
   return (
     <>
-      {" "}
       <TablaPedidoCotizacion
         pedidos={pedidoCotizacion}
-        deletePedido={deletePedido}
         handleEditarPedido={handleEditarPedido}
         handleCrearPedido={handleCrearPedido}
         formatearFecha={formatearFecha}
       />
+      {/**  Comentar porque a veces no anda el server local (quien sabe por que)    */}
       <ModalDetallesCotizacion
         cotizacion={cotizacionSelected}
         show={show}
