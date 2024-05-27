@@ -13,8 +13,10 @@ import { ListarDepositos } from "./components/listados/ListarDepositos";
 import { ListarProductos } from "./components/listados/ListarProductos";
 import { ListarCategorias } from "./components/listados/ListarCategorias";
 import { ListadoPedidoCotizacion } from "./components/listados/ListadoPedidoCotizacion";
+import ListarPedidoCotizacionNuevo from "./components/listados/Cotizacion/ListarPedidoCotizacionNuevo";
 import AuthTabs from "./components/AuthTabs";
 import ProtectedRoute from "./components/ProtectedRoute";
+
 
 const AppContent = () => {
   const navigate = useNavigate();
@@ -47,6 +49,10 @@ const AppContent = () => {
         <Route
           path="/pedido-cotizacion"
           element={<ProtectedRoute element={<ListadoPedidoCotizacion />} />}
+        />
+        <Route
+          path="/pedido-cotizacion/nuevo/:id"
+          element={<ProtectedRoute element={<ListarPedidoCotizacionNuevo />} />}
         />
       </Routes>
     </AuthProvider>

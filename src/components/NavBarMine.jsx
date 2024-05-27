@@ -26,9 +26,6 @@ export const NavBarMine = () => {
               <NavDropdown.Item href="/pedido-cotizacion">
                 Listado
               </NavDropdown.Item>
-              <NavDropdown.Item href="/pedido-cotizacion/nuevo">
-                Nuevo
-              </NavDropdown.Item>
             </NavDropdown>
           </Nav>
           <Nav className="ms-auto me-3">
