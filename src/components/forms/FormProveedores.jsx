@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import axiosInstance from "../axiosInstance";
+import Select from "react-select";
+
 export const FormProveedores = ({
   proveedor,
   actualizarProveedores,
@@ -15,8 +16,14 @@ export const FormProveedores = ({
     direccion: "",
   });
 
+  const [categorias, setCategorias] = useState([]);
+  const [selectedCategorias, setSelectedCategorias] = useState([]);
+
   useEffect(() => {
-    console.log("proveedor que llego: ", proveedor);
+    fetchCategorias();
+  }, []);
+  //si existe proveedor (querer editar)
+  useEffect(() => {
     if (proveedor) {
       setFormState({
         nombre: proveedor.nombre,
@@ -25,9 +32,30 @@ export const FormProveedores = ({
         correo: proveedor.correo,
         direccion: proveedor.direccion,
       });
+      // Aquí puedes establecer las categorías seleccionadas del proveedor si están disponibles
+      setSelectedCategorias(
+        proveedor.categorias?.map((cat) => ({
+          value: cat.id,
+          label: cat.nombre,
+        })) || []
+      );
     }
   }, [proveedor]);
-  const handleSubmit = () => {
+
+  const fetchCategorias = async () => {
+    try {
+      const response = await axiosInstance.get("/categorias");
+      const categoriasOptions = response.data.map((cat) => ({
+        value: cat.id,
+        label: cat.nombre,
+      }));
+      setCategorias(categoriasOptions);
+    } catch (error) {
+      console.error("Error al obtener las categorías:", error);
+    }
+  };
+
+  const handleSubmit = async () => {
     const { nombre, ruc, contacto, correo, direccion } = formState;
     const nuevoProveedor = {
       nombre: nombre,
@@ -36,68 +64,76 @@ export const FormProveedores = ({
       correo: correo,
       direccion: direccion,
     };
-    //console.log(isEdit);
-    //isEdit?handleSubmitEdit() : handleSubmitNew()
+
     if (!validar()) {
       return;
     }
-    if (isEdit) {
-      console.log(isEdit);
-      handleSubmitEdit(nuevoProveedor);
-      //return
-    } else {
-      console.log(isEdit);
-      handleSubmitNew(nuevoProveedor);
-      //return
+
+    try {
+      if (isEdit) {
+        await handleSubmitEdit(nuevoProveedor);
+      } else {
+        await handleSubmitNew(nuevoProveedor);
+      }
+      actualizarProveedores();
+      handleClose();
+      setFormState({
+        nombre: "",
+        ruc: "",
+        contacto: "",
+        correo: "",
+        direccion: "",
+      });
+      setSelectedCategorias([]);
+    } catch (error) {
+      console.error("Error al guardar el proveedor:", error);
     }
   };
-  const handleSubmitNew = (nuevoProveedor) => {
-    axiosInstance
-      .post("https://api.rodrigomaidana.com:8080/api/v1/proveedores", nuevoProveedor)
-      .then((response) => {
-        console.log(response.data);
-        actualizarProveedores();
-        handleClose();
-        setFormState({
-          nombre: "",
-          ruc: "",
-          contacto: "",
-          correo: "",
-          direccion: "",
-        });
-      })
-      .catch((error) => {
-        console.error("Error al crear el proveedor:", error);
-      });
-  };
-  const handleSubmitEdit = (nuevoProveedor) => {
-    console.log("edita");
-    console.log(nuevoProveedor);
-    axiosInstance
-      .put(
-        `https://api.rodrigomaidana.com:8080/api/v1/proveedores/${proveedor.id}`,
+
+  const handleSubmitNew = async (nuevoProveedor) => {
+    try {
+      const response = await axiosInstance.post(
+        "https://api.rodrigomaidana.com:8080/api/v1/proveedores",
         nuevoProveedor
-      )
-      .then((response) => {
-        console.log(response.data);
-        actualizarProveedores();
-        handleClose();
-        setFormState({
-          nombre: "",
-          ruc: "",
-          contacto: "",
-          correo: "",
-          direccion: "",
-        });
-      })
-      .catch((error) => {
-        console.error("Error al editar el proveedor:", error);
+      );
+      const idProveedorNuevo = response.data.id;
+
+      const categoriaPromises = selectedCategorias.map(async (categoria) => {
+        try {
+          await axiosInstance.post("/proveedores/categorias", {
+            proveedorId: idProveedorNuevo,
+            categoriaId: categoria.value,
+          });
+        } catch (error) {
+          console.error(
+            `Error al asociar la categoría ${categoria.value} con el proveedor ${idProveedorNuevo}:`,
+            error
+          );
+        }
       });
+
+      await Promise.all(categoriaPromises);
+    } catch (error) {
+      console.error("Error al crear el nuevo proveedor:", error);
+    }
   };
+
+  const handleSubmitEdit = async (nuevoProveedor) => {
+    const response = await axiosInstance.put(
+      `/proveedores/${proveedor.id}`,
+      nuevoProveedor
+    );
+    return response.data;
+  };
+
   const handleChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
     setFormState({ ...formState, [name]: value });
+  };
+
+  const handleCategoriaChange = (selectedOptions) => {
+    setSelectedCategorias(selectedOptions);
   };
 
   const validar = () => {
@@ -116,8 +152,13 @@ export const FormProveedores = ({
       alert("formato de correo no valido");
       return false;
     }
+    if (selectedCategorias.length === 0) {
+      alert("debe tener al menos una categoria");
+      return false;
+    }
     return true;
   };
+
   return (
     <>
       <div className="container p-2">
@@ -183,7 +224,7 @@ export const FormProveedores = ({
           </div>
           <div className="col-12-md-6 px-4">
             <label className="col-6 pe-4" htmlFor="direccionProveedor">
-              Direccion:
+              Dirección:
             </label>
             <input
               className="col-6"
@@ -194,6 +235,19 @@ export const FormProveedores = ({
               onChange={handleChange}
               placeholder="ejemplo: calle 1 c/ calle2"
             ></input>
+          </div>
+          <div className="col-12-md-6 px-4">
+            <label className="col-6 pe-4" htmlFor="categorias">
+              Categorías:
+            </label>
+            <Select
+              id="categorias"
+              isMulti
+              options={categorias}
+              value={selectedCategorias}
+              onChange={handleCategoriaChange}
+              isDisabled={isEdit}
+            />
           </div>
           <div className="text-center">
             <button

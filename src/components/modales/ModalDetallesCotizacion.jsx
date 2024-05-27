@@ -3,20 +3,16 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Table from "react-bootstrap/Table";
 import axios from "axios";
-
+import axiosInstance from "../axiosInstance";
 const ModalDetallesCotizacion = ({ cotizacion, show, handleClose, onSave }) => {
   const [detalles, setDetalles] = useState([]);
   //cargar detalles del pedido de cotizacion
   const fetchProductos = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:3000/pedidos-cotizacion/detalles/${cotizacion.id}`
+      const response = await axiosInstance.get(
+        `/cotizaciones/${cotizacion.id}/detalles`
       );
-      const productosConPrecio = response.data.productos.map((producto) => ({
-        ...producto,
-        precioUnitario: producto.precioUnitario || 0, //iniciar el precio en 0 por las dudas
-      }));
-      setDetalles(productosConPrecio);
+      setDetalles(response.data);
     } catch (error) {
       console.error("Error al cargar los productos:", error);
     }
@@ -71,10 +67,11 @@ const ModalDetallesCotizacion = ({ cotizacion, show, handleClose, onSave }) => {
 
   return (
     <>
+      {/*console.log(cotizacion.id)*/}
       <Modal show={show} onHide={handleCancelar} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>
-            Detalles de la Cotización N°{cotizacion.nroPedidoCotizacion}
+            Detalles de la Cotización N°{/*cotizacion.nroPedidoCotizacion*/}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>

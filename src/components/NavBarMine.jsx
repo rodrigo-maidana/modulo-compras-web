@@ -21,15 +21,16 @@ export const NavBarMine = () => {
             <Nav.Link href="/depositos">Depositos</Nav.Link>
             <Nav.Link href="/categorias">Categorias</Nav.Link>
             <Nav.Link href="/productos">Productos</Nav.Link>
-            <Nav.Link href="/pedidos">Pedidos</Nav.Link>
-            <NavDropdown title="Pedido Cotizacion" id="basic-nav-dropdown">
-              <NavDropdown.Item href="/pedido-cotizacion">
+            <Nav.Link href="/pedidos-compra">Pedido compra</Nav.Link>
+            <NavDropdown title="Pedido cotizacion" id="basic-nav-dropdown">
+              <NavDropdown.Item href="/pedidos-cotizacion">
                 Listado
               </NavDropdown.Item>
               <NavDropdown.Item href="/pedido-cotizacion/nuevo">
                 Nuevo
               </NavDropdown.Item>
             </NavDropdown>
+            <Nav.Link href="/orden-compra">Orden compra</Nav.Link>
           </Nav>
           <Nav className="ms-auto me-3">
             <button onClick={logout} className="btn btn-outline-light">
