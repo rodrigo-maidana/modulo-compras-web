@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
-import axiosInstance from "../../axiosInstance";
+import axiosInstance from "../axiosInstance";
 import ListarCategoriasDetalles from "./ListarCategoriasDetalles";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ListarDetalleTablaCotizacion from "./ListarDetalleTablaCotizacion"
+import ListarDetalleTablaCotizacion from "./ListarDetalleTablaCotizacion";
 import { useParams } from "react-router-dom";
 
 const ListarPedidoCotizacionNuevo = () => {
     const [detalles, setDetalles] = useState([]);
     const [nroPedido, setNroPedido] = useState("");
     const [categorias, setCategorias] = useState([]);
+    const [pedidoCompra, setPedidoCompra] = useState(null);
     const { id } = useParams();
 
     useEffect(() => {
         const fetchDetalles = async () => {
             try {
-                const response = await axiosInstance.get(`/pedidos-compra/detalles/${id}`);
+                const response = await axiosInstance.get(`/pedidos-compra/${id}/detalles`);
                 setDetalles(response.data);
             } catch (error) {
                 console.error("Error al cargar los detalles del pedido:", error);
@@ -23,7 +24,7 @@ const ListarPedidoCotizacionNuevo = () => {
 
         const fetchCategorias = async () => {
             try {
-                const response = await axiosInstance.get(`/pedidos-compra/detalles/${id}`);
+                const response = await axiosInstance.get(`/pedidos-compra/${id}/detalles`);
                 const categorias = response.data.map(item => item.producto.categoria);
                 const uniqueCategorias = [...new Set(categorias.map(categoria => categoria.id))].map(
                     id => categorias.find(categoria => categoria.id === id)
@@ -37,17 +38,14 @@ const ListarPedidoCotizacionNuevo = () => {
         const fetchPedido = async () => {
             try {
                 const response = await axiosInstance.get(`/pedidos-compra/${id}`);
-                console.log(response.data); // Verifica la estructura de los datos retornados
                 setNroPedido(response.data.nroPedido);
+                setPedidoCompra(response.data); // Guardar todo el objeto de pedidoCompra
             } catch (error) {
                 if (error.response) {
-                    // El servidor respondió con un estado fuera del rango 2xx
                     console.error("Error al cargar el número del pedido:", error.response.data);
                 } else if (error.request) {
-                    // La solicitud fue hecha pero no se recibió respuesta
                     console.error("No se recibió respuesta del servidor:", error.request);
                 } else {
-                    // Algo pasó al configurar la solicitud que lanzó un error
                     console.error("Error al configurar la solicitud:", error.message);
                 }
             }
@@ -70,15 +68,11 @@ const ListarPedidoCotizacionNuevo = () => {
                 </div>
                 <div className="col-md-6 mb-4">
                     <h2 className="mb-4">Detalle Categorias</h2>
-                    <ListarCategoriasDetalles categorias={categorias} />
+                    <ListarCategoriasDetalles categorias={categorias} pedidoCompra={pedidoCompra} />
                 </div>
             </div>
         </div>
     );
-
-
-
-
 };
 
 export default ListarPedidoCotizacionNuevo;

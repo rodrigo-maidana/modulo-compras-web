@@ -13,7 +13,7 @@ import { ListarDepositos } from "./components/listados/ListarDepositos";
 import { ListarProductos } from "./components/listados/ListarProductos";
 import { ListarCategorias } from "./components/listados/ListarCategorias";
 import { ListadoPedidoCotizacion } from "./components/listados/ListadoPedidoCotizacion";
-import ListarPedidoCotizacionNuevo from "./components/listados/Cotizacion/ListarPedidoCotizacionNuevo";
+import ListarPedidoCotizacionNuevo from "./components/listados/ListarPedidoCotizacionNuevo";
 import AuthTabs from "./components/AuthTabs";
 import ProtectedRoute from "./components/ProtectedRoute";
 

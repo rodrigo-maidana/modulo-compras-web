@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Table } from "react-bootstrap";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import ModalProveedoresCotizacion from "./ModalProveedoresCotizacion";
+import ModalProveedoresCotizacion from "../modales/ModalProveedoresCotizacion";
 
-const ListarCategoriasDetalles = ({ categorias = [] }) => {
+const ListarCategoriasDetalles = ({ categorias = [], pedidoCompra }) => {
     const [showModal, setShowModal] = useState(false);
     const [selectedCategoria, setSelectedCategoria] = useState(null);
 
@@ -53,6 +53,7 @@ const ListarCategoriasDetalles = ({ categorias = [] }) => {
                     show={showModal}
                     handleClose={handleCloseModal}
                     selectedCategoria={selectedCategoria}
+                    pedidoCompra={pedidoCompra}
                 />
             )}
         </div>
