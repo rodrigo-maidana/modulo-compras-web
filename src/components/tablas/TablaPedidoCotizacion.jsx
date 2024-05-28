@@ -19,7 +19,7 @@ export const TablaPedidoCotizacion = ({
         Cell: ({ value }) => formatearFecha(value),
       },
       { Header: "Estado", accessor: "estado" },
-      { Header: "Nro Pedido", accessor: "nroPedidoCotizacion" },
+      { Header: "Nro Pedido", accessor: "nroCotizacion" },
       {
         Header: "Proveedor",
         accessor: "proveedor.nombre",

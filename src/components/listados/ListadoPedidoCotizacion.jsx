@@ -37,6 +37,7 @@ export const ListadoPedidoCotizacion = () => {
   };
   const onSave = () => {
     setShow(false);
+    //actualizar lista
   };
   return (
     <>
