@@ -15,9 +15,8 @@ export const ModalDeposito = ({
     <>
       <Modal show={show} onHide={handleClose} size="xl">
         <Modal.Header>
-          <Modal.Title className="p-1">
-            {" "}
-            <h1>Crear deposito</h1>
+          <Modal.Title className="mt-2 ms-2">
+            {isEdit ? "" : "Crear deposito"}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>

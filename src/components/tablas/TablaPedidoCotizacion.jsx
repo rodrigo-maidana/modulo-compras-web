@@ -6,9 +6,7 @@ import "../styles.css";
 
 export const TablaPedidoCotizacion = ({
   pedidos,
-  deletePedido,
   handleEditarPedido,
-  handleCrearPedido,
   formatearFecha,
 }) => {
   const [filter, setFilter] = useState("");
@@ -21,7 +19,7 @@ export const TablaPedidoCotizacion = ({
         Cell: ({ value }) => formatearFecha(value),
       },
       { Header: "Estado", accessor: "estado" },
-      { Header: "Nro Pedido", accessor: "nroPedidoCotizacion" },
+      { Header: "Nro Pedido", accessor: "nroCotizacion" },
       {
         Header: "Proveedor",
         accessor: "proveedor.nombre",
@@ -37,17 +35,11 @@ export const TablaPedidoCotizacion = ({
             >
               <FontAwesomeIcon icon={faEye} />
             </button>
-            <button
-              className="btn-custom mx-1"
-              onClick={() => deletePedido(row.original)}
-            >
-              <FontAwesomeIcon icon={faTrash} />
-            </button>
           </div>
         ),
       },
     ],
-    [handleEditarPedido, deletePedido, formatearFecha]
+    [handleEditarPedido, formatearFecha]
   );
 
   const {
@@ -114,14 +106,7 @@ export const TablaPedidoCotizacion = ({
                 onChange={handleFilterChange}
                 placeholder="Buscar"
               />
-              <div className="text-right mx-4">
-                <button
-                  className="btn btn-primary px-5"
-                  onClick={handleCrearPedido}
-                >
-                  Crear
-                </button>
-              </div>
+              <div className="text-right mx-4"></div>
             </div>
             <table
               {...getTableProps()}

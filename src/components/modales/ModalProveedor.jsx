@@ -15,9 +15,8 @@ export const ModalProveedor = ({
     <>
       <Modal show={show} onHide={handleClose} size="xl">
         <Modal.Header>
-          <Modal.Title className="p-1">
-            {" "}
-            <h1>Crear proveedor</h1>
+          <Modal.Title className="mt-2 ms-2">
+            {!isEdit ? <h2>Crear proveedor</h2> : <></>}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>

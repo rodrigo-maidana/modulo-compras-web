@@ -20,6 +20,23 @@ export const TablaProveedores = ({
       { Header: "Correo", accessor: "correo" },
       { Header: "Direccion", accessor: "direccion" },
       {
+        Header: "Categorias",
+        accessor: "categorias",
+        Cell: ({ row }) => (
+          <div>
+            {row.original.categorias.map((categoria) => (
+              <span
+                key={categoria.id}
+                className="badge bg-secondary mb-1 "
+                style={{ display: "block" }}
+              >
+                {categoria.nombre}
+              </span>
+            ))}
+          </div>
+        ),
+      },
+      {
         Header: "Acciones",
         accessor: "acciones",
         Cell: ({ row }) => (
@@ -79,7 +96,12 @@ export const TablaProveedores = ({
     gotoPage(page - 1);
   };
 
-  if (!proveedores.length) return <div className="text-center"><strong>Cargando...</strong></div>;
+  if (!proveedores.length)
+    return (
+      <div className="text-center">
+        <strong>Cargando...</strong>
+      </div>
+    );
 
   const totalPaginas = pageOptions.length;
   const maxPagesToShow = 10;
@@ -111,12 +133,22 @@ export const TablaProveedores = ({
                 </button>
               </div>
             </div>
-            <table {...getTableProps()} className="table table-bordered table-hover">
+            <table
+              {...getTableProps()}
+              className="table table-bordered table-hover"
+            >
               <thead className="thead-dark">
                 {headerGroups.map((headerGroup) => (
-                  <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
+                  <tr
+                    key={headerGroup.id}
+                    {...headerGroup.getHeaderGroupProps()}
+                  >
                     {headerGroup.headers.map((column) => (
-                      <th key={column.id} {...column.getHeaderProps()} className="text-center">
+                      <th
+                        key={column.id}
+                        {...column.getHeaderProps()}
+                        className="text-center"
+                      >
                         {column.render("Header")}
                       </th>
                     ))}
@@ -134,7 +166,9 @@ export const TablaProveedores = ({
                           {...cell.getCellProps()}
                           className={"align-middle"}
                           style={
-                            ["nombre", "correo", "direccion"].includes(cell.column.id)
+                            ["nombre", "correo", "direccion"].includes(
+                              cell.column.id
+                            )
                               ? { textAlign: "left" }
                               : { textAlign: "center" }
                           }
@@ -150,7 +184,11 @@ export const TablaProveedores = ({
             <div className="d-flex justify-content-center">
               <nav>
                 <ul className="pagination">
-                  <li className={`page-item ${!canPreviousPage ? "disabled" : ""}`}>
+                  <li
+                    className={`page-item ${
+                      !canPreviousPage ? "disabled" : ""
+                    }`}
+                  >
                     <button
                       className="page-link"
                       onClick={() => handlePageChange(1)}
@@ -159,7 +197,9 @@ export const TablaProveedores = ({
                       {"<<"}
                     </button>
                   </li>
-                  <li className={`page-item ${pageIndex === 0 ? "disabled" : ""}`}>
+                  <li
+                    className={`page-item ${pageIndex === 0 ? "disabled" : ""}`}
+                  >
                     <button
                       className="page-link"
                       onClick={() => previousPage()}
@@ -168,10 +208,15 @@ export const TablaProveedores = ({
                       {"<"}
                     </button>
                   </li>
-                  {Array.from({ length: endPage - startPage }, (_, i) => startPage + i).map((pageNumber) => (
+                  {Array.from(
+                    { length: endPage - startPage },
+                    (_, i) => startPage + i
+                  ).map((pageNumber) => (
                     <li
                       key={pageNumber}
-                      className={`page-item ${pageNumber === pageIndex ? "active" : ""}`}
+                      className={`page-item ${
+                        pageNumber === pageIndex ? "active" : ""
+                      }`}
                     >
                       <button
                         className="page-link"
@@ -181,7 +226,11 @@ export const TablaProveedores = ({
                       </button>
                     </li>
                   ))}
-                  <li className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""}`}>
+                  <li
+                    className={`page-item ${
+                      pageIndex === pageCount - 1 ? "disabled" : ""
+                    }`}
+                  >
                     <button
                       className="page-link"
                       onClick={() => nextPage()}

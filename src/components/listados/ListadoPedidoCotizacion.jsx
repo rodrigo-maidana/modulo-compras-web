@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { TablaPedidoCotizacion } from "../tablas/TablaPedidoCotizacion";
 import ModalDetallesCotizacion from "../modales/ModalDetallesCotizacion";
-
+import axiosInstance from "../axiosInstance";
 export const ListadoPedidoCotizacion = () => {
   const [pedidoCotizacion, setPedidoCotizacion] = useState([]);
   const [cotizacionSelected, setCotizacionSelected] = useState(null);
   const [show, setShow] = useState(false);
 
   const fetchCargarPedidos = () => {
-    axios
-      .get("http://localhost:3000/pedidos-cotizacion")
+    axiosInstance
+      .get("/cotizaciones")
       .then((response) => {
         console.log("response", response.data);
         setPedidoCotizacion(response.data);
@@ -36,17 +35,19 @@ export const ListadoPedidoCotizacion = () => {
   const handleClose = () => {
     setShow(false);
   };
-  const onSave = () => {};
+  const onSave = () => {
+    setShow(false);
+    fetchCargarPedidos();
+  };
   return (
     <>
-      {" "}
       <TablaPedidoCotizacion
         pedidos={pedidoCotizacion}
-        deletePedido={deletePedido}
         handleEditarPedido={handleEditarPedido}
         handleCrearPedido={handleCrearPedido}
         formatearFecha={formatearFecha}
       />
+      {/**  Comentar porque a veces no anda el server local (quien sabe por que)    */}
       <ModalDetallesCotizacion
         cotizacion={cotizacionSelected}
         show={show}

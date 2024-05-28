@@ -53,8 +53,7 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
     const fetchDetalles = async () => {
       try {
         const response = await axiosInstance.get(
-          `/pedidos-compra/detalles/${id}`
-
+          `/pedidos-compra/${id}/detalles`
         );
         setDetalles(response.data);
       } catch (error) {
@@ -127,6 +126,7 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
           `/pedidos-compra`,
           pedidoCompra
         );
+        console.log("cabecera siguiente: ", responsePedidoCompra);
         pedidoCompraId = responsePedidoCompra.data.id;
         //promise all para que se guarden todos los detalles
         await Promise.all(
