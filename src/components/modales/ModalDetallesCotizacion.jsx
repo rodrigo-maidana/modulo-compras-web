@@ -3,7 +3,13 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Table from "react-bootstrap/Table";
 import axiosInstance from "../axiosInstance";
-const ModalDetallesCotizacion = ({ cotizacion, show, handleClose, onSave }) => {
+const ModalDetallesCotizacion = ({
+  cotizacion,
+  show,
+  handleClose,
+  onSave,
+  formatearFecha,
+}) => {
   const [detalles, setDetalles] = useState([]);
   const [registrado, setRegistrado] = useState(false);
   //cargar detalles del pedido de cotizacion
@@ -75,11 +81,27 @@ const ModalDetallesCotizacion = ({ cotizacion, show, handleClose, onSave }) => {
       <Modal show={show} onHide={handleCancelar} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>
-            Detalles de la Cotización N°
-            {cotizacion ? cotizacion.nroCotizacion : ""}
+            <p className="mb-1">
+              <font size="5" className="my-1">
+                {cotizacion.estado === "Registrado"
+                  ? "Precios registrados"
+                  : "Cargar precios"}{" "}
+                de la cotización N° {cotizacion ? cotizacion.nroCotizacion : ""}
+              </font>
+            </p>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <p className="mb-1">
+            <font size="4">
+              Proveedor: {cotizacion ? cotizacion.proveedor.nombre : ""}
+            </font>
+          </p>
+          <p className="mb-1">
+            <font size="4">
+              fecha: {cotizacion ? formatearFecha(cotizacion.fechaEmision) : ""}
+            </font>
+          </p>
           <Table bordered hover>
             <thead className="thead-dark">
               <tr>

@@ -53,6 +53,7 @@ export const ListadoPedidoCotizacion = () => {
         show={show}
         handleClose={handleClose}
         onSave={onSave}
+        formatearFecha={formatearFecha}
       />
     </>
   );
