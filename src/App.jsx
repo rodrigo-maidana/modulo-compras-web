@@ -19,7 +19,6 @@ import ListarPedidoCotizacionNuevo from "./components/listados/ListarPedidoCotiz
 import AuthTabs from "./components/AuthTabs";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-
 const AppContent = () => {
   const navigate = useNavigate();
 
@@ -51,6 +50,10 @@ const AppContent = () => {
         <Route
           path="/pedidos-cotizacion"
           element={<ProtectedRoute element={<ListadoPedidoCotizacion />} />}
+        />
+        <Route
+          path="/pedido-cotizacion/nuevo/:id"
+          element={<ProtectedRoute element={<ListarPedidoCotizacionNuevo />} />}
         />
         <Route
           path="/orden-compra"
