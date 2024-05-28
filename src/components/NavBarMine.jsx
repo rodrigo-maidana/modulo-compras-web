@@ -17,10 +17,15 @@ export const NavBarMine = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/proveedores">Proveedores</Nav.Link>
-            <Nav.Link href="/depositos">Depositos</Nav.Link>
-            <Nav.Link href="/categorias">Categorias</Nav.Link>
-            <Nav.Link href="/productos">Productos</Nav.Link>
+            <NavDropdown title="Gestión" id="inventory-nav-dropdown">
+              <NavDropdown.Item href="/proveedores">
+                Proveedores
+              </NavDropdown.Item>
+              <NavDropdown.Item href="/depositos">Depositos</NavDropdown.Item>
+              <NavDropdown.Item href="/categorias">Categorias</NavDropdown.Item>
+              <NavDropdown.Item href="/productos">Productos</NavDropdown.Item>
+            </NavDropdown>
+
             <Nav.Link href="/pedidos-compra">Pedido compra</Nav.Link>
             <NavDropdown title="Pedido cotizacion" id="basic-nav-dropdown">
               <NavDropdown.Item href="/pedidos-cotizacion">

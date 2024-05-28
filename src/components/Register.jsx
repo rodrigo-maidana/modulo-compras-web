@@ -25,7 +25,7 @@ export const Register = () => {
         }
       );
       console.log(response.data);
-      navigate("/categorias"); // Redirigir a la página principal después del registro
+      navigate("/proveedores"); // Redirigir a la página principal después del registro
     } catch (err) {
       console.log(err);
       setError("Registration failed, please try again.", err);
