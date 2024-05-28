@@ -52,10 +52,16 @@ const ModalProveedoresCotizacion = ({ show, handleClose, selectedCategoria, pedi
             }
             handleClose();
         } catch (error) {
-            console.error('Error al crear cotizaciones:', error);
-            alert('Error al crear cotizaciones');
+            if (error.response && error.response.status === 409) { // Suponiendo que 409 es el código de conflicto para orden ya existente
+                console.error('Error: Ya existe una orden para el proveedor seleccionado.', error);
+                alert('Ya existe una orden para el proveedor seleccionado.');
+            } else {
+                console.error('Error al crear cotizaciones:', error);
+                alert('Error al crear cotizaciones');
+            }
         }
     };
+
 
     return (
         <Modal show={show} onHide={handleClose} size="lg">
