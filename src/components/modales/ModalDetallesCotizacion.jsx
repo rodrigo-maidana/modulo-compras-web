@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Table from "react-bootstrap/Table";
-import axios from "axios";
 import axiosInstance from "../axiosInstance";
 const ModalDetallesCotizacion = ({ cotizacion, show, handleClose, onSave }) => {
   const [detalles, setDetalles] = useState([]);
@@ -13,8 +12,11 @@ const ModalDetallesCotizacion = ({ cotizacion, show, handleClose, onSave }) => {
       const response = await axiosInstance.get(
         `/cotizaciones/${cotizacion.id}/detalles`
       );
-      setDetalles(response.data);
-      setRegistrado(detalles.every((detalle) => detalle.precioUnitario > 0));
+      const productos = response.data;
+      setDetalles(productos);
+      setRegistrado(
+        productos.every((detalle) => parseInt(detalle.precioUnitario) > 0)
+      );
       console.log(registrado);
     } catch (error) {
       console.error("Error al cargar los productos:", error);
@@ -31,17 +33,11 @@ const ModalDetallesCotizacion = ({ cotizacion, show, handleClose, onSave }) => {
     const allPriceSet = detalles.every(
       (producto) => producto.precioUnitario > 0
     );
-
     //si todos los precios son mayor a 0
     if (allPriceSet) {
       // hacer put de los productos con sus precios cargados y el estado a cotizado
       const preciosPromises = detalles.map(async (detalle) => {
         try {
-          /*
-        axios.put(
-          `http://localhost:3000/pedidos-cotizacion/detalles/${cotizacion.id}`,
-          { productos: detalles, estado: "Cotizado" }
-        );*/
           await axiosInstance.put(`cotizacion-detalles/${detalle.id}`, detalle);
           onSave();
         } catch (error) {
@@ -49,6 +45,8 @@ const ModalDetallesCotizacion = ({ cotizacion, show, handleClose, onSave }) => {
         }
       });
       await Promise.all(preciosPromises);
+      cotizacion.estado = "Registrado";
+      axiosInstance.put(`cotizaciones/${cotizacion.id}`, cotizacion);
     } else {
       alert("todos los productos deben tener precio mayor a 0");
     }
