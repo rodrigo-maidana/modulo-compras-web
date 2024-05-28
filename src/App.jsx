@@ -14,8 +14,11 @@ import { ListarProductos } from "./components/listados/ListarProductos";
 import { ListarCategorias } from "./components/listados/ListarCategorias";
 import { ListadoPedidoCotizacion } from "./components/listados/ListadoPedidoCotizacion";
 import { ListadoOrdenCompra } from "./components/listados/ListadoOrdenCompra";
+import ListarPedidoCotizacionNuevo from "./components/listados/ListarPedidoCotizacionNuevo";
+
 import AuthTabs from "./components/AuthTabs";
 import ProtectedRoute from "./components/ProtectedRoute";
+
 
 const AppContent = () => {
   const navigate = useNavigate();

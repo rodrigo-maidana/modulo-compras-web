@@ -9,6 +9,11 @@ export const ListadoPedidosCompras = () => {
   const [selectedPedidoId, setSelectedPedidoId] = useState(null);
   const [edit, setEdit] = useState(false);
 
+  const cotizacion = (id) => {
+    setSelectedPedidoId(id);
+    window.location.href = `/pedido-cotizacion/nuevo/${id}`;
+  };
+
   const handleCrearPedido = () => {
     setShow(true);
     setEdit(false);
@@ -94,6 +99,7 @@ export const ListadoPedidosCompras = () => {
         deletePedido={deletePedido}
         handleEditarPedido={handleEditarPedido}
         handleCrearPedido={handleCrearPedido}
+        cotizacion={cotizacion}
         formatearFecha={formatearFecha}
       />
 

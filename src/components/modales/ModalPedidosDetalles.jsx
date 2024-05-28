@@ -146,8 +146,6 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
               },
               cantidad: detalle.cantidad,
             };
-            console.log(pedidoDetalle);
-            console.log(pedidoDetalle);
             await axiosInstance.post(
               `/pedidos-detalles/${pedidoCompraId}`,
               pedidoDetalle

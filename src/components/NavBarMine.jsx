@@ -26,9 +26,6 @@ export const NavBarMine = () => {
               <NavDropdown.Item href="/pedidos-cotizacion">
                 Listado
               </NavDropdown.Item>
-              <NavDropdown.Item href="/pedido-cotizacion/nuevo">
-                Nuevo
-              </NavDropdown.Item>
             </NavDropdown>
             <Nav.Link href="/orden-compra">Orden compra</Nav.Link>
           </Nav>
