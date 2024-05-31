@@ -27,11 +27,14 @@ export const NavBarMine = () => {
             </NavDropdown>
 
             <Nav.Link href="/pedidos-compra">Pedido compra</Nav.Link>
+            <Nav.Link href="/pedidos-cotizacion">Pedido cotizacion</Nav.Link>
+            {/** 
             <NavDropdown title="Pedido cotizacion" id="basic-nav-dropdown">
               <NavDropdown.Item href="/pedidos-cotizacion">
                 Listado
               </NavDropdown.Item>
             </NavDropdown>
+            */}
             <Nav.Link href="/orden-compra">Orden compra</Nav.Link>
           </Nav>
           <Nav className="ms-auto me-3">

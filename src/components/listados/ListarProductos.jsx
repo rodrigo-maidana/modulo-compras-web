@@ -23,7 +23,7 @@ export const ListarProductos = () => {
   const handleCrearProducto = () => {
     setShow(true);
     setIsEdit(false);
-    productoSeleccionado(null);
+    setProductoSeleccionado(null);
   };
   const fetchProductos = () => {
     axiosInstance

@@ -1,4 +1,3 @@
-// TablaCategorias.jsx
 import React, { useMemo, useState } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -129,42 +128,56 @@ export const TablaProductos = ({
               className="table table-bordered table-hover"
             >
               <thead className="thead-dark">
-                {headerGroups.map((headerGroup) => (
-                  <tr
-                    key={headerGroup.id}
-                    {...headerGroup.getHeaderGroupProps()}
-                  >
-                    {headerGroup.headers.map((column) => (
-                      <th
-                        key={column.id}
-                        {...column.getHeaderProps()}
-                        className="text-center"
-                      >
-                        {column.render("Header")}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
+                {headerGroups.map((headerGroup) => {
+                  const { key: headerGroupKey, ...restHeaderGroupProps } =
+                    headerGroup.getHeaderGroupProps();
+                  return (
+                    <tr key={headerGroupKey} {...restHeaderGroupProps}>
+                      {headerGroup.headers.map((column) => {
+                        const { key: columnKey, ...restColumnProps } =
+                          column.getHeaderProps();
+                        return (
+                          <th
+                            key={columnKey}
+                            {...restColumnProps}
+                            className="text-center"
+                          >
+                            {column.render("Header")}
+                          </th>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
               </thead>
               <tbody {...getTableBodyProps()}>
                 {page.map((row) => {
                   prepareRow(row);
+                  const { key: rowKey, ...restRowProps } = row.getRowProps();
                   return (
-                    <tr key={row.id} {...row.getRowProps()}>
-                      {row.cells.map((cell) => (
-                        <td
-                          key={cell.column.id}
-                          {...cell.getCellProps()}
-                          className={"align-middle"}
-                          style={
-                            ["marca.nombre", "categoria.nombre", "descripcion"].includes(cell.column.id)
-                              ? { textAlign: "left" }
-                              : { textAlign: "center" }
-                          }
-                        >
-                          {cell.render("Cell")}
-                        </td>
-                      ))}
+                    <tr key={rowKey} {...restRowProps}>
+                      {row.cells.map((cell) => {
+                        const { key: cellKey, ...restCellProps } =
+                          cell.getCellProps();
+                        return (
+                          <td
+                            key={cellKey}
+                            {...restCellProps}
+                            className={"align-middle"}
+                            style={
+                              [
+                                "marca.nombre",
+                                "categoria.nombre",
+                                "descripcion",
+                              ].includes(cell.column.id)
+                                ? { textAlign: "left" }
+                                : { textAlign: "center" }
+                            }
+                          >
+                            {cell.render("Cell")}
+                          </td>
+                        );
+                      })}
                     </tr>
                   );
                 })}
@@ -174,8 +187,9 @@ export const TablaProductos = ({
               <nav>
                 <ul className="pagination">
                   <li
-                    className={`page-item ${!canPreviousPage ? "disabled" : ""
-                      }`}
+                    className={`page-item ${
+                      !canPreviousPage ? "disabled" : ""
+                    }`}
                   >
                     <button
                       className="page-link"
@@ -196,11 +210,15 @@ export const TablaProductos = ({
                       {"<"}
                     </button>
                   </li>
-                  {Array.from({ length: endPage - startPage }, (_, i) => startPage + i).map((pageNumber) => (
+                  {Array.from(
+                    { length: endPage - startPage },
+                    (_, i) => startPage + i
+                  ).map((pageNumber) => (
                     <li
                       key={pageNumber}
-                      className={`page-item ${pageNumber === pageIndex ? "active" : ""
-                        }`}
+                      className={`page-item ${
+                        pageNumber === pageIndex ? "active" : ""
+                      }`}
                     >
                       <button
                         className="page-link"
@@ -211,8 +229,9 @@ export const TablaProductos = ({
                     </li>
                   ))}
                   <li
-                    className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""
-                      }`}
+                    className={`page-item ${
+                      pageIndex === pageCount - 1 ? "disabled" : ""
+                    }`}
                   >
                     <button
                       className="page-link"
