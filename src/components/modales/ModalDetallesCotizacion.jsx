@@ -53,9 +53,14 @@ const ModalDetallesCotizacion = ({
       cotizacion.estado = "Registrado";
       axiosInstance.put(`cotizaciones/${cotizacion.id}`, cotizacion);
       //actualizar el estado del pedido de compra al guardar
+      cotizacion.pedidoCompra.estado = "Cotizado";
       //obtener el pedido de compra
 
       //hacer put del pedido de compra con el estado actualizado
+      axiosInstance.put(
+        `pedidos-compra/${cotizacion.pedidoCompra.id}`,
+        cotizacion.pedidoCompra
+      );
     } else {
       alert("todos los productos deben tener precio mayor a 0");
     }
