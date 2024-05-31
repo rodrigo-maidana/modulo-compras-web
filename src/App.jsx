@@ -15,6 +15,7 @@ import { ListarCategorias } from "./components/listados/ListarCategorias";
 import { ListadoPedidoCotizacion } from "./components/listados/ListadoPedidoCotizacion";
 import { ListadoOrdenCompra } from "./components/listados/ListadoOrdenCompra";
 import ListarPedidoCotizacionNuevo from "./components/listados/ListarPedidoCotizacionNuevo";
+import { FormOrdenCompra } from "./components/forms/FormOrdenCompra";
 
 import AuthTabs from "./components/AuthTabs";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -56,8 +57,8 @@ const AppContent = () => {
           element={<ProtectedRoute element={<ListarPedidoCotizacionNuevo />} />}
         />
         <Route
-          path="/orden-compra"
-          element={<ProtectedRoute element={<ListadoOrdenCompra />} />}
+          path="/orden-compra/:id"
+          element={<ProtectedRoute element={<FormOrdenCompra />} />}
         />
       </Routes>
     </AuthProvider>

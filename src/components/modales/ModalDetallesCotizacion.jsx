@@ -23,7 +23,6 @@ const ModalDetallesCotizacion = ({
       setRegistrado(
         productos.every((detalle) => parseInt(detalle.precioUnitario) > 0)
       );
-      console.log(registrado);
     } catch (error) {
       console.error("Error al cargar los productos:", error);
     }
@@ -53,6 +52,10 @@ const ModalDetallesCotizacion = ({
       await Promise.all(preciosPromises);
       cotizacion.estado = "Registrado";
       axiosInstance.put(`cotizaciones/${cotizacion.id}`, cotizacion);
+      //actualizar el estado del pedido de compra al guardar
+      //obtener el pedido de compra
+
+      //hacer put del pedido de compra con el estado actualizado
     } else {
       alert("todos los productos deben tener precio mayor a 0");
     }
@@ -83,10 +86,13 @@ const ModalDetallesCotizacion = ({
           <Modal.Title>
             <p className="mb-1">
               <font size="5" className="my-1">
-                {cotizacion.estado === "Registrado"
-                  ? "Precios registrados"
-                  : "Cargar precios"}{" "}
-                de la cotización N° {cotizacion ? cotizacion.nroCotizacion : ""}
+                <b>
+                  {cotizacion.estado === "Registrado"
+                    ? "Precios registrados"
+                    : "Cargar precios"}{" "}
+                  de la cotización N°{" "}
+                  {cotizacion ? cotizacion.nroCotizacion : ""}
+                </b>
               </font>
             </p>
           </Modal.Title>
@@ -94,12 +100,20 @@ const ModalDetallesCotizacion = ({
         <Modal.Body>
           <p className="mb-1">
             <font size="4">
-              Proveedor: {cotizacion ? cotizacion.proveedor.nombre : ""}
+              <b>Proveedor: </b>
+              {cotizacion ? cotizacion.proveedor.nombre : ""}
             </font>
           </p>
           <p className="mb-1">
             <font size="4">
-              fecha: {cotizacion ? formatearFecha(cotizacion.fechaEmision) : ""}
+              <b>Fecha:</b>{" "}
+              {cotizacion ? formatearFecha(cotizacion.fechaEmision) : ""}
+            </font>
+          </p>
+          <p className="mb-1">
+            <font size="4">
+              <b>Nro pedido compra:</b>{" "}
+              {cotizacion ? cotizacion.pedidoCompra.nroPedido : ""}
             </font>
           </p>
           <Table bordered hover>
