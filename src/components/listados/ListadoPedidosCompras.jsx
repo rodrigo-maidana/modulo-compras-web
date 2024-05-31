@@ -13,7 +13,9 @@ export const ListadoPedidosCompras = () => {
     setSelectedPedidoId(id);
     window.location.href = `/pedido-cotizacion/nuevo/${id}`;
   };
-
+  const ordenCompra = (id) => {
+    window.location.href = `/orden-compra/${id}`;
+  };
   const handleCrearPedido = () => {
     setShow(true);
     setEdit(false);
@@ -101,6 +103,7 @@ export const ListadoPedidosCompras = () => {
         handleCrearPedido={handleCrearPedido}
         cotizacion={cotizacion}
         formatearFecha={formatearFecha}
+        ordenCompra={ordenCompra}
       />
 
       <ModalPedidosDetalles

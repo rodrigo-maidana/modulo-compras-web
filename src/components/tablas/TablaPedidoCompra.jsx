@@ -1,6 +1,12 @@
 import React, { useMemo, useState } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
-import { faEdit, faTrash, faEye, faDollarSign } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faTrash,
+  faEye,
+  faDollarSign,
+  faCartShopping,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../styles.css";
 
@@ -11,9 +17,9 @@ export const TablaPedidoCompra = ({
   handleCrearPedido,
   cotizacion,
   formatearFecha,
+  ordenCompra,
 }) => {
   const [filter, setFilter] = useState("");
-
   const columns = useMemo(
     () => [
       {
@@ -29,22 +35,29 @@ export const TablaPedidoCompra = ({
         Cell: ({ row }) => (
           <div className="d-flex justify-content-center">
             <button
-              className="btn btn-lg mx-1"
+              className="btn btn-lg mx-auto"
               onClick={() => cotizacion(row.original.id)}
             >
               <FontAwesomeIcon icon={faDollarSign} />
             </button>
             <button
-              className="btn btn-lg mx-1"
+              className="btn btn-lg mx-auto"
               onClick={() => handleEditarPedido(row.original.id)}
             >
               <FontAwesomeIcon icon={faEye} />
             </button>
             <button
-              className="btn-custom mx-1"
+              className="btn-custom mx-auto"
               onClick={() => deletePedido(row.original)}
             >
               <FontAwesomeIcon icon={faTrash} />
+            </button>
+            <button
+              className="btn btn-lg mx-auto"
+              onClick={() => ordenCompra(row.original.id)}
+              disabled={!(row.original.estado === "Cotización Generada")}
+            >
+              <FontAwesomeIcon icon={faCartShopping} />
             </button>
           </div>
         ),
@@ -52,8 +65,6 @@ export const TablaPedidoCompra = ({
     ],
     [handleEditarPedido, deletePedido, formatearFecha]
   );
-
-
 
   const {
     getTableProps,
@@ -177,8 +188,9 @@ export const TablaPedidoCompra = ({
               <nav>
                 <ul className="pagination">
                   <li
-                    className={`page-item ${!canPreviousPage ? "disabled" : ""
-                      }`}
+                    className={`page-item ${
+                      !canPreviousPage ? "disabled" : ""
+                    }`}
                   >
                     <button
                       className="page-link"
@@ -205,8 +217,9 @@ export const TablaPedidoCompra = ({
                   ).map((pageNumber) => (
                     <li
                       key={pageNumber}
-                      className={`page-item ${pageNumber === pageIndex ? "active" : ""
-                        }`}
+                      className={`page-item ${
+                        pageNumber === pageIndex ? "active" : ""
+                      }`}
                     >
                       <button
                         className="page-link"
@@ -217,8 +230,9 @@ export const TablaPedidoCompra = ({
                     </li>
                   ))}
                   <li
-                    className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""
-                      }`}
+                    className={`page-item ${
+                      pageIndex === pageCount - 1 ? "disabled" : ""
+                    }`}
                   >
                     <button
                       className="page-link"

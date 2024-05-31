@@ -47,14 +47,16 @@ export const ListadoPedidoCotizacion = () => {
         handleCrearPedido={handleCrearPedido}
         formatearFecha={formatearFecha}
       />
-      {/**  Comentar porque a veces no anda el server local (quien sabe por que)    */}
-      <ModalDetallesCotizacion
-        cotizacion={cotizacionSelected}
-        show={show}
-        handleClose={handleClose}
-        onSave={onSave}
-        formatearFecha={formatearFecha}
-      />
+      {/**  Comentar porque a veces no anda el server local (quien sabe por que) */}
+      {show && cotizacionSelected && (
+        <ModalDetallesCotizacion
+          cotizacion={cotizacionSelected}
+          show={show}
+          handleClose={handleClose}
+          onSave={onSave}
+          formatearFecha={formatearFecha}
+        />
+      )}
     </>
   );
 };
