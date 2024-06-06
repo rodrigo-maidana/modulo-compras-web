@@ -75,7 +75,7 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
       if (id) {
         // Eliminar los detalles que fueron eliminados en el frontend
         const detallesActuales = await axiosInstance.get(
-          `/pedidos-compra/detalles/${id}`
+          `/pedidos-compra/${id}/detalles`
         );
         const detallesEliminados = detallesActuales.data.filter(
           (detalleActual) =>

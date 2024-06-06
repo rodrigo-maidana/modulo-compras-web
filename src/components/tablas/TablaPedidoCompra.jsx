@@ -55,7 +55,7 @@ export const TablaPedidoCompra = ({
             <button
               className="btn btn-lg mx-auto"
               onClick={() => ordenCompra(row.original.id)}
-              disabled={!(row.original.estado === "Cotización Generada")}
+              disabled={!(row.original.estado === "Cotizado")}
             >
               <FontAwesomeIcon icon={faCartShopping} />
             </button>

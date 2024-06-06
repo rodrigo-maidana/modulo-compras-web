@@ -1,53 +1,74 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../axiosInstance";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const FormOrdenCompra = () => {
   const [cabeceraPedido, setCabeceraPedido] = useState({});
   const [detalles, setDetalles] = useState([]);
   const [precios, setPrecios] = useState([]);
+  const [detallesSeleccionados, setDetallesSeleccionados] = useState([]);
   const { id } = useParams();
+  const navigate = useNavigate();
 
-  // Obtener cabecera del pedido de compra
   const fetchCabeceraPedido = async () => {
     try {
       const response = await axiosInstance.get(`pedidos-compra/${id}`);
       setCabeceraPedido(response.data);
       console.log(response.data);
     } catch (e) {
-      console.log("error al obtener cabecera del pedido", e);
+      console.log("Error al obtener cabecera del pedido", e);
     }
   };
 
-  // Obtener detalle del pedido de compra
   const fetchDetallePedido = async () => {
     try {
       const response = await axiosInstance.get(`pedidos-compra/${id}/detalles`);
       setDetalles(response.data);
+      const detallesConPrecios = response.data.map((detalle) => {
+        const preciosDetalle =
+          precios.find((p) => p.id === detalle.id)?.precios || [];
+        const precioMinimo =
+          preciosDetalle.length > 0 ? findMinPrice(preciosDetalle) : 0;
+        const proveedorId =
+          preciosDetalle.length > 0 ? preciosDetalle[0].proveedor.id : null;
+        return {
+          id: detalle.id,
+          producto: detalle.producto,
+          cantidad: detalle.cantidad,
+          precioUnitario: detalle.precioUnitario || precioMinimo,
+          proveedorId: detalle.proveedorId || proveedorId,
+        };
+      });
+      setDetallesSeleccionados(detallesConPrecios);
       console.log(response.data);
     } catch (e) {
-      console.log("error al obtener detalle del pedido", e);
+      console.log("Error al obtener detalle del pedido", e);
     }
   };
 
-  // Obtener precios del pedido de compra
   const fetchPrecios = async () => {
     try {
       const response = await axiosInstance.get(`pedidos-compra/${id}/precios`);
       setPrecios(response.data);
       console.log(response.data);
     } catch (e) {
-      console.log("error al obtener precios", e);
+      console.log("Error al obtener precios", e);
     }
   };
 
   useEffect(() => {
     fetchCabeceraPedido();
-    fetchDetallePedido();
     fetchPrecios();
   }, [id]);
 
-  // Función para encontrar el precio mínimo
+  useEffect(() => {
+    if (precios.length > 0) {
+      fetchDetallePedido();
+    }
+  }, [precios]);
+
   const findMinPrice = (precios) => {
     if (precios.length === 0) return 0;
     return precios.reduce(
@@ -56,20 +77,18 @@ export const FormOrdenCompra = () => {
     );
   };
 
-  // Manejar cambios en el precio seleccionado
-  const handlePriceChange = (detalleId, newPrice) => {
-    setDetalles((prevDetalles) =>
+  const handlePriceChange = (detalleId, newPrice, proveedorId) => {
+    setDetallesSeleccionados((prevDetalles) =>
       prevDetalles.map((detalle) =>
         detalle.id === detalleId
-          ? { ...detalle, precioUnitario: newPrice }
+          ? { ...detalle, precioUnitario: newPrice, proveedorId }
           : detalle
       )
     );
   };
 
-  // Manejar cambios en la cantidad
   const handleQuantityChange = (detalleId, newQuantity) => {
-    setDetalles((prevDetalles) =>
+    setDetallesSeleccionados((prevDetalles) =>
       prevDetalles.map((detalle) =>
         detalle.id === detalleId
           ? { ...detalle, cantidad: newQuantity }
@@ -78,12 +97,84 @@ export const FormOrdenCompra = () => {
     );
   };
 
+  const handleGenerarOrden = async () => {
+    try {
+      const cabeceraPreviewResponse = await axiosInstance.get(
+        "ordenes-compra/preview"
+      );
+      const cabeceraPreview = cabeceraPreviewResponse.data;
+
+      const ordenesCompra = detallesSeleccionados.reduce((acc, detalle) => {
+        const proveedorId = detalle.proveedorId;
+        if (!proveedorId) {
+          throw new Error(
+            `Proveedor ID is undefined for detalle ${detalle.id}`
+          );
+        }
+        if (!acc[proveedorId]) {
+          const proveedor = precios
+            .find((p) =>
+              p.precios.some((precio) => precio.proveedor.id === proveedorId)
+            )
+            ?.precios.find(
+              (precio) => precio.proveedor.id === proveedorId
+            )?.proveedor;
+          if (!proveedor) {
+            throw new Error(
+              `Proveedor not found for proveedorId ${proveedorId}`
+            );
+          }
+          acc[proveedorId] = {
+            proveedor,
+            fechaEmision: cabeceraPreview.fechaEmision,
+            estado: cabeceraPreview.estado,
+            nroOrdenCompra: cabeceraPreview.nroOrdenCompra,
+            detalles: [],
+          };
+        }
+        acc[proveedorId].detalles.push({
+          cantidad: detalle.cantidad,
+          precioUnitario: detalle.precioUnitario,
+          producto: detalle.producto,
+        });
+        return acc;
+      }, {});
+
+      for (const [proveedorId, orden] of Object.entries(ordenesCompra)) {
+        const postCabeceraResponse = await axiosInstance.post(
+          "ordenes-compra",
+          {
+            proveedor: orden.proveedor,
+            fechaEmision: orden.fechaEmision,
+            estado: orden.estado,
+            nroOrdenCompra: orden.nroOrdenCompra,
+          }
+        );
+        const cabeceraId = postCabeceraResponse.data.id;
+
+        const detallesPromises = orden.detalles.map((detalle) => {
+          return axiosInstance.post(`ordenes-detalles/${cabeceraId}`, detalle);
+        });
+
+        await Promise.all(detallesPromises);
+      }
+
+      toast.success("Orden de compra generada exitosamente");
+      setTimeout(() => {
+        navigate("/orden-compra");
+      }, 3000); // 3 segundos de retraso antes de redirigir
+    } catch (e) {
+      console.log("Error al generar pedido", e);
+      toast.error("Error al generar la orden de compra");
+    }
+  };
+
   return (
     <>
       <div className="container">
         <div className="cabecera">
-          <h2>Orden de Compra</h2>
-          <h3 className="text-end">Pedido: {cabeceraPedido.nroPedido}</h3>
+          <h2 className="my-4">Orden de Compra</h2>
+          <h3 className="mb-4">Pedido: {cabeceraPedido.nroPedido}</h3>
         </div>
         <div>
           <table className="table table-bordered table-light">
@@ -100,7 +191,12 @@ export const FormOrdenCompra = () => {
                 const productoPrecios =
                   precios.find((p) => p.id === detalle.id)?.precios || [];
                 const precioMinimo = findMinPrice(productoPrecios);
-                const precioActual = detalle.precioUnitario || precioMinimo;
+                const detalleSeleccionado =
+                  detallesSeleccionados.find((d) => d.id === detalle.id) || {};
+                const precioActual =
+                  detalleSeleccionado.precioUnitario || precioMinimo;
+                const cantidadActual =
+                  detalleSeleccionado.cantidad || detalle.cantidad;
 
                 return (
                   <tr className="table-light" key={detalle.id}>
@@ -110,7 +206,7 @@ export const FormOrdenCompra = () => {
                         type="number"
                         min="0"
                         className="form-control"
-                        value={detalle.cantidad}
+                        value={cantidadActual}
                         onChange={(e) =>
                           handleQuantityChange(
                             detalle.id,
@@ -123,12 +219,17 @@ export const FormOrdenCompra = () => {
                       <select
                         className="form-select"
                         value={precioActual}
-                        onChange={(e) =>
+                        onChange={(e) => {
+                          const selectedPrice = parseFloat(e.target.value);
+                          const proveedorId = productoPrecios.find(
+                            (precio) => precio.precioUnitario === selectedPrice
+                          )?.proveedor.id;
                           handlePriceChange(
                             detalle.id,
-                            parseFloat(e.target.value)
-                          )
-                        }
+                            selectedPrice,
+                            proveedorId
+                          );
+                        }}
                       >
                         {productoPrecios.map((precio, index) => (
                           <option key={index} value={precio.precioUnitario}>
@@ -139,7 +240,7 @@ export const FormOrdenCompra = () => {
                       </select>
                     </td>
                     <td className="text-end">
-                      {detalle.cantidad * precioActual} Gs
+                      {cantidadActual * precioActual} Gs
                     </td>
                   </tr>
                 );
@@ -147,7 +248,13 @@ export const FormOrdenCompra = () => {
             </tbody>
           </table>
         </div>
+        <div className="text-end">
+          <button className="btn btn-info" onClick={handleGenerarOrden}>
+            Generar orden
+          </button>
+        </div>
       </div>
+      <ToastContainer />
     </>
   );
 };
