@@ -36,6 +36,7 @@ export const TablaPedidoCompra = ({
           <div className="d-flex justify-content-center">
             <button
               className="btn btn-lg mx-auto"
+              disabled={row.original.estado === "Cancelado"}
               onClick={() => cotizacion(row.original.id)}
             >
               <FontAwesomeIcon icon={faDollarSign} />
