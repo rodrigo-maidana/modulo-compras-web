@@ -3,6 +3,9 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Table from "react-bootstrap/Table";
 import axiosInstance from "../axiosInstance";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const ModalDetallesCotizacion = ({
   cotizacion,
   show,
@@ -12,7 +15,8 @@ const ModalDetallesCotizacion = ({
 }) => {
   const [detalles, setDetalles] = useState([]);
   const [registrado, setRegistrado] = useState(false);
-  //cargar detalles del pedido de cotizacion
+
+  // Cargar detalles del pedido de cotización
   const fetchProductos = async () => {
     try {
       const response = await axiosInstance.get(
@@ -38,39 +42,34 @@ const ModalDetallesCotizacion = ({
     const allPriceSet = detalles.every(
       (producto) => producto.precioUnitario > 0
     );
-    //si todos los precios son mayor a 0
     if (allPriceSet) {
-      // hacer put de los productos con sus precios cargados y el estado a cotizado
-      const preciosPromises = detalles.map(async (detalle) => {
-        try {
+      try {
+        for (const detalle of detalles) {
           await axiosInstance.put(`cotizacion-detalles/${detalle.id}`, detalle);
-          onSave();
-        } catch (error) {
-          console.log("error put de los precios de los productos", error);
         }
-      });
-      await Promise.all(preciosPromises);
-      cotizacion.estado = "Registrado";
-      axiosInstance.put(`cotizaciones/${cotizacion.id}`, cotizacion);
-      //actualizar el estado del pedido de compra al guardar
-      cotizacion.pedidoCompra.estado = "Cotizado";
-      //obtener el pedido de compra
-
-      //hacer put del pedido de compra con el estado actualizado
-      axiosInstance.put(
-        `pedidos-compra/${cotizacion.pedidoCompra.id}`,
-        cotizacion.pedidoCompra
-      );
+        cotizacion.estado = "Registrado";
+        await axiosInstance.put(`cotizaciones/${cotizacion.id}`, cotizacion);
+        cotizacion.pedidoCompra.estado = "Cotizado";
+        await axiosInstance.put(
+          `pedidos-compra/${cotizacion.pedidoCompra.id}`,
+          cotizacion.pedidoCompra
+        );
+        onSave();
+      } catch (error) {
+        console.log("Error al registrar los precios de los productos", error);
+        toast.error("Error al registrar los precios de los productos");
+      }
     } else {
-      alert("todos los productos deben tener precio mayor a 0");
+      toast.warning("Todos los productos deben tener precio mayor a 0");
     }
   };
 
   const handleCancelar = () => {
     handleClose();
     setDetalles([]);
+    //toast.info("Operación cancelada");
   };
-  //funcion para que el usuario pueda modificar el precio de los productos de la cotizacion mayor a 0
+
   const handlePrecioChange = (id, precio) => {
     const numericPrecio = parseFloat(precio);
     if (numericPrecio >= 0) {
@@ -167,6 +166,7 @@ const ModalDetallesCotizacion = ({
           </Button>
         </Modal.Footer>
       </Modal>
+      <ToastContainer />
     </>
   );
 };

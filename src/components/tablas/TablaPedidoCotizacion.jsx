@@ -1,12 +1,20 @@
 import React, { useMemo, useState } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
-import { faEdit, faTrash, faEye } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faTrash,
+  faEye,
+  faFilePdf,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../styles.css";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 export const TablaPedidoCotizacion = ({
   pedidos,
   handleEditarPedido,
+  handleCrearPDF,
   formatearFecha,
 }) => {
   const [filter, setFilter] = useState("");
@@ -36,11 +44,19 @@ export const TablaPedidoCotizacion = ({
             >
               <FontAwesomeIcon icon={faEye} />
             </button>
+            {row.original.estado === "Pendiente" && (
+              <button
+                className="btn btn-lg mx-1"
+                onClick={() => handleCrearPDF(row.original)}
+              >
+                <FontAwesomeIcon icon={faFilePdf} />
+              </button>
+            )}
           </div>
         ),
       },
     ],
-    [handleEditarPedido, formatearFecha]
+    [handleEditarPedido, handleCrearPDF, formatearFecha]
   );
 
   const {

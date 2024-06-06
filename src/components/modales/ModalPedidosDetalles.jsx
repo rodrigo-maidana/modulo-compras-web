@@ -4,6 +4,8 @@ import Modal from "react-bootstrap/Modal";
 import axiosInstance from "../axiosInstance";
 import { TablaProductoPedido } from "../tablas/TablaProductoPedido";
 import ListarDetalleTabla from "../listados/ListarDetalleTabla";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
   const [detalles, setDetalles] = useState([]);
@@ -33,10 +35,12 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
       )
     );
     setEditandoProducto(null);
+    toast.info("Cantidad editada exitosamente");
   };
 
   const handleCancelarEdicion = () => {
     setEditandoProducto(null);
+    toast.info("Edición cancelada");
   };
 
   const handleEliminarProducto = (idProducto) => {
@@ -82,37 +86,36 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
             !detalles.some((detalle) => detalle.id === detalleActual.id)
         );
 
-        await Promise.all(
-          detallesEliminados.map((detalleEliminado) =>
-            axiosInstance.delete(`/pedidos-detalles/${detalleEliminado.id}`)
-          )
-        );
-        const updatedDetalles = detalles.map((detalle) => ({
-          id: detalle.id,
-          producto: {
-            id: parseInt(detalle.producto.id),
-            descripcion: detalle.producto.descripcion,
-            marca: {
-              id: parseInt(detalle.producto.marca.id),
-              nombre: detalle.producto.marca.nombre,
-            },
-            categoria: {
-              id: parseInt(detalle.producto.categoria.id),
-              nombre: detalle.producto.categoria.nombre,
-            },
-          },
-          cantidad: parseInt(detalle.cantidad),
-        }));
+        for (const detalleEliminado of detallesEliminados) {
+          await axiosInstance.delete(
+            `/pedidos-detalles/${detalleEliminado.id}`
+          );
+        }
 
-        await Promise.all(
-          updatedDetalles.map((detalle) => {
-            //console.log(detalle);
-            axiosInstance.put(`/pedidos-detalles/${detalle.id}`, detalle);
-          })
-        );
+        for (const detalle of detalles) {
+          const updatedDetalle = {
+            id: detalle.id,
+            producto: {
+              id: parseInt(detalle.producto.id),
+              descripcion: detalle.producto.descripcion,
+              marca: {
+                id: parseInt(detalle.producto.marca.id),
+                nombre: detalle.producto.marca.nombre,
+              },
+              categoria: {
+                id: parseInt(detalle.producto.categoria.id),
+                nombre: detalle.producto.categoria.nombre,
+              },
+            },
+            cantidad: parseInt(detalle.cantidad),
+          };
+          await axiosInstance.put(
+            `/pedidos-detalles/${detalle.id}`,
+            updatedDetalle
+          );
+        }
       } else {
         // Crear nuevo pedido
-        //obtengo la cabecera del siguiente
         const responsePreview = await axiosInstance.get(
           `/pedidos-compra/preview`
         );
@@ -121,14 +124,12 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
           estado: "pendiente",
           nroPedido: responsePreview.data.nroPedido,
         };
-        //se crea la cabecera del pedido
+
         const responsePedidoCompra = await axiosInstance.post(
           `/pedidos-compra`,
           pedidoCompra
         );
-        console.log("cabecera siguiente: ", responsePedidoCompra);
         pedidoCompraId = responsePedidoCompra.data.id;
-        //promise all para que se guarden todos los detalles
         for (const detalle of detalles) {
           const pedidoDetalle = {
             producto: {
@@ -150,14 +151,14 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
             pedidoDetalle
           );
         }
-
       }
 
-      console.log("Pedido guardado correctamente");
+      toast.success("Pedido guardado correctamente");
       onSave();
       handleClose();
     } catch (error) {
       console.log("Error al guardar el pedido:", error);
+      toast.error("Error al guardar el pedido");
     }
   };
 
@@ -167,35 +168,40 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
   };
 
   return (
-    <Modal show={show} onHide={handleCancel} size="lg">
-      <Modal.Header closeButton>
-        <Modal.Title>Detalles del N°{id}</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        {!id && (
-          <TablaProductoPedido handleAgregarProducto={handleAgregarProducto} />
-        )}
-        <div>Listado de detalles</div>
-        <ListarDetalleTabla
-          detalles={detalles}
-          editandoProducto={editandoProducto}
-          nuevaCantidad={nuevaCantidad}
-          handleGuardarCantidad={handleGuardarCantidad}
-          handleCancelarEdicion={handleCancelarEdicion}
-          handleEliminarProducto={handleEliminarProducto}
-          handleEditarCantidad={handleEditarCantidad}
-          setNuevaCantidad={setNuevaCantidad}
-        />
-      </Modal.Body>
-      <Modal.Footer>
-        <button className="btn btn-outline-secondary" onClick={handleCancel}>
-          Cancelar
-        </button>
-        <button className="btn btn-primary" onClick={handleSave}>
-          Confirmar pedido
-        </button>
-      </Modal.Footer>
-    </Modal>
+    <>
+      <Modal show={show} onHide={handleCancel} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Detalles del N°{id}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {!id && (
+            <TablaProductoPedido
+              handleAgregarProducto={handleAgregarProducto}
+            />
+          )}
+          <div>Listado de detalles</div>
+          <ListarDetalleTabla
+            detalles={detalles}
+            editandoProducto={editandoProducto}
+            nuevaCantidad={nuevaCantidad}
+            handleGuardarCantidad={handleGuardarCantidad}
+            handleCancelarEdicion={handleCancelarEdicion}
+            handleEliminarProducto={handleEliminarProducto}
+            handleEditarCantidad={handleEditarCantidad}
+            setNuevaCantidad={setNuevaCantidad}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <button className="btn btn-outline-secondary" onClick={handleCancel}>
+            Cancelar
+          </button>
+          <button className="btn btn-primary" onClick={handleSave}>
+            Confirmar pedido
+          </button>
+        </Modal.Footer>
+      </Modal>
+      <ToastContainer />
+    </>
   );
 };
 
