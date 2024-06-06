@@ -55,7 +55,7 @@ export const TablaPedidoCompra = ({
             <button
               className="btn btn-lg mx-auto"
               onClick={() => ordenCompra(row.original.id)}
-              disabled={!(row.original.estado === "Cotización Generada")}
+              disabled={!(row.original.estado === "Cotizado")}
             >
               <FontAwesomeIcon icon={faCartShopping} />
             </button>
@@ -144,41 +144,51 @@ export const TablaPedidoCompra = ({
               className="table table-bordered table-hover"
             >
               <thead className="thead-dark">
-                {headerGroups.map((headerGroup) => (
-                  <tr
-                    key={headerGroup.id}
-                    {...headerGroup.getHeaderGroupProps()}
-                  >
-                    {headerGroup.headers.map((column) => (
-                      <th
-                        key={column.id}
-                        {...column.getHeaderProps()}
-                        className="text-center"
-                      >
-                        {column.render("Header")}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
+                {headerGroups.map((headerGroup) => {
+                  const { key: headerGroupKey, ...restHeaderGroupProps } =
+                    headerGroup.getHeaderGroupProps();
+                  return (
+                    <tr key={headerGroupKey} {...restHeaderGroupProps}>
+                      {headerGroup.headers.map((column) => {
+                        const { key: columnKey, ...restColumnProps } =
+                          column.getHeaderProps();
+                        return (
+                          <th
+                            key={columnKey}
+                            {...restColumnProps}
+                            className="text-center"
+                          >
+                            {column.render("Header")}
+                          </th>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
               </thead>
               <tbody {...getTableBodyProps()}>
                 {page.map((row) => {
                   prepareRow(row);
+                  const { key: rowKey, ...restRowProps } = row.getRowProps();
                   return (
                     <tr
-                      key={row.id}
-                      {...row.getRowProps()}
+                      key={rowKey}
+                      {...restRowProps}
                       className="text-center align-middle"
                     >
-                      {row.cells.map((cell) => (
-                        <td
-                          key={cell.column.id}
-                          {...cell.getCellProps()}
-                          className="text-center"
-                        >
-                          {cell.render("Cell")}
-                        </td>
-                      ))}
+                      {row.cells.map((cell) => {
+                        const { key: cellKey, ...restCellProps } =
+                          cell.getCellProps();
+                        return (
+                          <td
+                            key={cellKey}
+                            {...restCellProps}
+                            className="text-center"
+                          >
+                            {cell.render("Cell")}
+                          </td>
+                        );
+                      })}
                     </tr>
                   );
                 })}

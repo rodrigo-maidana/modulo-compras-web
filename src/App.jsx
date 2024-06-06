@@ -60,6 +60,10 @@ const AppContent = () => {
           path="/orden-compra/:id"
           element={<ProtectedRoute element={<FormOrdenCompra />} />}
         />
+        <Route
+          path="/orden-compra"
+          element={<ProtectedRoute element={<ListadoOrdenCompra />} />}
+        ></Route>
       </Routes>
     </AuthProvider>
   );
