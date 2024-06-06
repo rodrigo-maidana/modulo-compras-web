@@ -7,6 +7,8 @@ const ModalProveedoresCotizacion = ({
   handleClose,
   selectedCategoria,
   pedidoCompra,
+  processedProveedores,
+  setProcessedProveedores, // Nuevo prop para actualizar proveedores procesados
 }) => {
   const [proveedores, setProveedores] = useState([]);
   const [selectedProveedores, setSelectedProveedores] = useState([]);
@@ -16,11 +18,13 @@ const ModalProveedoresCotizacion = ({
   useEffect(() => {
     if (selectedCategoria) {
       const fetchProveedores = async () => {
+        console.log("Fetching proveedores...");
         setLoading(true);
         try {
           const response = await axiosInstance.get(
             `/categorias/${selectedCategoria.id}/proveedores`
           );
+          console.log("Proveedores fetched:", response.data);
           setProveedores(response.data);
         } catch (error) {
           console.error("Error al cargar los proveedores:", error);
@@ -36,6 +40,7 @@ const ModalProveedoresCotizacion = ({
   }, [selectedCategoria]);
 
   const handleCheckboxChange = (proveedorId) => {
+    console.log("Checkbox change for proveedorId:", proveedorId);
     setSelectedProveedores((prevSelected) => {
       if (prevSelected.includes(proveedorId)) {
         return prevSelected.filter((id) => id !== proveedorId);
@@ -46,7 +51,9 @@ const ModalProveedoresCotizacion = ({
   };
 
   const handleConfirm = async () => {
+    console.log("Confirming selections:", selectedProveedores);
     try {
+      const processed = [];
       for (const proveedorId of selectedProveedores) {
         const proveedor = proveedores.find((prov) => prov.id === proveedorId);
         const cotizacion = {
@@ -55,11 +62,14 @@ const ModalProveedoresCotizacion = ({
         };
         console.log("Enviando cotización:", cotizacion);
         await axiosInstance.post("/cotizaciones", cotizacion);
+        processed.push(proveedorId);
+        console.log("Processed proveedorId:", proveedorId);
       }
+      setProcessedProveedores((prevProcessed) => [...prevProcessed, ...processed]);
+      setSelectedProveedores([]);
       handleClose();
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        // Suponiendo que 409 es el código de conflicto para orden ya existente
         console.error(
           "Error: Ya existe una orden para el proveedor seleccionado.",
           error
@@ -81,45 +91,46 @@ const ModalProveedoresCotizacion = ({
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        {loading && <Spinner animation="border" />}
+        {error && <Alert variant="danger">{error}</Alert>}
         {!loading && !error && (
-          <>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Nombre</th>
-                  <th>RUC</th>
-                  <th>Contacto</th>
-                  <th>Seleccionar</th>
-                </tr>
-              </thead>
-              <tbody>
-                {proveedores.length > 0 ? (
-                  proveedores.map((proveedor, index) => (
-                    <tr key={proveedor.id}>
-                      <td>{index + 1}</td>
-                      <td>{proveedor.nombre}</td>
-                      <td>{proveedor.ruc}</td>
-                      <td>{proveedor.contacto}</td>
-                      <td>
-                        <input
-                          type="checkbox"
-                          checked={selectedProveedores.includes(proveedor.id)}
-                          onChange={() => handleCheckboxChange(proveedor.id)}
-                        />
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="5" className="text-center">
-                      No hay proveedores disponibles
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>RUC</th>
+                <th>Contacto</th>
+                <th>Seleccionar</th>
+              </tr>
+            </thead>
+            <tbody>
+              {proveedores.length > 0 ? (
+                proveedores.map((proveedor, index) => (
+                  <tr key={proveedor.id}>
+                    <td>{index + 1}</td>
+                    <td>{proveedor.nombre}</td>
+                    <td>{proveedor.ruc}</td>
+                    <td>{proveedor.contacto}</td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={selectedProveedores.includes(proveedor.id)}
+                        disabled={processedProveedores.includes(proveedor.id)}
+                        onChange={() => handleCheckboxChange(proveedor.id)}
+                      />
                     </td>
                   </tr>
-                )}
-              </tbody>
-            </Table>
-          </>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center">
+                    No hay proveedores disponibles
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
         )}
       </Modal.Body>
       <Modal.Footer>

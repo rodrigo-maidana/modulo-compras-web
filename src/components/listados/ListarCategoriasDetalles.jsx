@@ -7,6 +7,7 @@ import ModalProveedoresCotizacion from "../modales/ModalProveedoresCotizacion";
 const ListarCategoriasDetalles = ({ categorias = [], pedidoCompra }) => {
     const [showModal, setShowModal] = useState(false);
     const [selectedCategoria, setSelectedCategoria] = useState(null);
+    const [processedProveedores, setProcessedProveedores] = useState([]); // Nuevo estado
 
     const handleShowModal = (categoria) => {
         setSelectedCategoria(categoria);
@@ -54,6 +55,8 @@ const ListarCategoriasDetalles = ({ categorias = [], pedidoCompra }) => {
                     handleClose={handleCloseModal}
                     selectedCategoria={selectedCategoria}
                     pedidoCompra={pedidoCompra}
+                    processedProveedores={processedProveedores} // Pasar el estado de proveedores procesados
+                    setProcessedProveedores={setProcessedProveedores} // Pasar la función de actualización
                 />
             )}
         </div>

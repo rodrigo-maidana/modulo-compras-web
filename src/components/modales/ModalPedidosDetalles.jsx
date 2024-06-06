@@ -130,7 +130,6 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
           pedidoCompra
         );
         pedidoCompraId = responsePedidoCompra.data.id;
-
         for (const detalle of detalles) {
           const pedidoDetalle = {
             producto: {
