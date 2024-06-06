@@ -28,7 +28,9 @@ export const ListadoPedidoCotizacion = () => {
     //console.log("llego");
   };
   const handleCrearPedido = () => {};
-
+  const formatearNumero = (numero) => {
+    return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
   const handleCrearPDF = (cotizacion) => {
     axiosInstance
       .get(`/cotizaciones/${cotizacion.id}/detalles`)
@@ -99,6 +101,7 @@ export const ListadoPedidoCotizacion = () => {
           handleClose={handleClose}
           onSave={onSave}
           formatearFecha={formatearFecha}
+          formatearNumero={formatearNumero}
         />
       )}
     </>

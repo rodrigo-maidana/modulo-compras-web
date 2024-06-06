@@ -12,6 +12,7 @@ const ModalDetallesCotizacion = ({
   handleClose,
   onSave,
   formatearFecha,
+  formatearNumero,
 }) => {
   const [detalles, setDetalles] = useState([]);
   const [registrado, setRegistrado] = useState(false);
@@ -140,7 +141,11 @@ const ModalDetallesCotizacion = ({
                       type="number"
                       className="form-control"
                       inputMode="numeric"
-                      value={producto.precioUnitario}
+                      value={
+                        registrado
+                          ? formatearNumero(producto.precioUnitario)
+                          : producto.precioUnitario
+                      }
                       disabled={registrado}
                       onChange={(e) =>
                         handlePrecioChange(producto.id, e.target.value)
@@ -154,7 +159,12 @@ const ModalDetallesCotizacion = ({
           </Table>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline-secondary" onClick={handleCancelar}>
+          <Button
+            variant="outline-secondary"
+            onClick={() => {
+              handleCancelar();
+            }}
+          >
             Cancelar
           </Button>
           <Button

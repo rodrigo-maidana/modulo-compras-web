@@ -171,7 +171,7 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
     <>
       <Modal show={show} onHide={handleCancel} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Detalles del N°{id}</Modal.Title>
+          <Modal.Title>{id ? `Detalles: ${id}` : "Crear pedido"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {!id && (

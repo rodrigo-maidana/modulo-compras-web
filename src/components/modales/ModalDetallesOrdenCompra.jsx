@@ -10,6 +10,7 @@ export const ModalDetallesOrdenCompra = ({
   handleClose,
   onSave,
   formatearFecha,
+  formatearNumero,
 }) => {
   const [detalles, setDetalles] = useState([]);
 
@@ -82,9 +83,12 @@ export const ModalDetallesOrdenCompra = ({
                     {detalle.producto.descripcion}
                   </td>
                   <td className="text-center">{detalle.cantidad}</td>
-                  <td className="text-center">{detalle.precioUnitario} Gs</td>
                   <td className="text-center">
-                    {detalle.cantidad * detalle.precioUnitario} Gs
+                    {formatearNumero(detalle.precioUnitario)} Gs
+                  </td>
+                  <td className="text-center">
+                    {formatearNumero(detalle.cantidad * detalle.precioUnitario)}{" "}
+                    Gs
                   </td>
                 </tr>
               ))}
