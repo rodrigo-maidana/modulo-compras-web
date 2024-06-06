@@ -129,29 +129,28 @@ const ModalPedidosDetalles = ({ id, show, handleClose, onSave }) => {
         console.log("cabecera siguiente: ", responsePedidoCompra);
         pedidoCompraId = responsePedidoCompra.data.id;
         //promise all para que se guarden todos los detalles
-        await Promise.all(
-          detalles.map(async (detalle) => {
-            const pedidoDetalle = {
-              producto: {
-                id: detalle.producto.id,
-                descripcion: detalle.producto.descripcion,
-                marca: {
-                  id: detalle.producto.marca.id,
-                  nombre: detalle.producto.marca.nombre,
-                },
-                categoria: {
-                  id: detalle.producto.categoria.id,
-                  nombre: detalle.producto.categoria.nombre,
-                },
+        for (const detalle of detalles) {
+          const pedidoDetalle = {
+            producto: {
+              id: detalle.producto.id,
+              descripcion: detalle.producto.descripcion,
+              marca: {
+                id: detalle.producto.marca.id,
+                nombre: detalle.producto.marca.nombre,
               },
-              cantidad: detalle.cantidad,
-            };
-            await axiosInstance.post(
-              `/pedidos-detalles/${pedidoCompraId}`,
-              pedidoDetalle
-            );
-          })
-        );
+              categoria: {
+                id: detalle.producto.categoria.id,
+                nombre: detalle.producto.categoria.nombre,
+              },
+            },
+            cantidad: detalle.cantidad,
+          };
+          await axiosInstance.post(
+            `/pedidos-detalles/${pedidoCompraId}`,
+            pedidoDetalle
+          );
+        }
+
       }
 
       console.log("Pedido guardado correctamente");
