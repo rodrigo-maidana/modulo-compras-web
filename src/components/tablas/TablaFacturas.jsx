@@ -1,12 +1,10 @@
-// src/tablas/TablaFactura.jsx
-
 import React, { useMemo, useState } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import "../styles.css";
 
-const TablaFactura = ({ facturas, onAbrirModal }) => {
+export const TablaFactura = ({ facturas, handleAbrirModal }) => {
     const [filter, setFilter] = useState("");
 
     const formatearFecha = (fecha) => {
@@ -19,21 +17,16 @@ const TablaFactura = ({ facturas, onAbrirModal }) => {
 
     const columns = useMemo(
         () => [
-            { Header: "Número de Factura", accessor: "nroFactura" },
-            { Header: "Timbrado", accessor: "timbrado" },
-            { Header: "Proveedor", accessor: "proveedor.nombre" },
-            { Header: "Ruc", accessor: "proveedor.ruc" },
-            { Header: "Deposito", accessor: "deposito.nombre" },
             {
                 Header: "Fecha de Emisión",
                 accessor: "fechaEmision",
                 Cell: ({ value }) => formatearFecha(value),
             },
-            {
-                Header: "Fecha de Vencimiento",
-                accessor: "fechaVencimiento",
-                Cell: ({ value }) => formatearFecha(value),
-            },
+            { Header: "Número de Factura", accessor: "nroFactura" },
+            { Header: "Timbrado", accessor: "timbrado" },
+            { Header: "Proveedor", accessor: "proveedor.nombre" },
+            { Header: "RUC", accessor: "proveedor.ruc" },
+            { Header: "Depósito", accessor: "deposito.nombre" },
             { Header: "Estado", accessor: "estado" },
             { Header: "Monto Total", accessor: "montoTotal" },
             { Header: "Saldo Pendiente", accessor: "saldoPendiente" },
@@ -44,7 +37,7 @@ const TablaFactura = ({ facturas, onAbrirModal }) => {
                     <div className="d-flex justify-content-center">
                         <button
                             className="btn btn-lg mx-auto"
-                            onClick={() => onAbrirModal(row.original.id)}
+                            onClick={() => handleAbrirModal(row.original)}
                         >
                             <FontAwesomeIcon icon={faEye} />
                         </button>
@@ -52,7 +45,7 @@ const TablaFactura = ({ facturas, onAbrirModal }) => {
                 ),
             },
         ],
-        []
+        [handleAbrirModal]
     );
 
     const {
@@ -103,17 +96,17 @@ const TablaFactura = ({ facturas, onAbrirModal }) => {
     const endPage = Math.min(startPage + maxPagesToShow, totalPaginas);
 
     return (
-        <div className="container-fluid mt-5">
+        <div className="container mt-5">
             <div className="mb-4">
                 <h2>Listado de Facturas</h2>
             </div>
             <div className="row justify-content-center">
                 <div className="col-md-12">
                     <div className="text-center">
-                        <div className="text-center d-flex mb-4">
+                        <div className="text-center d-flex">
                             <input
                                 type="text"
-                                className="form-control"
+                                className="form-control mb-4"
                                 value={filter}
                                 onChange={handleFilterChange}
                                 placeholder="Buscar"
