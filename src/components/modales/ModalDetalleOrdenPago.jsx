@@ -14,7 +14,7 @@ const ModalDetalleOrdenPago = ({ show, handleClose, ordenPagoId }) => {
   const fetchDetalles = async () => {
     try {
       const response = await axiosInstance.get(
-        `orden-pago/${ordenPagoId}/detalle`
+        `orden-pago/${ordenPagoId}/detalles`
       );
       setDetalles(response.data);
     } catch (e) {
