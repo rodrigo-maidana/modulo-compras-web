@@ -68,7 +68,7 @@ const AppContent = () => {
         <Route
           path="/facturas"
           element={<ProtectedRoute element={<ListarFacturas />} />}
-        ></Route>
+        />
       </Routes>
     </AuthProvider>
   );
