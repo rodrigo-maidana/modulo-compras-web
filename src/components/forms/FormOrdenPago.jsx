@@ -13,7 +13,6 @@ export const FormOrdenPago = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // Obtener factura
   const fetchFactura = async () => {
     try {
       const response = await axiosInstance.get(`facturas/${id}`);
@@ -23,7 +22,6 @@ export const FormOrdenPago = () => {
     }
   };
 
-  // Obtener métodos de pago
   const fetchMetodosPago = async () => {
     try {
       const response = await axiosInstance.get("metodos-pago");
@@ -37,7 +35,6 @@ export const FormOrdenPago = () => {
     }
   };
 
-  // Obtener datos de preview
   const fetchPreviewData = async () => {
     try {
       const response = await axiosInstance.get("orden-pago/preview");
@@ -56,7 +53,6 @@ export const FormOrdenPago = () => {
   const handleMontoChange = (e) => {
     const { value } = e.target;
     if (/^\d*\.?\d*$/.test(value)) {
-      // Acepta solo números y un punto decimal
       setMonto(value);
     }
   };
@@ -65,16 +61,15 @@ export const FormOrdenPago = () => {
     const montoNum = parseFloat(monto);
     const totalPagado = pagos.reduce((acc, pago) => acc + pago.monto, 0);
 
-    if (
-      selectedMetodo &&
-      montoNum &&
-      totalPagado + montoNum <= factura.saldoPendiente
-    ) {
+    if (selectedMetodo && montoNum && montoNum <= factura.saldoPendiente) {
       setPagos([...pagos, { metodo: selectedMetodo, monto: montoNum }]);
       setMonto("");
       setSelectedMetodo(null);
       actualizarSaldoPendiente(totalPagado + montoNum);
     } else {
+      console.log(totalPagado + montoNum <= factura.saldoPendiente);
+      console.log("a pagar: ", totalPagado + montoNum);
+      console.log("saldo pendiente: ", factura.saldoPendiente);
       alert(
         "Seleccione un método de pago y asegúrese de que el monto es válido y no excede el saldo pendiente."
       );
@@ -95,20 +90,20 @@ export const FormOrdenPago = () => {
   const confirmarPago = async () => {
     try {
       const totalPagado = calcularTotal();
-      console.log(previewData);
       const ordenPago = {
         factura: factura,
         proveedor: factura.proveedor,
         fechaPago: previewData.fechaPago,
         nroOrdenPago: previewData.nroOrdenPago,
         estado: "Pendiente",
-        montoTotal: totalPagado,
+        montoTotal: parseFloat(totalPagado),
       };
       const cabeceraResponse = await axiosInstance.post(
         `orden-pago/${factura.id}`,
         ordenPago
       );
       const cabeceraId = cabeceraResponse.data.id;
+
       const detallesPagos = pagos.map((pago) => ({
         idMetodoPago: pago.metodo.value,
         monto: pago.monto,
@@ -118,6 +113,7 @@ export const FormOrdenPago = () => {
         `ordenes-pago-detalles/${cabeceraId}/bulk`,
         detallesPagos
       );
+
       alert("Orden de pago confirmada exitosamente");
       navigate("/facturas");
     } catch (e) {
