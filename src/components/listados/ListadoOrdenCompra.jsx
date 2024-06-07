@@ -2,17 +2,21 @@ import React, { useEffect, useState } from "react";
 import axiosInstance from "../axiosInstance";
 import { TablaOrdenCompra } from "../tablas/TablaOrdenCompra";
 import { ModalDetallesOrdenCompra } from "../modales/ModalDetallesOrdenCompra";
+
+import { ModalFacturaOrdenCompra } from "../modales/ModalFacturaOrdenCompra"
+
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
 const formatearNumero = (numero) => {
   return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-};
 
 export const ListadoOrdenCompra = () => {
   const [ordenCompra, setOrdenCompra] = useState([]);
   const [ordenCompraSelected, setOrdenCompraSelected] = useState(null);
   const [show, setShow] = useState(false);
+  const [showFactura, setShowFactura] = useState(false);
+  const [idOrdenCompraFactura, setIdOrdenCompraFactura] = useState(null);
 
   const fetchCargarOrdenCompra = () => {
     axiosInstance
@@ -91,12 +95,23 @@ export const ListadoOrdenCompra = () => {
       );
   };
 
+  const handleAbrirFactura = (idOrdenCompra) => {
+    setIdOrdenCompraFactura(idOrdenCompra);
+    setShowFactura(true);
+  };
+
+  const handleCloseFactura = () => {
+    setShowFactura(false);
+  };
+
   return (
     <>
       {/*Ver donde se utiliza formatear numero en tabla orden compra */}
       <TablaOrdenCompra
         ordenCompra={ordenCompra}
         handleEditarOrden={handleEditarOrden}
+        handleCrearOrden={handleCrearOrden}
+        handleAbrirFactura={handleAbrirFactura}
         handleCrearPDF={handleCrearPDF}
         formatearFecha={formatearFecha}
       />
@@ -108,6 +123,14 @@ export const ListadoOrdenCompra = () => {
           onSave={onSave}
           formatearFecha={formatearFecha}
           formatearNumero={formatearNumero}
+        />
+      )}
+      {showFactura && (
+        <ModalFacturaOrdenCompra
+          show={showFactura}
+          handleClose={handleCloseFactura}
+          idOrdenCompra={idOrdenCompraFactura}
+          onSave={fetchCargarOrdenCompra}
         />
       )}
     </>
