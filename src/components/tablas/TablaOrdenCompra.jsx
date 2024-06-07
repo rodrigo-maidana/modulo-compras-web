@@ -1,7 +1,8 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faFilePdf } from "@fortawesome/free-solid-svg-icons";
+import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faFileInvoice } from "@fortawesome/free-solid-svg-icons";
 import "../styles.css";
 import { Dropdown } from "react-bootstrap";
 
@@ -9,6 +10,7 @@ export const TablaOrdenCompra = ({
   ordenCompra,
   handleEditarOrden,
   handleCrearPDF,
+  handleAbrirFactura,
   formatearFecha,
 }) => {
   const [filter, setFilter] = useState("");
@@ -65,11 +67,17 @@ export const TablaOrdenCompra = ({
                 <FontAwesomeIcon icon={faFilePdf} />
               </button>
             )}
+            <button
+              className="btn btn-lg mx-1"
+              onClick={() => handleAbrirFactura(row.original.id)}
+            >
+              <FontAwesomeIcon icon={faFileInvoice} />
+            </button>
           </div>
         ),
       },
     ],
-    [handleEditarOrden, handleCrearPDF, formatearFecha]
+    [handleEditarOrden, handleCrearPDF, formatearFecha, handleAbrirFactura]
   );
 
   const {
