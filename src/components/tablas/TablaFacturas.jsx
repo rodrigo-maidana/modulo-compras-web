@@ -1,11 +1,11 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faMoneyBill1Wave } from "@fortawesome/free-solid-svg-icons";
 import "../styles.css";
 import { Dropdown } from "react-bootstrap";
 
-export const TablaFactura = ({ facturas, handleAbrirModal }) => {
+export const TablaFactura = ({ facturas, handleAbrirModal, ordenPago }) => {
   const [filter, setFilter] = useState("");
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
@@ -72,16 +72,24 @@ export const TablaFactura = ({ facturas, handleAbrirModal }) => {
         Cell: ({ row }) => (
           <div className="d-flex justify-content-center">
             <button
-              className="btn btn-lg mx-auto"
+              className="btn btn-lg mx-1"
               onClick={() => handleAbrirModal(row.original)}
             >
               <FontAwesomeIcon icon={faEye} />
+            </button>
+            <button
+              className="btn mx-1"
+              onClick={() => {
+                ordenPago(row.original.id);
+              }}
+            >
+              <FontAwesomeIcon icon={faMoneyBill1Wave} />
             </button>
           </div>
         ),
       },
     ],
-    [handleAbrirModal]
+    [handleAbrirModal, ordenPago]
   );
 
   const {
