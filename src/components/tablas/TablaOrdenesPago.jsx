@@ -153,7 +153,7 @@ export const TablaOrdenesPago = ({ handleOpenModal }) => {
   return (
     <div className="container mt-3">
       <div className="mb-4">
-        <h2>Listado de Órdenes de Pago</h2>
+        <h2>Listado de ordenes de pago</h2>
       </div>
       <div className="row justify-content-center">
         <div className="col-md-12">
