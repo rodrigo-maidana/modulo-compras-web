@@ -99,6 +99,7 @@ export const ListadoOrdenCompra = () => {
         handleCrearPDF={handleCrearPDF}
         formatearFecha={formatearFecha}
       />
+      {/** */}
       {show && ordenCompraSelected && (
         <ModalDetallesOrdenCompra
           ordenCompra={ordenCompraSelected}
