@@ -250,7 +250,7 @@ export const ModalFacturaOrdenCompra = ({
             >
               <option value="">Seleccione una opción</option>
               <option value="Contado">Contado</option>
-              <option value="Crédito">Crédito</option>
+              <option value="Credito">Crédito</option>
             </select>
           </div>
           <div className="form-group">
