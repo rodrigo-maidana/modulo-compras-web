@@ -2,23 +2,28 @@ import React, { useEffect, useState } from "react";
 import ModalPedidosDetalles from "../modales/ModalPedidosDetalles";
 import axiosInstance from "../axiosInstance";
 import { TablaPedidoCompra } from "../tablas/TablaPedidoCompra";
+import { Dropdown } from "react-bootstrap";
 
 export const ListadoPedidosCompras = () => {
   const [pedidoCompras, setPedidoCompras] = useState([]);
+  const [filteredPedidos, setFilteredPedidos] = useState([]);
+  const [estadoFiltro, setEstadoFiltro] = useState("");
+  const [fechaInicio, setFechaInicio] = useState("");
+  const [fechaFin, setFechaFin] = useState("");
   const [show, setShow] = useState(false);
   const [selectedPedidoId, setSelectedPedidoId] = useState(null);
-  const [edit, setEdit] = useState(false);
 
   const cotizacion = (id) => {
     setSelectedPedidoId(id);
     window.location.href = `/pedido-cotizacion/nuevo/${id}`;
   };
+
   const ordenCompra = (id) => {
     window.location.href = `/orden-compra/${id}`;
   };
+
   const handleCrearPedido = () => {
     setShow(true);
-    setEdit(false);
     setSelectedPedidoId(null);
   };
 
@@ -35,8 +40,6 @@ export const ListadoPedidosCompras = () => {
   const obtenerPedido = async (id) => {
     try {
       const response = await axiosInstance.get(`/pedidos-compra/${id}`);
-
-      console.log(response.data);
       return response.data;
     } catch (e) {
       console.log("error al querer obtener un pedido", e);
@@ -46,10 +49,9 @@ export const ListadoPedidosCompras = () => {
   const fetchCargarPedidos = () => {
     axiosInstance
       .get("/pedidos-compra")
-
       .then((response) => {
         setPedidoCompras(response.data);
-        //console.log(response.data);
+        setFilteredPedidos(response.data);
       })
       .catch((error) => {
         console.log("el error es: ", error);
@@ -59,6 +61,27 @@ export const ListadoPedidosCompras = () => {
   useEffect(() => {
     fetchCargarPedidos();
   }, []);
+
+  useEffect(() => {
+    let pedidosFiltrados = pedidoCompras;
+
+    if (estadoFiltro) {
+      pedidosFiltrados = pedidosFiltrados.filter(
+        (p) => p.estado === estadoFiltro
+      );
+    }
+
+    if (fechaInicio && fechaFin) {
+      const inicio = new Date(fechaInicio);
+      const fin = new Date(fechaFin);
+      pedidosFiltrados = pedidosFiltrados.filter((p) => {
+        const fechaPedido = new Date(p.fechaEmision);
+        return fechaPedido >= inicio && fechaPedido <= fin;
+      });
+    }
+
+    setFilteredPedidos(pedidosFiltrados);
+  }, [estadoFiltro, fechaInicio, fechaFin, pedidoCompras]);
 
   const formatearFecha = (fecha) => {
     const fechaEmision = new Date(fecha);
@@ -76,11 +99,8 @@ export const ListadoPedidosCompras = () => {
     const pedidoObtenido = await obtenerPedido(pedido.id);
     if (pedidoObtenido) {
       pedidoObtenido.estado = "Cancelado";
-      console.log(pedidoObtenido.estado);
       try {
         await axiosInstance.put(`/pedidos-compra/${pedido.id}`, pedidoObtenido);
-
-        console.log("editado");
         fetchCargarPedidos();
       } catch (error) {
         console.log("error al editar ", error);
@@ -89,21 +109,22 @@ export const ListadoPedidosCompras = () => {
   };
 
   const handleSave = (updatedDetalles) => {
-    console.log("Detalles actualizados: ", updatedDetalles);
-    fetchCargarPedidos(); // Volver a cargar los pedidos si es necesario
+    fetchCargarPedidos();
   };
 
   return (
     <>
-      {/*Hasta aca todo igual ambos componentes*/}
       <TablaPedidoCompra
-        pedidos={pedidoCompras}
+        pedidos={filteredPedidos}
         deletePedido={deletePedido}
         handleEditarPedido={handleEditarPedido}
-        handleCrearPedido={handleCrearPedido}
         cotizacion={cotizacion}
         formatearFecha={formatearFecha}
         ordenCompra={ordenCompra}
+        handleCrearPedido={handleCrearPedido}
+        setEstadoFiltro={setEstadoFiltro}
+        setFechaInicio={setFechaInicio}
+        setFechaFin={setFechaFin}
       />
 
       <ModalPedidosDetalles

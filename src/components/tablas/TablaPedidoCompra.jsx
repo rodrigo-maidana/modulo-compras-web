@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
 import {
   faEdit,
@@ -9,17 +9,20 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../styles.css";
+import { Dropdown } from "react-bootstrap";
 
 export const TablaPedidoCompra = ({
   pedidos,
   deletePedido,
   handleEditarPedido,
-  handleCrearPedido,
   cotizacion,
   formatearFecha,
   ordenCompra,
+  handleCrearPedido,
+  setEstadoFiltro,
+  setFechaInicio,
+  setFechaFin,
 }) => {
-  const [filter, setFilter] = useState("");
   const columns = useMemo(
     () => [
       {
@@ -64,7 +67,7 @@ export const TablaPedidoCompra = ({
         ),
       },
     ],
-    [handleEditarPedido, deletePedido, formatearFecha]
+    [handleEditarPedido, deletePedido, formatearFecha, cotizacion, ordenCompra]
   );
 
   const {
@@ -95,7 +98,6 @@ export const TablaPedidoCompra = ({
 
   const handleFilterChange = (e) => {
     const value = e.target.value || undefined;
-    setFilter(value);
     setGlobalFilter(value);
   };
 
@@ -123,22 +125,57 @@ export const TablaPedidoCompra = ({
       <div className="row justify-content-center">
         <div className="col-md-12">
           <div className="text-center">
-            <div className="text-center d-flex">
+            <div className="text-center d-flex mb-4">
               <input
                 type="text"
-                className="form-control mb-4"
-                value={filter}
+                className="form-control"
                 onChange={handleFilterChange}
                 placeholder="Buscar"
               />
-              <div className="text-right mx-4">
-                <button
-                  className="btn btn-primary px-5"
-                  onClick={handleCrearPedido}
-                >
-                  Crear
-                </button>
-              </div>
+
+              <button
+                className="btn btn-primary px-4 ms-2"
+                onClick={handleCrearPedido}
+              >
+                Crear
+              </button>
+            </div>
+            <div className="d-flex justify-content-end mb-3 col-5 ">
+              <h4 className="me-2">Filtros:</h4>
+              <Dropdown className="ms-2">
+                <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                  Filtrar por estado
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => setEstadoFiltro("")}>
+                    Todos
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => setEstadoFiltro("Cancelado")}>
+                    Cancelado
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => setEstadoFiltro("Cotización Generada")}
+                  >
+                    Cotización Generada
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => setEstadoFiltro("Cotizado")}>
+                    Cotizado
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => setEstadoFiltro("Pendiente")}>
+                    Pendiente
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              <input
+                type="date"
+                className="form-control mx-3"
+                onChange={(e) => setFechaInicio(e.target.value)}
+              />
+              <input
+                type="date"
+                className="form-control ms-2"
+                onChange={(e) => setFechaFin(e.target.value)}
+              />
             </div>
             <table
               {...getTableProps()}

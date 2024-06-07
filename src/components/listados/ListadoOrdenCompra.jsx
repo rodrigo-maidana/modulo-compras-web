@@ -93,7 +93,6 @@ export const ListadoOrdenCompra = () => {
 
   return (
     <>
-      {/*Ver donde se utiliza formatear numero en tabla orden compra */}
       <TablaOrdenCompra
         ordenCompra={ordenCompra}
         handleEditarOrden={handleEditarOrden}
