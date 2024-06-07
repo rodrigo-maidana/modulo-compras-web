@@ -132,7 +132,7 @@ export const TablaPedidoCotizacion = ({
   const endPage = Math.min(startPage + maxPagesToShow, totalPaginas);
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-3">
       <div className="mb-4">
         <h2>Listado de pedidos de cotización</h2>
       </div>
@@ -147,7 +147,7 @@ export const TablaPedidoCotizacion = ({
                 placeholder="Buscar"
               />
             </div>
-            <div className="d-flex justify-content-end mb-3 col-5 ">
+            <div className="d-flex justify-content-end mb-3 col-6 ">
               <h4 className="me-2">Filtros:</h4>
               <Dropdown className="ms-2">
                 <Dropdown.Toggle variant="primary" id="dropdown-basic">

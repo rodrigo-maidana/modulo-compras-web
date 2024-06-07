@@ -5,9 +5,6 @@ import { ModalDetallesOrdenCompra } from "../modales/ModalDetallesOrdenCompra";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { ModalFacturaOrdenCompra } from "../modales/ModalFacturaOrdenCompra";
-const formatearNumero = (numero) => {
-  return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-};
 
 export const ListadoOrdenCompra = () => {
   const [ordenCompra, setOrdenCompra] = useState([]);
@@ -16,6 +13,9 @@ export const ListadoOrdenCompra = () => {
   const [showFactura, setShowFactura] = useState(false);
   const [idOrdenCompraFactura, setIdOrdenCompraFactura] = useState(null);
 
+  const formatearNumero = (numero) => {
+    return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
   const fetchCargarOrdenCompra = () => {
     axiosInstance
       .get("ordenes-compra")

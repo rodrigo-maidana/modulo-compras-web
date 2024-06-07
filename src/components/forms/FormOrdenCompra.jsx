@@ -12,6 +12,9 @@ export const FormOrdenCompra = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const formatearNumero = (numero) => {
+    return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
   const fetchCabeceraPedido = async () => {
     try {
       const response = await axiosInstance.get(`pedidos-compra/${id}`);
@@ -169,6 +172,13 @@ export const FormOrdenCompra = () => {
     }
   };
 
+  const calcularTotal = () => {
+    return detallesSeleccionados.reduce(
+      (total, detalle) => total + detalle.cantidad * detalle.precioUnitario,
+      0
+    );
+  };
+
   return (
     <>
       <div className="container">
@@ -240,16 +250,24 @@ export const FormOrdenCompra = () => {
                       </select>
                     </td>
                     <td className="text-end">
-                      {cantidadActual * precioActual} Gs
+                      {formatearNumero(cantidadActual * precioActual)} Gs
                     </td>
                   </tr>
                 );
               })}
+              <tr>
+                <td colSpan="3" className="text-end">
+                  <strong>Total</strong>
+                </td>
+                <td className="text-end">
+                  <strong>{formatearNumero(calcularTotal())} Gs</strong>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
         <div className="text-end">
-          <button className="btn btn-info" onClick={handleGenerarOrden}>
+          <button className="btn btn-primary" onClick={handleGenerarOrden}>
             Generar orden
           </button>
         </div>
