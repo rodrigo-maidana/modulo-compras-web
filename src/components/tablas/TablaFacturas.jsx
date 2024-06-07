@@ -24,7 +24,6 @@ export const TablaFactura = ({ facturas, handleAbrirModal, ordenPago }) => {
           factura.nroFactura.toLowerCase().includes(filter.toLowerCase())
       );
     }
-
     if (estadoFiltro) {
       facturasFiltradas = facturasFiltradas.filter(
         (factura) => factura.estado === estadoFiltro

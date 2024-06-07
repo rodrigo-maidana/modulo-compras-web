@@ -13,6 +13,9 @@ export const FormOrdenPago = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const formatearNumero = (numero) => {
+    return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
   const fetchFactura = async () => {
     try {
       const response = await axiosInstance.get(`facturas/${id}`);
@@ -124,31 +127,44 @@ export const FormOrdenPago = () => {
 
   return (
     <div className="container">
-      <div className="cabecera">
+      <div className="cabecera my-3">
         <h2>Orden de pago {id}</h2>
         <h5>Factura nro: {factura.nroFactura}</h5>
-        <h5>Monto total: {factura.montoTotal}</h5>
-        <h5>Saldo pendiente: {factura.saldoPendiente}</h5>
+        <h5>
+          Monto total:{" "}
+          {factura.montoTotal ? formatearNumero(factura.montoTotal) : ""}
+        </h5>
+        <h5>
+          Saldo pendiente:{" "}
+          {factura.saldoPendiente
+            ? formatearNumero(factura.saldoPendiente)
+            : ""}
+        </h5>
       </div>
-      <div className="metodosPago">
+      <div className="metodosPago my-4">
         <h5>Método de Pago</h5>
-        <Select
-          options={metodosPago}
-          value={selectedMetodo}
-          onChange={setSelectedMetodo}
-        />
-        <h5 className="mt-3">Monto</h5>
-        <input
-          type="text"
-          className="form-control"
-          value={monto}
-          onChange={handleMontoChange}
-        />
+        <div className="col-4 my-1">
+          <Select
+            options={metodosPago}
+            value={selectedMetodo}
+            onChange={setSelectedMetodo}
+          />
+        </div>
+        <div className="col-4">
+          <h5 className="mt-3">Monto</h5>
+          <input
+            type="text"
+            className="form-control"
+            value={monto}
+            onChange={handleMontoChange}
+          />
+        </div>
+
         <button className="btn btn-primary mt-3" onClick={agregarPago}>
           Agregar Método de Pago
         </button>
       </div>
-      <div className="mt-5">
+      <div className="mt-5 col-5">
         <h4>Métodos de Pago Agregados</h4>
         <table className="table table-bordered">
           <thead>
@@ -161,7 +177,7 @@ export const FormOrdenPago = () => {
             {pagos.map((pago, index) => (
               <tr key={index}>
                 <td>{pago.metodo.label}</td>
-                <td>{pago.monto}</td>
+                <td>{formatearNumero(pago.monto)}</td>
               </tr>
             ))}
             <tr>
@@ -169,7 +185,7 @@ export const FormOrdenPago = () => {
                 <strong>Total</strong>
               </td>
               <td>
-                <strong>{calcularTotal()}</strong>
+                <strong>{formatearNumero(calcularTotal())}</strong>
               </td>
             </tr>
           </tbody>
