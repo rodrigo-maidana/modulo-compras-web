@@ -1,12 +1,13 @@
 import React, { useMemo, useState } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faFileInvoice } from "@fortawesome/free-solid-svg-icons";
 import "../styles.css";
 
 export const TablaOrdenCompra = ({
   ordenCompra,
   handleEditarOrden,
+  handleAbrirFactura,
   formatearFecha,
 }) => {
   const [filter, setFilter] = useState("");
@@ -32,11 +33,17 @@ export const TablaOrdenCompra = ({
             >
               <FontAwesomeIcon icon={faEye} />
             </button>
+            <button
+              className="btn btn-lg mx-auto"
+              onClick={() => handleAbrirFactura(row.original.id)}
+            >
+              <FontAwesomeIcon icon={faFileInvoice} />
+            </button>
           </div>
         ),
       },
     ],
-    [handleEditarOrden, formatearFecha]
+    [handleEditarOrden, handleAbrirFactura, formatearFecha]
   );
 
   const {
@@ -163,9 +170,8 @@ export const TablaOrdenCompra = ({
               <nav>
                 <ul className="pagination">
                   <li
-                    className={`page-item ${
-                      !canPreviousPage ? "disabled" : ""
-                    }`}
+                    className={`page-item ${!canPreviousPage ? "disabled" : ""
+                      }`}
                   >
                     <button
                       className="page-link"
@@ -192,9 +198,8 @@ export const TablaOrdenCompra = ({
                   ).map((pageNumber) => (
                     <li
                       key={pageNumber}
-                      className={`page-item ${
-                        pageNumber === pageIndex ? "active" : ""
-                      }`}
+                      className={`page-item ${pageNumber === pageIndex ? "active" : ""
+                        }`}
                     >
                       <button
                         className="page-link"
@@ -205,9 +210,8 @@ export const TablaOrdenCompra = ({
                     </li>
                   ))}
                   <li
-                    className={`page-item ${
-                      pageIndex === pageCount - 1 ? "disabled" : ""
-                    }`}
+                    className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""
+                      }`}
                   >
                     <button
                       className="page-link"

@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import axiosInstance from "../axiosInstance";
 import { TablaOrdenCompra } from "../tablas/TablaOrdenCompra";
 import { ModalDetallesOrdenCompra } from "../modales/ModalDetallesOrdenCompra";
+import { ModalFacturaOrdenCompra } from "../modales/ModalFacturaOrdenCompra"
 
 export const ListadoOrdenCompra = () => {
   const [ordenCompra, setOrdenCompra] = useState([]);
   const [ordenCompraSelected, setOrdenCompraSelected] = useState(null);
   const [show, setShow] = useState(false);
+  const [showFactura, setShowFactura] = useState(false);
+  const [idOrdenCompraFactura, setIdOrdenCompraFactura] = useState(null);
 
   const fetchCargarOrdenCompra = () => {
     axiosInstance
@@ -46,12 +49,22 @@ export const ListadoOrdenCompra = () => {
     // Lógica para crear una nueva orden de compra
   };
 
+  const handleAbrirFactura = (idOrdenCompra) => {
+    setIdOrdenCompraFactura(idOrdenCompra);
+    setShowFactura(true);
+  };
+
+  const handleCloseFactura = () => {
+    setShowFactura(false);
+  };
+
   return (
     <>
       <TablaOrdenCompra
         ordenCompra={ordenCompra}
         handleEditarOrden={handleEditarOrden}
         handleCrearOrden={handleCrearOrden}
+        handleAbrirFactura={handleAbrirFactura}
         formatearFecha={formatearFecha}
       />
       {show && ordenCompraSelected && (
@@ -61,6 +74,14 @@ export const ListadoOrdenCompra = () => {
           handleClose={handleClose}
           onSave={onSave}
           formatearFecha={formatearFecha}
+        />
+      )}
+      {showFactura && (
+        <ModalFacturaOrdenCompra
+          show={showFactura}
+          handleClose={handleCloseFactura}
+          idOrdenCompra={idOrdenCompraFactura}
+          onSave={fetchCargarOrdenCompra}
         />
       )}
     </>
