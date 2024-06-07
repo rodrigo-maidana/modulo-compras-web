@@ -19,7 +19,7 @@ const ModalFacturas = ({ show, handleClose, factura }) => {
             { Header: "Nombre", accessor: "producto.descripcion" },
             { Header: "Cantidad", accessor: "cantidad" },
             { Header: "Precio Unitario", accessor: "precioUnitario" },
-            { Header: "Valor Total", accessor: (row) => (row.precioUnitario * row.cantidad).toFixed(0) },
+            { Header: "Sub-Total", accessor: (row) => (row.precioUnitario * row.cantidad).toFixed(0) },
         ],
         []
     );

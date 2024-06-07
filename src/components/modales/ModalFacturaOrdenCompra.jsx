@@ -111,7 +111,7 @@ export const ModalFacturaOrdenCompra = ({
       console.log("Factura guardada con ID:", facturaId);
 
       // Crear promesas para guardar los productos uno a uno
-      const promesas = productos.map((producto) => {
+      for (const producto of productos) {
         const detalleFactura = {
           producto: {
             id: producto.producto.id,
@@ -134,14 +134,9 @@ export const ModalFacturaOrdenCompra = ({
           JSON.stringify(detalleFactura, null, 2)
         ); // Mensaje de depuración
 
-        return axiosInstance.post(
-          `/facturas-detalles/${facturaId}`,
-          detalleFactura
-        );
-      });
+        await axiosInstance.post(`/facturas-detalles/${facturaId}`, detalleFactura);
+      }
 
-      // Esperar a que todas las promesas se resuelvan
-      await Promise.all(promesas);
       toast.success("Factura y productos guardados correctamente");
       onSave();
       handleClose();
