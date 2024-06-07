@@ -139,6 +139,8 @@ export const FormProveedores = ({
   const validar = () => {
     const { nombre, ruc, contacto, correo, direccion } = formState;
     const rucCheck = /^[0-9-]+$/;
+    const contactoCheck = /^[0-9]+$/;
+    const correoRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
     if (!nombre || !ruc || !contacto || !correo || !direccion) {
       alert("no se aceptan campos en blanco");
       return false;
@@ -147,7 +149,10 @@ export const FormProveedores = ({
       alert("ruc solo numeros y guion");
       return false;
     }
-    const correoRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+    if (!contactoCheck.test(contacto)) {
+      alert("contacto solo numeros");
+      return false;
+    }
     if (!correoRegex.test(correo)) {
       alert("formato de correo no valido");
       return false;
@@ -200,7 +205,7 @@ export const FormProveedores = ({
             </label>
             <input
               className="col-6"
-              type="text"
+              type="number"
               name="contacto"
               value={formState.contacto}
               id="contactoProveedor"

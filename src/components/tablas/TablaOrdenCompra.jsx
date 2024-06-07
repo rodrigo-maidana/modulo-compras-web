@@ -2,12 +2,14 @@ import React, { useMemo, useState } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faFileInvoice } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import "../styles.css";
 
 export const TablaOrdenCompra = ({
   ordenCompra,
   handleEditarOrden,
   handleAbrirFactura,
+  handleCrearPDF,
   formatearFecha,
 }) => {
   const [filter, setFilter] = useState("");
@@ -39,11 +41,20 @@ export const TablaOrdenCompra = ({
             >
               <FontAwesomeIcon icon={faFileInvoice} />
             </button>
+            {row.original.estado === "Pendiente" && (
+              <button
+                className="btn btn-lg mx-auto"
+                onClick={() => handleCrearPDF(row.original)}
+              >
+                <FontAwesomeIcon icon={faFilePdf} />
+              </button>
+            )}
           </div>
         ),
       },
     ],
     [handleEditarOrden, handleAbrirFactura, formatearFecha]
+    [handleEditarOrden, handleCrearPDF, formatearFecha]
   );
 
   const {
