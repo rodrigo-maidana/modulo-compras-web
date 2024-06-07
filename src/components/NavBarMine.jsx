@@ -30,6 +30,7 @@ export const NavBarMine = () => {
             <Nav.Link href="/pedidos-cotizacion">Pedido cotizacion</Nav.Link>
             <Nav.Link href="/orden-compra">Orden compra</Nav.Link>
             <Nav.Link href="/facturas">Facturas</Nav.Link>
+            <Nav.Link href="/orden-pago">Pagos</Nav.Link>
           </Nav>
           <Nav className="ms-auto me-3">
             <button onClick={logout} className="btn btn-outline-light">

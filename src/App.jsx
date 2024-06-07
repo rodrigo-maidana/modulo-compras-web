@@ -20,6 +20,7 @@ import { ListarFacturas } from "./components/listados/ListarFacturas";
 import { FormOrdenPago } from "./components/forms/FormOrdenPago";
 import AuthTabs from "./components/AuthTabs";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { ListadoOrdenPago } from "./components/listados/ListadoOrdenPago";
 
 const AppContent = () => {
   const navigate = useNavigate();
@@ -72,6 +73,10 @@ const AppContent = () => {
         <Route
           path="/orden-pago/:id"
           element={<ProtectedRoute element={<FormOrdenPago />} />}
+        />
+        <Route
+          path="/orden-pago"
+          element={<ProtectedRoute element={<ListadoOrdenPago />} />}
         />
       </Routes>
     </AuthProvider>
