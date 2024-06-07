@@ -23,6 +23,7 @@ export const NavBarMine = () => {
               </NavDropdown.Item>
               <NavDropdown.Item href="/depositos">Depositos</NavDropdown.Item>
               <NavDropdown.Item href="/categorias">Categorias</NavDropdown.Item>
+              <NavDropdown.Item href="/marcas">Marcas</NavDropdown.Item>
               <NavDropdown.Item href="/productos">Productos</NavDropdown.Item>
             </NavDropdown>
 

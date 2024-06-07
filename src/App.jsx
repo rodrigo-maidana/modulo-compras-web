@@ -12,6 +12,7 @@ import { ListadoPedidosCompras } from "./components/listados/ListadoPedidosCompr
 import { ListarDepositos } from "./components/listados/ListarDepositos";
 import { ListarProductos } from "./components/listados/ListarProductos";
 import { ListarCategorias } from "./components/listados/ListarCategorias";
+import { ListarMarcas } from "./components/listados/ListarMarcas";
 import { ListadoPedidoCotizacion } from "./components/listados/ListadoPedidoCotizacion";
 import { ListadoOrdenCompra } from "./components/listados/ListadoOrdenCompra";
 import ListarPedidoCotizacionNuevo from "./components/listados/ListarPedidoCotizacionNuevo";
@@ -41,6 +42,10 @@ const AppContent = () => {
         <Route
           path="/categorias"
           element={<ProtectedRoute element={<ListarCategorias />} />}
+        />
+        <Route
+          path="/marcas"
+          element={<ProtectedRoute element={<ListarMarcas />} />}
         />
         <Route
           path="/productos"
