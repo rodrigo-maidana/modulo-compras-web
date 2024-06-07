@@ -4,7 +4,7 @@ import ModalDetallesCotizacion from "../modales/ModalDetallesCotizacion";
 import axiosInstance from "../axiosInstance";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import "jspdf-autotable";
+
 export const ListadoPedidoCotizacion = () => {
   const [pedidoCotizacion, setPedidoCotizacion] = useState([]);
   const [cotizacionSelected, setCotizacionSelected] = useState(null);
@@ -25,7 +25,6 @@ export const ListadoPedidoCotizacion = () => {
   const handleEditarPedido = (cotizacion) => {
     setCotizacionSelected(cotizacion);
     setShow(true);
-    //console.log("llego");
   };
   const handleCrearPedido = () => {};
   const formatearNumero = (numero) => {
@@ -107,3 +106,5 @@ export const ListadoPedidoCotizacion = () => {
     </>
   );
 };
+
+export default ListadoPedidoCotizacion;

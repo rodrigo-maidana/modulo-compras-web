@@ -112,3 +112,5 @@ export const ListadoOrdenCompra = () => {
     </>
   );
 };
+
+export default ListadoOrdenCompra;

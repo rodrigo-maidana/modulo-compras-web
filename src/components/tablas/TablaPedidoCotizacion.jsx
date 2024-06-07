@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
 import {
   faEdit,
@@ -8,8 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../styles.css";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
+import { Dropdown } from "react-bootstrap";
 
 export const TablaPedidoCotizacion = ({
   pedidos,
@@ -18,6 +17,31 @@ export const TablaPedidoCotizacion = ({
   formatearFecha,
 }) => {
   const [filter, setFilter] = useState("");
+  const [estadoFiltro, setEstadoFiltro] = useState("");
+  const [fechaInicio, setFechaInicio] = useState("");
+  const [fechaFin, setFechaFin] = useState("");
+  const [filteredPedidos, setFilteredPedidos] = useState(pedidos);
+
+  useEffect(() => {
+    let pedidosFiltrados = pedidos;
+
+    if (estadoFiltro) {
+      pedidosFiltrados = pedidosFiltrados.filter(
+        (p) => p.estado === estadoFiltro
+      );
+    }
+
+    if (fechaInicio && fechaFin) {
+      const inicio = new Date(fechaInicio);
+      const fin = new Date(fechaFin);
+      pedidosFiltrados = pedidosFiltrados.filter((p) => {
+        const fechaPedido = new Date(p.fechaEmision);
+        return fechaPedido >= inicio && fechaPedido <= fin;
+      });
+    }
+
+    setFilteredPedidos(pedidosFiltrados);
+  }, [estadoFiltro, fechaInicio, fechaFin, pedidos]);
 
   const columns = useMemo(
     () => [
@@ -78,7 +102,7 @@ export const TablaPedidoCotizacion = ({
   } = useTable(
     {
       columns,
-      data: pedidos,
+      data: filteredPedidos,
       initialState: { pageIndex: 0 },
     },
     useGlobalFilter,
@@ -115,15 +139,42 @@ export const TablaPedidoCotizacion = ({
       <div className="row justify-content-center">
         <div className="col-md-12">
           <div className="text-center">
-            <div className="text-center d-flex">
+            <div className="text-center d-flex mb-4">
               <input
                 type="text"
-                className="form-control mb-4"
-                value={filter}
+                className="form-control"
                 onChange={handleFilterChange}
                 placeholder="Buscar"
               />
-              <div className="text-right mx-4"></div>
+            </div>
+            <div className="d-flex justify-content-end mb-3 col-5 ">
+              <h4 className="me-2">Filtros:</h4>
+              <Dropdown className="ms-2">
+                <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                  Filtrar por estado
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => setEstadoFiltro("")}>
+                    Todos
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => setEstadoFiltro("Pendiente")}>
+                    Pendiente
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => setEstadoFiltro("Registrado")}>
+                    Registrado
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              <input
+                type="date"
+                className="form-control ms-2"
+                onChange={(e) => setFechaInicio(e.target.value)}
+              />
+              <input
+                type="date"
+                className="form-control ms-2"
+                onChange={(e) => setFechaFin(e.target.value)}
+              />
             </div>
             <table
               {...getTableProps()}
