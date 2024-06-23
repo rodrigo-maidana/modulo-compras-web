@@ -50,6 +50,10 @@ export const TablaFactura = ({ facturas, handleAbrirModal, ordenPago }) => {
     return `${dia}/${mes}/${año}`;
   };
 
+  const formatearNumero = (numero) => {
+    return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
   const columns = useMemo(
     () => [
       {
@@ -63,8 +67,8 @@ export const TablaFactura = ({ facturas, handleAbrirModal, ordenPago }) => {
       { Header: "RUC", accessor: "proveedor.ruc" },
       { Header: "Depósito", accessor: "deposito.nombre" },
       { Header: "Estado", accessor: "estado" },
-      { Header: "Monto Total", accessor: "montoTotal" },
-      { Header: "Saldo Pendiente", accessor: "saldoPendiente" },
+      { Header: "Monto Total", accessor: "montoTotal", Cell: ({ value }) => formatearNumero(value) },
+      { Header: "Saldo Pendiente", accessor: "saldoPendiente", Cell: ({ value }) => formatearNumero(value) },
       {
         Header: "Acciones",
         accessor: "acciones",
@@ -228,9 +232,8 @@ export const TablaFactura = ({ facturas, handleAbrirModal, ordenPago }) => {
               <nav>
                 <ul className="pagination">
                   <li
-                    className={`page-item ${
-                      !canPreviousPage ? "disabled" : ""
-                    }`}
+                    className={`page-item ${!canPreviousPage ? "disabled" : ""
+                      }`}
                   >
                     <button
                       className="page-link"
@@ -257,9 +260,8 @@ export const TablaFactura = ({ facturas, handleAbrirModal, ordenPago }) => {
                   ).map((pageNumber) => (
                     <li
                       key={pageNumber}
-                      className={`page-item ${
-                        pageNumber === pageIndex ? "active" : ""
-                      }`}
+                      className={`page-item ${pageNumber === pageIndex ? "active" : ""
+                        }`}
                     >
                       <button
                         className="page-link"
@@ -270,9 +272,8 @@ export const TablaFactura = ({ facturas, handleAbrirModal, ordenPago }) => {
                     </li>
                   ))}
                   <li
-                    className={`page-item ${
-                      pageIndex === pageCount - 1 ? "disabled" : ""
-                    }`}
+                    className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""
+                      }`}
                   >
                     <button
                       className="page-link"

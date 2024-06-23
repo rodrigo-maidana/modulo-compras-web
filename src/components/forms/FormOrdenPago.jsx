@@ -129,6 +129,7 @@ export const FormOrdenPago = () => {
     <div className="container">
       <div className="cabecera my-3">
         <h2>Orden de pago {id}</h2>
+        <h3>Proveedor: {factura.proveedor?.nombre ? factura.proveedor.nombre : ""}</h3>
         <h5>Factura nro: {factura.nroFactura}</h5>
         <h5>
           Monto total:{" "}

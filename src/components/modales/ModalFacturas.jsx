@@ -27,6 +27,10 @@ const ModalFacturas = ({ show, handleClose, factura }) => {
     []
   );
 
+  const formatearNumero = (numero) => {
+    return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
   const data = useMemo(() => factura?.detalles || [], [factura]);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -43,6 +47,19 @@ const ModalFacturas = ({ show, handleClose, factura }) => {
       <Modal.Body>
         {factura && (
           <div className="container">
+            <div className="row mb-3">
+              <div className="form-group">
+                <label>
+                  <strong>Proveedor</strong>
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={factura.proveedor.nombre}
+                  readOnly
+                />
+              </div>
+            </div>
             <div className="row mb-3">
               <div className="col-md-6">
                 <div className="form-group">
@@ -158,7 +175,9 @@ const ModalFacturas = ({ show, handleClose, factura }) => {
                       >
                         {row.cells.map((cell) => (
                           <td {...cell.getCellProps()} className="text-center">
-                            {cell.render("Cell")}
+                            {cell.column.id === 'precioUnitario' || cell.column.id === 'Sub-Total'
+                              ? formatearNumero(cell.value)
+                              : cell.render("Cell")}
                           </td>
                         ))}
                       </tr>
@@ -177,7 +196,7 @@ const ModalFacturas = ({ show, handleClose, factura }) => {
                   <input
                     type="text"
                     className="form-control"
-                    value={factura.montoTotal.toFixed(0)}
+                    value={formatearNumero(factura.montoTotal.toFixed(0))}
                     readOnly
                   />
                 </div>
@@ -190,7 +209,7 @@ const ModalFacturas = ({ show, handleClose, factura }) => {
                   <input
                     type="text"
                     className="form-control"
-                    value={(factura.montoTotal / 11).toFixed(0)}
+                    value={formatearNumero((factura.montoTotal / 11).toFixed(0))}
                     readOnly
                   />
                 </div>

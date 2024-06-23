@@ -68,6 +68,10 @@ export const TablaOrdenesPago = ({ handleOpenModal }) => {
     }
   };
 
+  const formatearNumero = (numero) => {
+    return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
   const columns = useMemo(
     () => [
       {
@@ -78,7 +82,7 @@ export const TablaOrdenesPago = ({ handleOpenModal }) => {
       { Header: "Nro Factura", accessor: "factura.nroFactura" },
       { Header: "Proveedor", accessor: "factura.proveedor.nombre" },
       { Header: "Estado", accessor: "estado" },
-      { Header: "Monto Total", accessor: "montoTotal" },
+      { Header: "Monto Total", accessor: "montoTotal", Cell: ({ value }) => formatearNumero(value) },
       {
         Header: "Acciones",
         accessor: "acciones",
@@ -232,9 +236,8 @@ export const TablaOrdenesPago = ({ handleOpenModal }) => {
               <nav>
                 <ul className="pagination">
                   <li
-                    className={`page-item ${
-                      !canPreviousPage ? "disabled" : ""
-                    }`}
+                    className={`page-item ${!canPreviousPage ? "disabled" : ""
+                      }`}
                   >
                     <button
                       className="page-link"
@@ -261,9 +264,8 @@ export const TablaOrdenesPago = ({ handleOpenModal }) => {
                   ).map((pageNumber) => (
                     <li
                       key={pageNumber}
-                      className={`page-item ${
-                        pageNumber === pageIndex ? "active" : ""
-                      }`}
+                      className={`page-item ${pageNumber === pageIndex ? "active" : ""
+                        }`}
                     >
                       <button
                         className="page-link"
@@ -274,9 +276,8 @@ export const TablaOrdenesPago = ({ handleOpenModal }) => {
                     </li>
                   ))}
                   <li
-                    className={`page-item ${
-                      pageIndex === pageCount - 1 ? "disabled" : ""
-                    }`}
+                    className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""
+                      }`}
                   >
                     <button
                       className="page-link"

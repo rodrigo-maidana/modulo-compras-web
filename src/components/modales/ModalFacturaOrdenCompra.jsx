@@ -149,6 +149,10 @@ export const ModalFacturaOrdenCompra = ({
     }
   };
 
+  const formatearNumero = (numero) => {
+    return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
   const handleFechaVencimientoChange = (e) => {
     const fechaVenc = e.target.value;
     if (fechaVenc < fechaEmision) {
@@ -307,7 +311,7 @@ export const ModalFacturaOrdenCompra = ({
                     <input
                       type="number"
                       className="form-control"
-                      value={producto.precioUnitario}
+                      value={formatearNumero(producto.precioUnitario)}
                       onChange={(e) => {
                         const newProductos = [...productos];
                         newProductos[index].precioUnitario = e.target.value;
@@ -315,7 +319,7 @@ export const ModalFacturaOrdenCompra = ({
                       }}
                     />
                   </td>
-                  <td>{producto.precioUnitario * producto.cantidad}</td>
+                  <td>{formatearNumero(producto.precioUnitario * producto.cantidad)}</td>
                 </tr>
               ))}
             </tbody>
@@ -325,12 +329,9 @@ export const ModalFacturaOrdenCompra = ({
             <input
               type="text"
               className="form-control"
-              value={(
-                productos.reduce(
-                  (acc, prod) => acc + prod.precioUnitario * prod.cantidad,
-                  0
-                ) / 11
-              ).toFixed(0)}
+              value={formatearNumero(
+                (productos.reduce((acc, prod) => acc + prod.precioUnitario * prod.cantidad, 0) / 11).toFixed(0)
+              )}
               readOnly
             />
           </div>
@@ -339,9 +340,8 @@ export const ModalFacturaOrdenCompra = ({
             <input
               type="text"
               className="form-control"
-              value={productos.reduce(
-                (acc, prod) => acc + prod.precioUnitario * prod.cantidad,
-                0
+              value={formatearNumero(
+                (productos.reduce((acc, prod) => acc + prod.precioUnitario * prod.cantidad, 0)).toFixed(0)
               )}
               readOnly
             />
