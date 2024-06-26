@@ -134,7 +134,10 @@ export const ModalFacturaOrdenCompra = ({
           JSON.stringify(detalleFactura, null, 2)
         ); // Mensaje de depuración
 
-        await axiosInstance.post(`/facturas-detalles/${facturaId}`, detalleFactura);
+        await axiosInstance.post(
+          `/facturas-detalles/${facturaId}`,
+          detalleFactura
+        );
       }
 
       toast.success("Factura y productos guardados correctamente");
@@ -311,7 +314,7 @@ export const ModalFacturaOrdenCompra = ({
                     <input
                       type="number"
                       className="form-control"
-                      value={formatearNumero(producto.precioUnitario)}
+                      value={producto.precioUnitario}
                       onChange={(e) => {
                         const newProductos = [...productos];
                         newProductos[index].precioUnitario = e.target.value;
@@ -319,7 +322,11 @@ export const ModalFacturaOrdenCompra = ({
                       }}
                     />
                   </td>
-                  <td>{formatearNumero(producto.precioUnitario * producto.cantidad)}</td>
+                  <td>
+                    {formatearNumero(
+                      producto.precioUnitario * producto.cantidad
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -330,7 +337,12 @@ export const ModalFacturaOrdenCompra = ({
               type="text"
               className="form-control"
               value={formatearNumero(
-                (productos.reduce((acc, prod) => acc + prod.precioUnitario * prod.cantidad, 0) / 11).toFixed(0)
+                (
+                  productos.reduce(
+                    (acc, prod) => acc + prod.precioUnitario * prod.cantidad,
+                    0
+                  ) / 11
+                ).toFixed(0)
               )}
               readOnly
             />
@@ -341,7 +353,12 @@ export const ModalFacturaOrdenCompra = ({
               type="text"
               className="form-control"
               value={formatearNumero(
-                (productos.reduce((acc, prod) => acc + prod.precioUnitario * prod.cantidad, 0)).toFixed(0)
+                productos
+                  .reduce(
+                    (acc, prod) => acc + prod.precioUnitario * prod.cantidad,
+                    0
+                  )
+                  .toFixed(0)
               )}
               readOnly
             />

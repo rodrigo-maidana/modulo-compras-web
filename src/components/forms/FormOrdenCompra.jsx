@@ -243,8 +243,8 @@ export const FormOrdenCompra = () => {
                       >
                         {productoPrecios.map((precio, index) => (
                           <option key={index} value={precio.precioUnitario}>
-                            {precio.proveedor.nombre} - {precio.precioUnitario}{" "}
-                            Gs
+                            {precio.proveedor.nombre} -{" "}
+                            {formatearNumero(precio.precioUnitario)} Gs
                           </option>
                         ))}
                       </select>

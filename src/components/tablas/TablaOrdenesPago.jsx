@@ -209,29 +209,51 @@ export const TablaOrdenesPago = ({ handleOpenModal }) => {
               className="table table-bordered table-hover"
             >
               <thead className="thead-dark">
-                {headerGroups.map((headerGroup) => (
-                  <tr {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map((column) => (
-                      <th {...column.getHeaderProps()} className="text-center">
-                        {column.render("Header")}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
+                {headerGroups.map((headerGroup) => {
+                  const { key: headerGroupKey, ...restHeaderGroupProps } =
+                    headerGroup.getHeaderGroupProps();
+                  return (
+                    <tr key={headerGroupKey} {...restHeaderGroupProps}>
+                      {headerGroup.headers.map((column) => {
+                        const { key: columnKey, ...restColumnProps } =
+                          column.getHeaderProps();
+                        return (
+                          <th
+                            key={columnKey}
+                            {...restColumnProps}
+                            className="text-center"
+                          >
+                            {column.render("Header")}
+                          </th>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
               </thead>
               <tbody {...getTableBodyProps()}>
                 {page.map((row) => {
                   prepareRow(row);
+                  const { key: rowKey, ...restRowProps } = row.getRowProps();
                   return (
                     <tr
-                      {...row.getRowProps()}
+                      key={rowKey}
+                      {...restRowProps}
                       className="text-center align-middle"
                     >
-                      {row.cells.map((cell) => (
-                        <td {...cell.getCellProps()} className="text-center">
-                          {cell.render("Cell")}
-                        </td>
-                      ))}
+                      {row.cells.map((cell) => {
+                        const { key: cellKey, ...restCellProps } =
+                          cell.getCellProps();
+                        return (
+                          <td
+                            key={cellKey}
+                            {...restCellProps}
+                            className="text-center"
+                          >
+                            {cell.render("Cell")}
+                          </td>
+                        );
+                      })}
                     </tr>
                   );
                 })}
