@@ -127,9 +127,14 @@ export const FormOrdenPago = () => {
 
   return (
     <div className="container">
-      <div className="cabecera my-3">
-        <h2>Orden de pago {id}</h2>
-        <h3>Proveedor: {factura.proveedor?.nombre ? factura.proveedor.nombre : ""}</h3>
+      <h2 className="pt-3">Orden de pago</h2>
+      <div
+        className="cabecera my-3 p-4"
+        style={{ border: "1px solid black", borderRadius: "10px" }}
+      >
+        <h3>
+          Proveedor: {factura.proveedor?.nombre ? factura.proveedor.nombre : ""}
+        </h3>
         <h5>Factura nro: {factura.nroFactura}</h5>
         <h5>
           Monto total:{" "}
@@ -142,7 +147,10 @@ export const FormOrdenPago = () => {
             : ""}
         </h5>
       </div>
-      <div className="metodosPago my-4">
+      <div
+        className="metodosPago my-4 p-4"
+        style={{ border: "1px solid black", borderRadius: "10px" }}
+      >
         <h5>Método de Pago</h5>
         <div className="col-4 my-1">
           <Select
@@ -160,12 +168,20 @@ export const FormOrdenPago = () => {
             onChange={handleMontoChange}
           />
         </div>
-
+        <button
+          className="btn btn-secondary ms-5 me-2 mt-3"
+          onClick={() => {
+            setMonto("");
+            setSelectedMetodo(null);
+          }}
+        >
+          Cancelar
+        </button>
         <button className="btn btn-primary mt-3" onClick={agregarPago}>
           Agregar Método de Pago
         </button>
       </div>
-      <div className="mt-5 col-5">
+      <div className="mt-3 col-5">
         <h4>Métodos de Pago Agregados</h4>
         <table className="table table-bordered">
           <thead>
@@ -191,7 +207,17 @@ export const FormOrdenPago = () => {
             </tr>
           </tbody>
         </table>
-        <button className="btn btn-success mt-3" onClick={confirmarPago}>
+      </div>
+      <div className="col-5 text-end ">
+        <button
+          className="btn btn-secondary mx-2"
+          onClick={() => {
+            window.location.href = "/facturas";
+          }}
+        >
+          Cancelar
+        </button>
+        <button className="btn btn-success" onClick={confirmarPago}>
           Confirmar Pago
         </button>
       </div>
