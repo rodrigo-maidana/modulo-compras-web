@@ -29,6 +29,7 @@ export const TablaOrdenCompra = ({
     if (fechaInicio && fechaFin) {
       const inicio = new Date(fechaInicio);
       const fin = new Date(fechaFin);
+      fin.setDate(fin.getDate() + 1);
       ordenFiltrados = ordenFiltrados.filter((p) => {
         const fechaPedido = new Date(p.fechaEmision);
         return fechaPedido >= inicio && fechaPedido <= fin;

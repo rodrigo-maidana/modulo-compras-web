@@ -33,6 +33,7 @@ export const TablaFactura = ({ facturas, handleAbrirModal, ordenPago }) => {
     if (fechaInicio && fechaFin) {
       const inicio = new Date(fechaInicio);
       const fin = new Date(fechaFin);
+      fin.setDate(fin.getDate() + 1); // Sumar un día para que incluya la fecha fin (hasta las 23:59:59
       facturasFiltradas = facturasFiltradas.filter((factura) => {
         const fechaEmision = new Date(factura.fechaEmision);
         return fechaEmision >= inicio && fechaEmision <= fin;
@@ -67,8 +68,16 @@ export const TablaFactura = ({ facturas, handleAbrirModal, ordenPago }) => {
       { Header: "RUC", accessor: "proveedor.ruc" },
       { Header: "Depósito", accessor: "deposito.nombre" },
       { Header: "Estado", accessor: "estado" },
-      { Header: "Monto Total", accessor: "montoTotal", Cell: ({ value }) => formatearNumero(value) },
-      { Header: "Saldo Pendiente", accessor: "saldoPendiente", Cell: ({ value }) => formatearNumero(value) },
+      {
+        Header: "Monto Total",
+        accessor: "montoTotal",
+        Cell: ({ value }) => formatearNumero(value),
+      },
+      {
+        Header: "Saldo Pendiente",
+        accessor: "saldoPendiente",
+        Cell: ({ value }) => formatearNumero(value),
+      },
       {
         Header: "Acciones",
         accessor: "acciones",
@@ -85,6 +94,7 @@ export const TablaFactura = ({ facturas, handleAbrirModal, ordenPago }) => {
               onClick={() => {
                 ordenPago(row.original.id);
               }}
+              disabled={row.original.estado === "Pagado"}
             >
               <FontAwesomeIcon icon={faMoneyBill1Wave} />
             </button>
@@ -232,8 +242,9 @@ export const TablaFactura = ({ facturas, handleAbrirModal, ordenPago }) => {
               <nav>
                 <ul className="pagination">
                   <li
-                    className={`page-item ${!canPreviousPage ? "disabled" : ""
-                      }`}
+                    className={`page-item ${
+                      !canPreviousPage ? "disabled" : ""
+                    }`}
                   >
                     <button
                       className="page-link"
@@ -260,8 +271,9 @@ export const TablaFactura = ({ facturas, handleAbrirModal, ordenPago }) => {
                   ).map((pageNumber) => (
                     <li
                       key={pageNumber}
-                      className={`page-item ${pageNumber === pageIndex ? "active" : ""
-                        }`}
+                      className={`page-item ${
+                        pageNumber === pageIndex ? "active" : ""
+                      }`}
                     >
                       <button
                         className="page-link"
@@ -272,8 +284,9 @@ export const TablaFactura = ({ facturas, handleAbrirModal, ordenPago }) => {
                     </li>
                   ))}
                   <li
-                    className={`page-item ${pageIndex === pageCount - 1 ? "disabled" : ""
-                      }`}
+                    className={`page-item ${
+                      pageIndex === pageCount - 1 ? "disabled" : ""
+                    }`}
                   >
                     <button
                       className="page-link"
