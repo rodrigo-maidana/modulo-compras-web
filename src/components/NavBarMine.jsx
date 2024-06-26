@@ -18,9 +18,7 @@ export const NavBarMine = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <NavDropdown title="Gestión" id="inventory-nav-dropdown">
-              <NavDropdown.Item href="/proveedores">
-                Proveedores
-              </NavDropdown.Item>
+              <NavDropdown.Item href="/proveedores">Proveedores</NavDropdown.Item>
               <NavDropdown.Item href="/depositos">Depositos</NavDropdown.Item>
               <NavDropdown.Item href="/categorias">Categorias</NavDropdown.Item>
               <NavDropdown.Item href="/marcas">Marcas</NavDropdown.Item>
@@ -32,6 +30,11 @@ export const NavBarMine = () => {
             <Nav.Link href="/orden-compra">Orden compra</Nav.Link>
             <Nav.Link href="/facturas">Facturas</Nav.Link>
             <Nav.Link href="/orden-pago">Pagos</Nav.Link>
+            <NavDropdown title="Reportes" id="inventory-nav-dropdown">
+              <NavDropdown.Item href="/pedidos-pendientes">Pedidos pendientes</NavDropdown.Item>
+              <NavDropdown.Item href="/Factura-vencimiento-mes">Facturas a vencer este mes</NavDropdown.Item>
+              <NavDropdown.Item href="/Factura-vencimiento-mes-id">Facturas a vencer por Empresa este mes</NavDropdown.Item>
+            </NavDropdown>
           </Nav>
           <Nav className="ms-auto me-3">
             <button onClick={logout} className="btn btn-outline-light">

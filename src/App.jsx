@@ -22,6 +22,9 @@ import { FormOrdenPago } from "./components/forms/FormOrdenPago";
 import AuthTabs from "./components/AuthTabs";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { ListadoOrdenPago } from "./components/listados/ListadoOrdenPago";
+import { ListarPedidosPendientes } from "./components/listados/ListarPedidosPendientes";
+import { ListarFacturasAVencer } from "./components/listados/ListarFacturasAVencer";
+import { ListarProveedoresFacturaVencerID } from "./components/listados/ListarProveedoresFacturaVencerID";
 
 const AppContent = () => {
   const navigate = useNavigate();
@@ -82,6 +85,18 @@ const AppContent = () => {
         <Route
           path="/orden-pago"
           element={<ProtectedRoute element={<ListadoOrdenPago />} />}
+        />
+        <Route
+          path="/pedidos-pendientes"
+          element={<ProtectedRoute element={<ListarPedidosPendientes />} />}
+        />
+        <Route
+          path="/Factura-vencimiento-mes"
+          element={<ProtectedRoute element={<ListarFacturasAVencer />} />}
+        />
+        <Route
+          path="/Factura-vencimiento-mes-id"
+          element={<ProtectedRoute element={<ListarProveedoresFacturaVencerID />} />}
         />
       </Routes>
     </AuthProvider>
