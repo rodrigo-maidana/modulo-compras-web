@@ -20,7 +20,7 @@ export const TablaFacturasAVencerID = ({ facturas, onBack }) => {
     const columns = useMemo(
         () => [
             { Header: "Nombre Proveedor", accessor: "proveedor.nombre" },
-            { Header: "Estado Orden Compra", accessor: "ordenCompra.estado" },
+            { Header: "Estado Factura", accessor: "estado" },
             { Header: "Fecha de Emisión", accessor: "fechaEmision", Cell: ({ value }) => formatDate(value) },
             { Header: "Fecha de Vencimiento", accessor: "fechaVencimiento", Cell: ({ value }) => formatDate(value) },
             { Header: "Número de Orden de Compra", accessor: "ordenCompra.nroOrdenCompra" },
