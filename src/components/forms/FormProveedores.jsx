@@ -93,7 +93,7 @@ export const FormProveedores = ({
   const handleSubmitNew = async (nuevoProveedor) => {
     try {
       const response = await axiosInstance.post(
-        "https://api.rodrigomaidana.com:8080/api/v1/proveedores",
+        "http://localhost:8080/api/v1/proveedores",
         nuevoProveedor
       );
       const idProveedorNuevo = response.data.id;

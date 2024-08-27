@@ -14,7 +14,7 @@ export const Login = () => {
 
     try {
       const response = await axios.post(
-        "https://api.rodrigomaidana.com:8080/auth/login",
+        "http://localhost:8080/auth/login",
         { username, password }
       );
       login(response.data.token);
