@@ -15,15 +15,12 @@ export const Register = () => {
     setError("");
 
     try {
-      const response = await axiosInstance.post(
-        "http://localhost:8080/auth/register",
-        {
-          username,
-          password,
-          firstName,
-          lastName,
-        }
-      );
+      const response = await axiosInstance.post("/auth/register", {
+        username,
+        password,
+        firstName,
+        lastName,
+      });
       console.log(response.data);
       navigate("/proveedores"); // Redirigir a la página principal después del registro
     } catch (err) {

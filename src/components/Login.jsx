@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
+import axiosInstance from "./axiosInstance";
 import { AuthContext } from "./AuthContext";
 
 export const Login = () => {
@@ -13,9 +14,12 @@ export const Login = () => {
     setError("");
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/auth/login",
-        { username, password }
+      const response = await axiosInstance.post(
+        "http://modulo-compras.rodrigomaidana.com:8080/auth/login",
+        {
+          username,
+          password,
+        }
       );
       login(response.data.token);
     } catch (err) {
